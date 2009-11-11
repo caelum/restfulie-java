@@ -1,9 +1,9 @@
 package br.com.caelum.restfulie.vraptor;
 
 import java.lang.reflect.ParameterizedType;
-
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.core.InterceptorStack;
 import br.com.caelum.vraptor.core.MethodInfo;
+import br.com.caelum.vraptor.core.RequestInfo;
+import br.com.caelum.vraptor.core.Routes;
 import br.com.caelum.vraptor.interceptor.Interceptor;
+import br.com.caelum.vraptor.resource.HttpMethod;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.rest.Restfulie;
 import br.com.caelum.vraptor.rest.StateResource;
@@ -30,15 +33,15 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 	private final List<Class> controllers;
 	private final Status status;
 	private final Restfulie restfulie;
-	private final MethodInfo info;
-	private final HttpServletRequest request;
+	private final Routes routes;
+	private final RequestInfo info;
 
-	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, MethodInfo info, HttpServletRequest request) {
+	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, RequestInfo info, Routes routes) {
 		this.control = control;
 		this.restfulie = restfulie;
 		this.status = status;
 		this.info = info;
-		this.request = request;
+		this.routes = routes;
 		this.controllers = Arrays.asList(control.getControllers());
 	}
 
@@ -68,7 +71,7 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 					Type parameterType = parameterized.getActualTypeArguments()[0];
 					Class found = (Class) parameterType;
 					String parameterName = lowerFirstChar(found.getSimpleName()) + ".id";
-					String id = request.getParameter(parameterName);
+					String id = info.getRequest().getParameter(parameterName);
 					T resource = control.retrieve(id);
 					if(resource==null) {
 						status.notFound();
@@ -80,7 +83,9 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 							return true;
 						}
 					}
-					status.conflict();
+					EnumSet<HttpMethod> allowed = routes.allowedMethodsFor(info.getRequestedUri());
+					allowed.remove(HttpMethod.of(info.getRequest()));
+					status.methodNotAllowed(allowed);
 					return false;
 				}
 			} else {
