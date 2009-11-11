@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie.vraptor;
 
 import java.lang.reflect.ParameterizedType;
+
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,6 @@ import br.com.caelum.vraptor.core.MethodInfo;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.rest.Restfulie;
-import br.com.caelum.vraptor.rest.StateControl;
 import br.com.caelum.vraptor.rest.StateResource;
 import br.com.caelum.vraptor.view.Status;
 
