@@ -1,11 +1,29 @@
 package br.com.caelum.restfulie;
 
-import br.com.caelum.restfulie.XStreamDeserializerTest.Order;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class XStreamDeserializer {
+/**
+ * Deserialization support through xstream.
+ * 
+ * @author guilherme silveira
+ * @author lucas souza
+ * 
+ */
+public class XStreamDeserializer implements Deserializer {
 
-	public Order fromXml(String xml) {
-		return new Order();
+	public Object fromXml(String xml) {
+		XStream xstream = getXStream();
+		return xstream.fromXML(xml);
+	}
+
+	/**
+	 * Extension point to configure your xstream instance.
+	 * 
+	 * @return the xstream instance to use for deserialization
+	 */
+	protected XStream getXStream() {
+		return new XStream(new DomDriver());
 	}
 
 }
