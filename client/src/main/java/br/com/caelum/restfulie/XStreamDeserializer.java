@@ -2,6 +2,8 @@ package br.com.caelum.restfulie;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -12,8 +14,6 @@ import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
-
-import br.com.caelum.restfulie.XStreamDeserializerTest.Order;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -33,8 +33,19 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  */
 public class XStreamDeserializer implements Deserializer {
 
+	@SuppressWarnings("unchecked")
+	private final Map<Class,Class> realTypes= new HashMap<Class,Class>();
+	private final XStream xstream;
+	
+	public XStreamDeserializer() {
+		this.xstream = getXStream();
+	}
+
+	public XStreamDeserializer(XStream xStream) {
+		xstream = xStream;
+	}
+
 	public Object fromXml(String xml) {
-		XStream xstream = getXStream();
 		return xstream.fromXML(xml);
 	}
 	
@@ -47,6 +58,9 @@ public class XStreamDeserializer implements Deserializer {
 		@Override
 		public String getFieldNameForItemTypeAndName(Class definedIn,
 				Class itemType, String itemFieldName) {
+			if(realTypes.containsKey(definedIn) && itemFieldName.equals("link")) {
+				return "link";
+			}
 			return super.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
 		}
 	
@@ -68,7 +82,8 @@ public class XStreamDeserializer implements Deserializer {
 				return new MyWrapper(next);
 			}
 		};
-		xstream.alias("link", DefaultTransition.class);
+		xstream.useAttributeFor(DefaultTransition.class, "rel");
+		xstream.useAttributeFor(DefaultTransition.class, "href");
 		return xstream;
 	}
 
@@ -80,39 +95,18 @@ public class XStreamDeserializer implements Deserializer {
 		return new ReflectionProviderWrapper(new Sun14ReflectionProvider()) {
 			@Override
 			public Object newInstance(Class originalType) {
-				if(originalType.isPrimitive() || originalType.equals(String.class) || originalType.equals(Enum.class) || Modifier.isFinal(originalType.getModifiers())) {
-					Object instance = super.newInstance(originalType);
-					return instance;
+				if(realTypes.containsKey(originalType)) {
+					return super.newInstance(realTypes.get(originalType));
 				}
-				ClassPool pool = ClassPool.getDefault();
-				Class myCustomClass;
-				try {
-					CtClass custom =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
-					custom.setSuperclass(pool.get(originalType.getName()));
-					custom.addInterface(pool.get(Resource.class.getName()));
-					CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
-					custom.addField(field);
-					CtMethod method = CtNewMethod.make("public java.util.Collection getTransitions() { return new java.util.ArrayList(); }", custom);
-					custom.addMethod(method);
-					myCustomClass = custom.toClass();
-				} catch (NotFoundException e) {
-					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
-				} catch (CannotCompileException e) {
-					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
-				}
-				Object finalInstance = super.newInstance(myCustomClass);
-			    return finalInstance;
+				return super.newInstance(originalType);
 			}
+			
 			
 			@Override
 			public boolean fieldDefinedInClass(String arg0, Class arg1) {
 				return super.fieldDefinedInClass(arg0, arg1);
 			}
 			
-			@Override
-			public Field getField(Class definedIn, String fieldName) {
-				return super.getField(definedIn, fieldName);
-			}
 			@Override
 			public Class getFieldType(Object object, String fieldName,
 					Class definedIn) {
@@ -124,7 +118,29 @@ public class XStreamDeserializer implements Deserializer {
 					Object value, Class definedIn) {
 				super.writeField(object, fieldName, value, definedIn);
 			}
+			
+			
 		};
+	}
+
+	public <T> void enhanceResource(Class<T> originalType) {
+		ClassPool pool = ClassPool.getDefault();
+		try {
+			CtClass custom =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
+			custom.setSuperclass(pool.get(originalType.getName()));
+			custom.addInterface(pool.get(Resource.class.getName()));
+			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
+			custom.addField(field);
+			CtMethod method = CtNewMethod.make("public java.util.List getTransitions() { return link; }", custom);
+			custom.addMethod(method);
+			Class customType = custom.toClass();
+			xstream.addImplicitCollection(customType, "link","link", DefaultTransition.class);
+			this.realTypes.put(originalType, customType);
+		} catch (NotFoundException e) {
+			throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+		} catch (CannotCompileException e) {
+			throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+		}
 	}
 
 }

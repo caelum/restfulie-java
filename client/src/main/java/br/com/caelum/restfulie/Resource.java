@@ -1,6 +1,6 @@
 package br.com.caelum.restfulie;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * A single resource.<br>
@@ -17,6 +17,6 @@ public interface Resource {
 	 * 
 	 * @return the collection of transitions
 	 */
-	Collection<Transition> getTransitions();
+	List<Transition> getTransitions();
 
 }
