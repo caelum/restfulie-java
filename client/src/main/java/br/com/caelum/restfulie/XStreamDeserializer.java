@@ -1,7 +1,5 @@
 package br.com.caelum.restfulie;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +47,9 @@ public class XStreamDeserializer implements Deserializer {
 		return xstream.fromXML(xml);
 	}
 	
-	private class MyWrapper extends MapperWrapper{
+	private class LinkSupportWrapper extends MapperWrapper{
 
-		public MyWrapper(Mapper wrapped) {
+		public LinkSupportWrapper(Mapper wrapped) {
 			super(wrapped);
 		}
 		
@@ -79,7 +77,7 @@ public class XStreamDeserializer implements Deserializer {
 		XStream xstream = new XStream(provider, new StaxDriver(qnameMap)) {
 			@Override
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
-				return new MyWrapper(next);
+				return new LinkSupportWrapper(next);
 			}
 		};
 		xstream.useAttributeFor(DefaultTransition.class, "rel");
@@ -100,25 +98,6 @@ public class XStreamDeserializer implements Deserializer {
 				}
 				return super.newInstance(originalType);
 			}
-			
-			
-			@Override
-			public boolean fieldDefinedInClass(String arg0, Class arg1) {
-				return super.fieldDefinedInClass(arg0, arg1);
-			}
-			
-			@Override
-			public Class getFieldType(Object object, String fieldName,
-					Class definedIn) {
-				return super.getFieldType(object, fieldName, definedIn);
-			}
-			
-			@Override
-			public void writeField(Object object, String fieldName,
-					Object value, Class definedIn) {
-				super.writeField(object, fieldName, value, definedIn);
-			}
-			
 			
 		};
 	}
