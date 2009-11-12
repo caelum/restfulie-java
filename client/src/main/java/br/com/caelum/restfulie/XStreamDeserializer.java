@@ -1,16 +1,19 @@
 package br.com.caelum.restfulie;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -70,23 +73,35 @@ public class XStreamDeserializer implements Deserializer {
 	 * @return
 	 */
 	private ReflectionProvider getProvider() {
-		return new Sun14ReflectionProvider() {
+		return new ReflectionProviderWrapper(new Sun14ReflectionProvider()) {
 			@Override
-			public Object newInstance(Class type) {
-				final Object instance = super.newInstance(type);
-				if(type.isPrimitive() || type.equals(String.class) || type.equals(Enum.class)) {
+			public Object newInstance(Class originalType) {
+				if(originalType.isPrimitive() || originalType.equals(String.class) || originalType.equals(Enum.class) || Modifier.isFinal(originalType.getModifiers())) {
+					Object instance = super.newInstance(originalType);
 					return instance;
 				}
-			    Enhancer enhancer = new Enhancer();
-			    enhancer.setSuperclass(type);
-				MethodInterceptor interceptor = new MethodInterceptor() {
-			        public Object intercept(Object proxy, Method method, Object[] args, final MethodProxy methodProxy)throws Throwable {
-						return method.invoke(instance, args);
-			    	}
-			    };
-			    enhancer.setCallback(interceptor);
-			    Object myInstance = enhancer.create();
-			    return myInstance;
+				ClassPool pool = ClassPool.getDefault();
+				Class myCustomClass;
+				try {
+					CtClass cc =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
+					cc.setSuperclass(pool.get(originalType.getName()));
+					CtField field = CtField.make("public String link;", cc);
+					cc.addField(field);
+					myCustomClass = cc.toClass();
+				} catch (NotFoundException e) {
+					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+				} catch (CannotCompileException e) {
+					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+				}
+//				try {
+//					return myCustomClass.newInstance();
+//				} catch (InstantiationException e) {
+//					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+//				} catch (IllegalAccessException e) {
+//					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
+//				}
+				Object finalInstance = super.newInstance(myCustomClass);
+			    return finalInstance;
 			}
 			
 			@Override
