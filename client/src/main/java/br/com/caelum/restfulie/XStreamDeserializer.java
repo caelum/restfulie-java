@@ -7,6 +7,8 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
@@ -83,23 +85,19 @@ public class XStreamDeserializer implements Deserializer {
 				ClassPool pool = ClassPool.getDefault();
 				Class myCustomClass;
 				try {
-					CtClass cc =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
-					cc.setSuperclass(pool.get(originalType.getName()));
-					CtField field = CtField.make("public String link;", cc);
-					cc.addField(field);
-					myCustomClass = cc.toClass();
+					CtClass custom =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
+					custom.setSuperclass(pool.get(originalType.getName()));
+					custom.addInterface(pool.get(Resource.class.getName()));
+					CtField field = CtField.make("public String link;", custom);
+					custom.addField(field);
+					CtMethod method = CtNewMethod.make("public java.util.Collection getTransitions() { return new java.util.ArrayList(); }", custom);
+					custom.addMethod(method);
+					myCustomClass = custom.toClass();
 				} catch (NotFoundException e) {
 					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
 				} catch (CannotCompileException e) {
 					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
 				}
-//				try {
-//					return myCustomClass.newInstance();
-//				} catch (InstantiationException e) {
-//					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
-//				} catch (IllegalAccessException e) {
-//					throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
-//				}
 				Object finalInstance = super.newInstance(myCustomClass);
 			    return finalInstance;
 			}
