@@ -24,10 +24,10 @@ import br.com.caelum.vraptor.view.Status;
  * @author guilherme silveira
  * @author pedro mariano
  */
+@SuppressWarnings("unchecked")
 public class StateControlInterceptor<T extends StateResource> implements Interceptor {
 
 	private final StateControl<T> control;
-	@SuppressWarnings("unchecked")
 	private final List<Class> controllers;
 	private final Status status;
 	private final Restfulie restfulie;
