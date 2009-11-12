@@ -47,7 +47,7 @@ public class XStreamDeserializerTest {
 	public void shouldDeserializeWithASimpleLink() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" + linkFor("payment", "http://localhost/pay") + "</order>";
 		Resource resource = resource(deserializer.fromXml(xml));
-		assertThat(resource.getTransitions().size(), is(equalTo(0)));
+		assertThat(resource.getTransitions().size(), is(equalTo(1)));
 	}
 
 	private static <T> Resource resource(T object) {

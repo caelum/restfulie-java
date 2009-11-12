@@ -13,6 +13,8 @@ import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
 
+import br.com.caelum.restfulie.XStreamDeserializerTest.Order;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
@@ -88,7 +90,7 @@ public class XStreamDeserializer implements Deserializer {
 					CtClass custom =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
 					custom.setSuperclass(pool.get(originalType.getName()));
 					custom.addInterface(pool.get(Resource.class.getName()));
-					CtField field = CtField.make("public String link;", custom);
+					CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
 					custom.addField(field);
 					CtMethod method = CtNewMethod.make("public java.util.Collection getTransitions() { return new java.util.ArrayList(); }", custom);
 					custom.addMethod(method);
