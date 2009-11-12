@@ -55,6 +55,16 @@ public class XStreamDeserializerTest {
 	}
 
 	@Test
+	public void shouldSupportTheLinkWithoutTheXmlns() {
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\" xmlns:atom=\"http://www.w3.org/2005/Atom\">" + simpleLinkFor("payment", "http://localhost/pay") + "</order>";
+		Resource resource = resource(deserializer.fromXml(xml));
+		assertThat(resource.getTransitions().size(), is(equalTo(1)));
+		Transition first = resource.getTransitions().get(0);
+		assertThat(first.getRel(), is(equalTo("payment")));
+		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
+	}
+
+	@Test
 	public void shouldDeserializeWithTwoLinks() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" 
 			+ linkFor("payment", "http://localhost/pay") 
@@ -76,6 +86,10 @@ public class XStreamDeserializerTest {
 
 	private String linkFor(String rel, String uri) {
 		return "<atom:link xmlns:atom=\"http://www.w3.org/2005/Atom\" rel=\"" + rel + "\" href=\"" + uri + "\"/>";
+	}
+
+	private String simpleLinkFor(String rel, String uri) {
+		return "<atom:link rel=\"" + rel + "\" href=\"" + uri + "\"/>";
 	}
 
 }
