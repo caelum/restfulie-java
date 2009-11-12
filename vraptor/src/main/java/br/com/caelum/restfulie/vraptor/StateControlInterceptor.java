@@ -1,16 +1,14 @@
 package br.com.caelum.restfulie.vraptor;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.core.MethodInfo;
 import br.com.caelum.vraptor.core.RequestInfo;
 import br.com.caelum.vraptor.core.Routes;
 import br.com.caelum.vraptor.interceptor.Interceptor;
@@ -65,40 +63,58 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 		}
 		Type[] interfaces = baseType.getGenericInterfaces();
 		for (Type type : interfaces) {
-			if (type instanceof ParameterizedType) {
-				ParameterizedType parameterized = (ParameterizedType) type;
-				if(parameterized.getRawType().equals(StateControl.class)) {
-					Type parameterType = parameterized.getActualTypeArguments()[0];
-					Class found = (Class) parameterType;
-					String parameterName = lowerFirstChar(found.getSimpleName()) + ".id";
-					String id = info.getRequest().getParameter(parameterName);
-					T resource = control.retrieve(id);
-					if(resource==null) {
-						status.notFound();
-						return false;
-					}
-					List<br.com.caelum.vraptor.rest.Transition> transitions = resource.getFollowingTransitions(restfulie);
-					for (br.com.caelum.vraptor.rest.Transition transition : transitions) {
-						if(transition.matches(method.getMethod())) {
-							return true;
-						}
-					}
-					EnumSet<HttpMethod> allowed = routes.allowedMethodsFor(info.getRequestedUri());
-					allowed.remove(HttpMethod.of(info.getRequest()));
-					status.methodNotAllowed(allowed);
-					return false;
-				}
-			} else {
-				Class simple = (Class) type;
-				if (simple.equals(StateControl.class)) {
-					throw new IllegalStateException(
-							"Unable to detect which state control it is because "
-									+ control.getClass()
-									+ " does not implement StateControl of an specific type");
-				}
+			if (!(type instanceof ParameterizedType)) {
+				throw new IllegalStateException(
+						"Unable to detect which state control it is because "
+								+ control.getClass()
+								+ " does not implement StateControl of an specific type");
+			}
+			ParameterizedType parameterized = (ParameterizedType) type;
+			if(parameterized.getRawType().equals(StateControl.class)) {
+				return analyzeImplementation(method, parameterized);
 			}
 		}
 		return executeFor(baseType.getSuperclass(), method);
+	}
+
+	private boolean analyzeImplementation(ResourceMethod method,
+			ParameterizedType parameterized) {
+		Type parameterType = parameterized.getActualTypeArguments()[0];
+		Class found = (Class) parameterType;
+		T resource = retrieveResource(found);
+		if(resource==null) {
+			status.notFound();
+			return false;
+		}
+		if(allows(resource, method.getMethod())) {
+			return true;
+		}
+		status.methodNotAllowed(allowedMethods());
+		return false;
+	}
+
+	private EnumSet<HttpMethod> allowedMethods() {
+		EnumSet<HttpMethod> allowed = routes.allowedMethodsFor(info.getRequestedUri());
+		allowed.remove(HttpMethod.of(info.getRequest()));
+		return allowed;
+	}
+
+
+	private T retrieveResource(Class found) {
+		String parameterName = lowerFirstChar(found.getSimpleName()) + ".id";
+		String id = info.getRequest().getParameter(parameterName);
+		T resource = control.retrieve(id);
+		return resource;
+	}
+
+	private boolean allows(T resource, Method method) {
+		List<br.com.caelum.vraptor.rest.Transition> transitions = resource.getFollowingTransitions(restfulie);
+		for (br.com.caelum.vraptor.rest.Transition transition : transitions) {
+			if(transition.matches(method)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private String lowerFirstChar(String simpleName) {
