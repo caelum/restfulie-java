@@ -1,7 +1,10 @@
 package br.com.caelum.restfulie;
 
+import javax.xml.namespace.QName;
+
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.QNameMap;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * Deserialization support through xstream.
@@ -23,7 +26,12 @@ public class XStreamDeserializer implements Deserializer {
 	 * @return the xstream instance to use for deserialization
 	 */
 	protected XStream getXStream() {
-		return new XStream(new DomDriver());
+		QNameMap qnameMap = new QNameMap();
+		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
+		qnameMap.registerMapping(qname, DefaultTransition.class);
+		XStream xstream = new XStream(new StaxDriver(qnameMap));
+		xstream.alias("link", DefaultTransition.class);
+		return xstream;
 	}
 
 }

@@ -36,6 +36,7 @@ public class XStreamDeserializerTest {
 	
 	@Test
 	public void shouldDeserializeWithoutLinks() {
+
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\"></order>";
 		Order expected = new Order();
 		Order order = (Order) deserializer.fromXml(xml);
