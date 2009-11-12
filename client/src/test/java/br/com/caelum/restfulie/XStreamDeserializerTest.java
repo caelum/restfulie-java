@@ -54,6 +54,22 @@ public class XStreamDeserializerTest {
 		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
 	}
 
+	@Test
+	public void shouldDeserializeWithTwoLinks() {
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" 
+			+ linkFor("payment", "http://localhost/pay") 
+			+ linkFor("cancel", "http://localhost/cancel") 
+			+ "</order>";
+		Resource resource = resource(deserializer.fromXml(xml));
+		assertThat(resource.getTransitions().size(), is(equalTo(2)));
+		Transition first = resource.getTransitions().get(0);
+		assertThat(first.getRel(), is(equalTo("payment")));
+		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
+		Transition second = resource.getTransitions().get(1);
+		assertThat(second.getRel(), is(equalTo("cancel")));
+		assertThat(second.getHref(), is(equalTo("http://localhost/cancel")));
+	}
+
 	private static <T> Resource resource(T object) {
 		return (Resource) object;
 	}
