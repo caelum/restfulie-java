@@ -57,9 +57,6 @@ public class DefaultTransition implements Transition {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(false);
 			String methodName = methodName();
-			if(methodToUse) {
-				methodName = methodToUse;
-			}
 			connection.setRequestMethod(methodName);
 	        return new DefaultResponse(connection, methodName.equals("GET"));
 		} catch (MalformedURLException e) {
@@ -74,6 +71,9 @@ public class DefaultTransition implements Transition {
 	}
 
 	private String methodName() {
+		if(methodToUse != null) {
+			return methodToUse;
+		}
 		if(defaultMethods.containsKey(rel)) {
 			return defaultMethods.get(rel);
 		}
