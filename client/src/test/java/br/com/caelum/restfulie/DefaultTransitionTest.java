@@ -31,7 +31,7 @@ public class DefaultTransitionTest {
 	@Test
 	public void shouldAllowMethodOverriding() {
 		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/1/checkPayment");
-		Response result = transition.execute();
+		Response result = transition.method("get").execute();
 		Payment payment = result.getResource();
 		assertThat(payment.value, is(200.50));
 	}

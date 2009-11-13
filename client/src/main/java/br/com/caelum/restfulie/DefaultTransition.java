@@ -18,6 +18,7 @@ public class DefaultTransition implements Transition {
 
 	private String rel;
 	private String href;
+	private String methodToUse;
 	
 	private static final Map<String,String> defaultMethods = new HashMap<String,String>();
 	static {
@@ -56,6 +57,9 @@ public class DefaultTransition implements Transition {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(false);
 			String methodName = methodName();
+			if(methodToUse) {
+				methodName = methodToUse;
+			}
 			connection.setRequestMethod(methodName);
 	        return new DefaultResponse(connection, methodName.equals("GET"));
 		} catch (MalformedURLException e) {
@@ -78,6 +82,11 @@ public class DefaultTransition implements Transition {
 	
 	public <T> Response execute() {
 		return execute(null);
+	}
+
+	public DefaultTransition method(String methodToUse) {
+		this.methodToUse = methodToUse;
+		return this;
 	}
 
 }
