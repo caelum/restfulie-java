@@ -9,7 +9,7 @@ public class DefaultTransitionTest {
 	
 	@Test
 	public void shouldExecuteAnHttpRequest() {
-		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1");
+		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1", null);
 		Response result = transition.execute();
 		assertThat(result.getCode(), is(200));
 		assertThat(result.getContent(), is("<content/>"));
@@ -21,7 +21,7 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldParseAnObjectIfDesired() {
-		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1/checkPayment");
+		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1/checkPayment", null);
 		Response result = transition.execute();
 		Payment payment = result.getResource();
 		assertThat(payment.value, is(200.50));
@@ -30,7 +30,7 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldAllowMethodOverriding() {
-		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/1/checkPayment");
+		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/1/checkPayment", null);
 		Response result = transition.method("get").execute();
 		Payment payment = result.getResource();
 		assertThat(payment.value, is(200.50));
@@ -39,7 +39,7 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldAllowDeleteInvocations() {
-		DefaultTransition transition = new DefaultTransition("cancel", "http://localhost:8080/chapter05-service/order/1");
+		DefaultTransition transition = new DefaultTransition("cancel", "http://localhost:8080/chapter05-service/order/1", null);
 		Response result = transition.execute();
 		assertThat(result.getCode(), is(200));
 	}

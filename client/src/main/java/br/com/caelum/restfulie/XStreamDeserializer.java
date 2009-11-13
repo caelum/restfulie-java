@@ -13,6 +13,8 @@ import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
 
+import br.com.caelum.restfulie.client.DefaultTransitionConverter;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
@@ -37,10 +39,14 @@ public class XStreamDeserializer implements Deserializer {
 	
 	public XStreamDeserializer() {
 		this.xstream = getXStream();
+		// gs: nasty
+		this.xstream.registerConverter(new DefaultTransitionConverter(this));
 	}
 
 	public XStreamDeserializer(XStream xStream) {
-		xstream = xStream;
+		this.xstream = xStream;
+		// gs: nasty
+		this.xstream.registerConverter(new DefaultTransitionConverter(this));
 	}
 
 	public Object fromXml(String xml) {

@@ -31,9 +31,10 @@ public class DefaultTransition implements Transition {
 		defaultMethods.put("suspend", "DELETE");
 	}
 
-	public DefaultTransition(String rel, String href) {
+	public DefaultTransition(String rel, String href, Deserializer deserializer) {
 		this.rel = rel;
 		this.href = href;
+		this.deserializer = deserializer;
 	}
 
 	public String getHref() {
@@ -59,7 +60,7 @@ public class DefaultTransition implements Transition {
 			connection.setDoOutput(false);
 			String methodName = methodName();
 			connection.setRequestMethod(methodName);
-	        return new DefaultResponse(connection, methodName.equals("GET"), deserializer);
+	        return new DefaultResponse(connection, deserializer, methodName.equals("GET"));
 		} catch (MalformedURLException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		} catch (ProtocolException e) {
