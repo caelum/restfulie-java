@@ -19,6 +19,7 @@ public class DefaultTransition implements Transition {
 	private String rel;
 	private String href;
 	private String methodToUse;
+	private Deserializer deserializer;
 	
 	private static final Map<String,String> defaultMethods = new HashMap<String,String>();
 	static {
@@ -58,7 +59,7 @@ public class DefaultTransition implements Transition {
 			connection.setDoOutput(false);
 			String methodName = methodName();
 			connection.setRequestMethod(methodName);
-	        return new DefaultResponse(connection, methodName.equals("GET"));
+	        return new DefaultResponse(connection, methodName.equals("GET"), deserializer);
 		} catch (MalformedURLException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		} catch (ProtocolException e) {
