@@ -5,6 +5,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default implementation of a transition.
@@ -16,6 +18,16 @@ public class DefaultTransition implements Transition {
 
 	private String rel;
 	private String href;
+	
+	private static final Map<String,String> defaultMethods = new HashMap<String,String>();
+	static {
+		defaultMethods.put("latest", "GET");
+		defaultMethods.put("show", "GET");
+		defaultMethods.put("update", "POST");
+		defaultMethods.put("cancel", "DELETE");
+		defaultMethods.put("destroy", "DELETE");
+		defaultMethods.put("suspend", "DELETE");
+	}
 
 	public DefaultTransition(String rel, String href) {
 		this.rel = rel;
@@ -43,8 +55,9 @@ public class DefaultTransition implements Transition {
 			URL url = new URL(href);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(false);
-			connection.setRequestMethod("GET");
-	        return new DefaultResponse(connection);
+			String methodName = methodName();
+			connection.setRequestMethod(methodName);
+	        return new DefaultResponse(connection, methodName.equals("GET"));
 		} catch (MalformedURLException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		} catch (ProtocolException e) {
@@ -55,6 +68,14 @@ public class DefaultTransition implements Transition {
 
 
 	}
+
+	private String methodName() {
+		if(defaultMethods.containsKey(rel)) {
+			return defaultMethods.get(rel);
+		}
+		return "POST";
+	}
+	
 	public <T> Response execute() {
 		return execute(null);
 	}

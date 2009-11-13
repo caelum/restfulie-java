@@ -13,6 +13,7 @@ public class DefaultResponse implements Response {
 	private int code;
 	private String content = "";
 	private Map<String, List<String>> headers;
+	private HttpURLConnection connection;
 
 	public DefaultResponse(HttpURLConnection connection) throws IOException {
 		this(connection, true);
@@ -21,6 +22,7 @@ public class DefaultResponse implements Response {
 	public DefaultResponse(HttpURLConnection connection, boolean shouldReadContent)
 			throws IOException {
 		this.code = connection.getResponseCode();
+		this.connection = connection;
 		if (shouldReadContent) {
 			InputStream stream = (InputStream) connection.getContent();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -49,6 +51,14 @@ public class DefaultResponse implements Response {
 
 	public List<String> getHeader(String key) {
 		return headers.get(key);
+	}
+	
+	public HttpURLConnection getConnection() {
+		return connection;
+	}
+
+	public <T> T getResource() {
+		return null;
 	}
 
 
