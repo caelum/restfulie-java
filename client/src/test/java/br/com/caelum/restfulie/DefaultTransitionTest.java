@@ -11,10 +11,17 @@ import org.junit.Test;
 public class DefaultTransitionTest {
 	
 	private Deserializer deserializer;
+	private String defaultPayment;
 
 	@Before
 	public void setup() {
 		this.deserializer = mock(Deserializer.class);
+		this.defaultPayment = "<payment>\n" +
+			"  <cardNumber>1234123412341234</cardNumber>\n" +
+			"  <cardholderName>guilherme silveira</cardholderName>\n" +
+			"  <expiryMonth>11</expiryMonth>\n" +
+			"  <expiryYear>12</expiryYear>\n" +
+			"</payment>";
 	}
 	
 	@Test
@@ -25,18 +32,9 @@ public class DefaultTransitionTest {
 		assertThat(result.getContent(), is("<content/>"));
 	}
 	
-	public static class Payment {
-		private double value;
-	}
-
 	@Test
 	public void shouldParseAnObjectIfDesired() {
-		when(deserializer.fromXml("<payment>\n" +
-			"  <cardNumber>1234123412341234</cardNumber>\n" +
-			"  <cardholderName>guilherme silveira</cardholderName>\n" +
-			"  <expiryMonth>11</expiryMonth>\n" +
-			"  <expiryYear>12</expiryYear>\n" +
-			"</payment>")).thenReturn("my resulting resource");
+		when(deserializer.fromXml(defaultPayment)).thenReturn("my resulting resource");
 		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", deserializer);
 		Response result = transition.execute();
 		assertThat((String) result.getResource(), is("my resulting resource"));
@@ -45,10 +43,9 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldAllowMethodOverriding() {
-		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPayment", null);
-		Response result = transition.method("get").execute();
-		Payment payment = result.getResource();
-		assertThat(payment.value, is(200.50));
+		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null);
+		Response result = transition.method("GET").execute();
+		assertThat(result.getContent(), is(defaultPayment));
 	}
 
 
