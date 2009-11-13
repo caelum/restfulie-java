@@ -8,19 +8,32 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Default response implementation based on HttpURLConnection.
+ * 
+ * @author guilherme silveira
+ */
 public class DefaultResponse implements Response {
 
 	private int code;
 	private String content = "";
 	private Map<String, List<String>> headers;
 	private HttpURLConnection connection;
+	private final Deserializer deserializer;
 
-	public DefaultResponse(HttpURLConnection connection) throws IOException {
-		this(connection, true);
+	/**
+	 * Will use this connection to retrieve the response data. The deserializer
+	 * will be used if the user wants to retrieve the resource.
+	 */
+	public DefaultResponse(HttpURLConnection connection,
+			Deserializer deserializer) throws IOException {
+		this(connection, deserializer, true);
 	}
 
-	public DefaultResponse(HttpURLConnection connection, boolean shouldReadContent)
+	public DefaultResponse(HttpURLConnection connection,
+			Deserializer deserializer, boolean shouldReadContent)
 			throws IOException {
+		this.deserializer = deserializer;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
 		if (shouldReadContent) {
@@ -52,14 +65,13 @@ public class DefaultResponse implements Response {
 	public List<String> getHeader(String key) {
 		return headers.get(key);
 	}
-	
+
 	public HttpURLConnection getConnection() {
 		return connection;
 	}
 
 	public <T> T getResource() {
-		return null;
+		return (T) deserializer.fromXml(getContent());
 	}
-
 
 }
