@@ -15,8 +15,7 @@ public class XStreamDeserializerTest {
 	@XStreamAlias("order")
 	public static class Order {
 		public boolean equals(Object obj) {
-			Order result = (Order) obj;
-			return true;
+			return Order.class.isAssignableFrom(obj.getClass());
 		}
 	}
 
