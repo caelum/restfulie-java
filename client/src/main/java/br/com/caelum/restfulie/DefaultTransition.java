@@ -46,14 +46,10 @@ public class DefaultTransition implements Transition {
 	}
 
 	public <T> Response execute(T arg) {
-		// TODO 1: use httpclient new version to execute GET
 		// TODO 1.5: return result
-		// TODO 2: support POST and others by default
-		// TODO 3: allow method override
 		// TODO 4: GET should automatically de-serialize result
 		// TODO 5: receive parameters by default
-		// TODO 5.5: allow httpclient customization
-		// TODO 6: support other methods appart from httpclient
+		// TODO 6: support other methods appart from default url system
 		try {
 			URL url = new URL(href);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -68,8 +64,6 @@ public class DefaultTransition implements Transition {
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		}
-
-
 	}
 
 	private String methodName() {
