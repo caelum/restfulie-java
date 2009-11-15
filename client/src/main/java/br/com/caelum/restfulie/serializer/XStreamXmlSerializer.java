@@ -130,7 +130,9 @@ public class XStreamXmlSerializer implements BasicSerializer {
 			if (!excludes.containsKey(fieldType)) {
 				excludeNonPrimitiveFields(fieldType, fieldType);
 			}
-			excludes.get(parentType).remove(fieldName);
+			if(excludes.containsKey(parentType)) {
+				excludes.get(parentType).remove(fieldName);
+			}
 		}
 		return this;
 	}
