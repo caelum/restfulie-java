@@ -3,6 +3,8 @@ package br.com.caelum.restfulie;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -63,7 +65,7 @@ public class EntryPointService implements BasicResourceSerializer{
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(output);
+			Writer writer = new OutputStreamWriter(output);
 			BasicSerializer serializer = new XStreamXmlSerializer(new XStream(), writer, new DefaultTypeNameExtractor()).from(customObject);
 			serializer.include(includes.toArray(new String[0]));
 			serializer.exclude(excludes.toArray(new String[0]));
