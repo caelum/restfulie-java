@@ -1,11 +1,17 @@
 package br.com.caelum.restfulie;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URI;
-import java.net.URL;
+
+import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
+import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
+
+import com.thoughtworks.xstream.XStream;
 
 /**
  * A service's entry point.
@@ -24,20 +30,23 @@ public class EntryPointService {
 		return new EntryPointService(uri);
 	}
 	
-	public void create() {
+	public <T> void post(T object) {
 		try {
-			URL url = new URL(href);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(false);
-			String methodName = methodName();
-			connection.setRequestMethod(methodName);
-	        return new DefaultResponse(connection, deserializer, methodName.equals("GET"));
+			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+			connection.addRequestProperty("Content-type", "application/xml"); // read from some previous configured place
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+			OutputStream output = connection.getOutputStream();
+			OutputStreamWriter writer = new OutputStreamWriter(output);
+			new XStreamXmlSerializer(new XStream(), writer, new DefaultTypeNameExtractor()).from(object).serialize();
+			writer.flush();
+	        new DefaultResponse(connection, null, false);
 		} catch (MalformedURLException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			throw new TransitionException("Unable to execute " + uri, e);
 		} catch (ProtocolException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			throw new TransitionException("Unable to execute " + uri, e);
 		} catch (IOException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			throw new TransitionException("Unable to execute " + uri, e);
 		}
 	}
 
