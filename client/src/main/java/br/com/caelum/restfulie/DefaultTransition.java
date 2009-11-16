@@ -46,8 +46,6 @@ public class DefaultTransition implements Transition {
 	}
 
 	public <T> Response execute(T arg) {
-		// TODO 1.5: return result
-		// TODO 4: GET should automatically de-serialize result
 		// TODO 5: receive parameters by default
 		// TODO 6: support other methods appart from default url system
 		try {

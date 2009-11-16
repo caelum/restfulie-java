@@ -18,5 +18,7 @@ public interface Resource {
 	 * @return the collection of transitions
 	 */
 	List<Transition> getTransitions();
+	
+	Transition getTransition(String rel);
 
 }

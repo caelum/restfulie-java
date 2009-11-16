@@ -11,6 +11,8 @@ public interface BasicResourceSerializer {
 
 	BasicResourceSerializer include(String... names);
 
-	void post();
+	<R> R post();
+	
+	<R> R get();
 
 }

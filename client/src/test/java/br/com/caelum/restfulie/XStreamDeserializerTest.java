@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import static br.com.caelum.restfulie.Restfulie.resource;
+
 
 public class XStreamDeserializerTest {
 	
@@ -46,7 +48,7 @@ public class XStreamDeserializerTest {
 	@Test
 	public void shouldDeserializeWithASimpleLink() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" + linkFor("payment", "http://localhost/pay") + "</order>";
-		Resource resource = resource(deserializer.fromXml(xml));
+		Resource resource = Restfulie.resource(deserializer.fromXml(xml));
 		assertThat(resource.getTransitions().size(), is(equalTo(1)));
 		Transition first = resource.getTransitions().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
@@ -77,10 +79,6 @@ public class XStreamDeserializerTest {
 		Transition second = resource.getTransitions().get(1);
 		assertThat(second.getRel(), is(equalTo("cancel")));
 		assertThat(second.getHref(), is(equalTo("http://localhost/cancel")));
-	}
-
-	private static <T> Resource resource(T object) {
-		return (Resource) object;
 	}
 
 	private String linkFor(String rel, String uri) {

@@ -116,8 +116,8 @@ public class XStreamDeserializer implements Deserializer {
 			custom.addInterface(pool.get(Resource.class.getName()));
 			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
 			custom.addField(field);
-			CtMethod method = CtNewMethod.make("public java.util.List getTransitions() { return link; }", custom);
-			custom.addMethod(method);
+			custom.addMethod(CtNewMethod.make("public java.util.List getTransitions() { return link; }", custom));
+			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Transition getTransition(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Transition t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", custom));
 			Class customType = custom.toClass();
 			xstream.addImplicitCollection(customType, "link","link", DefaultTransition.class);
 			this.realTypes.put(originalType, customType);
