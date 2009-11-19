@@ -84,8 +84,8 @@ public class EntryPointService implements BasicResourceSerializer{
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
-			Writer writer = new OutputStreamWriter(output);
-			BasicSerializer serializer = new XStreamXmlSerializer(new XStream(), writer, new DefaultTypeNameExtractor()).from(customObject, config.type(customObject.getClass()));
+			Writer writer = new OutputStreamWriter(System.out);
+			BasicSerializer serializer = new XStreamXmlSerializer(getConfig().create(), writer, new DefaultTypeNameExtractor()).from(customObject, config.type(customObject.getClass()));
 			serializer.serialize();
 			writer.flush();
 	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(getConfig()), new IdentityContentProcessor());

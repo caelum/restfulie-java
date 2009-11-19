@@ -32,4 +32,8 @@ public class SerializationConfig {
 		return configs.values();
 	}
 
+	public boolean contains(Class<?> type) {
+		return configs.containsKey(type);
+	}
+
 }

@@ -21,7 +21,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class XStreamXmlSerializerTest {
 
-
 	private BasicSerializer serializer;
 	private ByteArrayOutputStream stream;
 
@@ -40,6 +39,7 @@ public class XStreamXmlSerializerTest {
 			this.street = street;
 		}
 	}
+	
 	public static class Client {
 		String name;
 		Address address;
@@ -51,6 +51,7 @@ public class XStreamXmlSerializerTest {
 			this.address = address;
 		}
 	}
+	
 	@XStreamAlias("item")
 	public static class Item {
 		String name;
@@ -60,6 +61,7 @@ public class XStreamXmlSerializerTest {
 			this.price = price;
 		}
 	}
+	
 	@XStreamAlias("order")
 	public static class Order {
 		Client client;
