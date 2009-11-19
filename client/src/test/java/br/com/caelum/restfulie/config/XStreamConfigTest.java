@@ -91,24 +91,22 @@ public class XStreamConfigTest {
 		assertThat(create().toXML(order), not(containsString("<item>")));
 	}
 
-//	public static enum Type { basic, advanced }
-//	class BasicOrder extends Order {
-//		public BasicOrder(Client client, double price, String comments, Type type) {
-//			super(client, price, comments);
-//			this.type = type;
-//		}
-//		private final Type type;
-//	}
-//
-//	@Test
-//	public void shouldSerializeEnumFields() {
-//		Order order = new BasicOrder(new Client("guilherme silveira"), 15.0, "pack it nicely, please", Type.basic);
-//		serializer.from(order).serialize();
-//		String result = result();
-//		assertThat(result, containsString("<type>basic</type>"));
-//	}
-//
-//
+	public static enum Type { basic, advanced }
+	public static class BasicOrder extends Order {
+		public BasicOrder(Client client, double price, String comments, Type type) {
+			super(client, price, comments);
+			this.type = type;
+		}
+		private final Type type;
+	}
+
+	@Test
+	public void shouldSerializeEnumFields() {
+		config.type(BasicOrder.class);
+		Order order = new BasicOrder(new Client("guilherme silveira"), 15.0, "pack it nicely, please", Type.basic);
+		assertThat(create().toXML(order), containsString("<type>basic</type>"));
+	}
+
 //	@Test
 //	@Ignore("not supported yet")
 //	public void shouldSerializeCollectionWithPrefixTag() {
