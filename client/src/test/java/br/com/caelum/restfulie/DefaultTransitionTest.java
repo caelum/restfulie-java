@@ -10,6 +10,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.restfulie.unmarshall.Deserializer;
+
 public class DefaultTransitionTest {
 	
 	private Deserializer deserializer;

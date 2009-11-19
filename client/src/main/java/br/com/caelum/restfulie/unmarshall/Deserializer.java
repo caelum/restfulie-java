@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.unmarshall;
 
 /**
  * Basic deserializer for hypermedia aware resources.

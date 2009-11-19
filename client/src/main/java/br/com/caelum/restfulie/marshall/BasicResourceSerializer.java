@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.marshall;
 
 /**
  * Basic resource serialization support.

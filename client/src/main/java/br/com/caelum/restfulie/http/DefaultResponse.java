@@ -1,12 +1,12 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.http;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
-import br.com.caelum.restfulie.http.ContentProcessor;
-import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
+import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
  * Default response implementation based on HttpURLConnection.

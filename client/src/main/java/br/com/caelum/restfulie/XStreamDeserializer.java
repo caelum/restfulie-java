@@ -7,13 +7,13 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
-import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
 
 import br.com.caelum.restfulie.client.DefaultTransitionConverter;
+import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;

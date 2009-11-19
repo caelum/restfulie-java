@@ -6,7 +6,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
+import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
  * Default implementation of a transition.

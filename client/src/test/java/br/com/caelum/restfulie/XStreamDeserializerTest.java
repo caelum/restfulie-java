@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie;
 
+import static br.com.caelum.restfulie.Restfulie.resource;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -9,7 +10,6 @@ import org.junit.Test;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import static br.com.caelum.restfulie.Restfulie.resource;
 
 
 public class XStreamDeserializerTest {

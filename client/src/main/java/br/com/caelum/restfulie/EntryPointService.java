@@ -10,8 +10,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
+import br.com.caelum.restfulie.marshall.BasicResourceSerializer;
 import br.com.caelum.restfulie.serializer.BasicSerializer;
 import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
 import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;

@@ -1,6 +1,5 @@
 package br.com.caelum.restfulie;
 
-import java.net.MalformedURLException;
 
 /**
  * Anything went wrong with executing a transition.
