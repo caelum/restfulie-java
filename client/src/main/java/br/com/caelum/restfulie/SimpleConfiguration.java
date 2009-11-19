@@ -30,4 +30,8 @@ public class SimpleConfiguration implements Configuration {
 		return includes.toArray(new String[includes.size()]);
 	}
 
+	public Class getType() {
+		return type;
+	}
+
 }

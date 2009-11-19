@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class SerializationConfig {
@@ -15,6 +16,10 @@ public class SerializationConfig {
 			configs.put(type, new SimpleConfiguration(type));
 		}
 		return configs.get(type);
+	}
+
+	public Collection<Configuration> getAllTypes() {
+		return configs.values();
 	}
 
 }

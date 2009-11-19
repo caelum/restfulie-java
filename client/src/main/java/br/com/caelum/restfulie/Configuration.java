@@ -14,4 +14,6 @@ public interface Configuration {
 	String[] getIncludes();
 
 	String[] getExcludes();
+
+	Class getType();
 }

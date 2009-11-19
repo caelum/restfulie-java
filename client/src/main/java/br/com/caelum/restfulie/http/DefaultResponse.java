@@ -16,7 +16,6 @@ import br.com.caelum.restfulie.unmarshall.Deserializer;
 public class DefaultResponse implements Response {
 
 	private int code;
-	private String content = "";
 	private Map<String, List<String>> headers;
 	private HttpURLConnection connection;
 	private final Deserializer deserializer;
@@ -58,7 +57,8 @@ public class DefaultResponse implements Response {
 	}
 
 	public <T> T getResource() throws IOException {
-		return (T) deserializer.fromXml(getContent());
+		String content = getContent();
+		return (T) deserializer.fromXml(content);
 	}
 
 }

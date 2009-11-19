@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +103,18 @@ public class EntryPointService implements BasicResourceSerializer{
 			connection.addRequestProperty("Accepts", "application/xml"); // read from some previous configured place
 			connection.setDoOutput(false);
 			connection.setRequestMethod("GET");
-	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(), new HttpURLConnectionContentProcessor(connection));
+			XStreamDeserializer deserializer = new XStreamDeserializer() {
+				protected XStream getXStream() {
+					XStream xstream = super.getXStream();
+					new XStreamConfig(config).applyTo(xstream);
+					return xstream;
+				}
+			};
+			Collection<Configuration> types = config.getAllTypes();
+			for (Configuration c : types) {
+				deserializer.enhanceResource(c.getType());
+			}
+			DefaultResponse response = new DefaultResponse(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
 	        return response.getResource();
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);

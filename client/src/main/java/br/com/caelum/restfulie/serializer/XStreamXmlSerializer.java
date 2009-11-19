@@ -170,8 +170,9 @@ public class XStreamXmlSerializer implements BasicSerializer {
 		include(config.getIncludes());
 		exclude(config.getExcludes());
 		Class<?> type = object.getClass();
-		String name = extractor.nameFor(type);
-		xstream.alias(name, type);
+		//String name = extractor.nameFor(type);
+		//xstream.alias(name, type);
+		xstream.processAnnotations(type);
 		excludeNonPrimitiveFields(type, type);
 		return this;
 	}
