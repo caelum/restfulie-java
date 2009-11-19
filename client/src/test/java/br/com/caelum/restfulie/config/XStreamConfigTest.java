@@ -128,14 +128,14 @@ public class XStreamConfigTest {
 ////		serializer.from("orders", Arrays.asList(order, order)).namespace("http://www.caelum.com.br/order","o").serialize();
 //		assertThat(result(), is(equalTo(expectedResult)));
 //	}
-//
-//	@Test
-//	public void shouldSerializeParentFields() {
-//		Order order = new AdvancedOrder(null, 15.0, "pack it nicely, please", "complex package");
-//		serializer.from(order).serialize();
-//		assertThat(result(), containsString("<notes>complex package</notes>"));
-//	}
-//
+
+	@Test
+	public void shouldSerializeParentFields() {
+		config.type(AdvancedOrder.class);
+		Order order = new AdvancedOrder(null, 15.0, "pack it nicely, please", "complex package");
+		assertThat(create().toXML(order), containsString("<notes>complex package</notes>"));
+	}
+
 //	@Test
 //	public void shouldOptionallyExcludeFields() {
 //		String expectedResult = "<order>\n  <comments>pack it nicely, please</comments>\n</order>";
