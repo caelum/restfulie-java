@@ -143,14 +143,16 @@ public class XStreamConfigTest {
 //		serializer.from(order).exclude("price").serialize();
 //		assertThat(result(), is(equalTo(expectedResult)));
 //	}
-//
-//	@Test
-//	public void shouldOptionallyIncludeFieldAndNotItsNonPrimitiveFields() {
-//		Order order = new Order(new Client("guilherme silveira", new Address("R. Vergueiro")), 15.0, "pack it nicely, please");
-//		serializer.from(order).include("client").serialize();
-//		assertThat(result(), containsString("<name>guilherme silveira</name>"));
-//		assertThat(result(), not(containsString("R. Vergueiro")));
-//	}
+
+	@Test
+	public void shouldOptionallyIncludeFieldAndNotItsNonPrimitiveFields() {
+		config.type(AdvancedOrder.class).include("client");
+		config.type(Client.class);
+		Order order = new Order(new Client("guilherme silveira", new Address("R. Vergueiro")), 15.0, "pack it nicely, please");
+		assertThat(create().toXML(order), containsString("<name>guilherme silveira</name>"));
+		assertThat(create().toXML(order), not(containsString("R. Vergueiro")));
+	}
+	
 //	@Test
 //	public void shouldOptionallyIncludeChildField() {
 //		Order order = new Order(new Client("guilherme silveira", new Address("R. Vergueiro")), 15.0, "pack it nicely, please");

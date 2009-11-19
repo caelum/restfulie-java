@@ -4,8 +4,10 @@ package br.com.caelum.restfulie.config;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javassist.CannotCompileException;
@@ -47,7 +49,7 @@ public class XStreamConfig {
 			Class type = config.getType();
 			enhanceResource(type);
 			instance.processAnnotations(type);
-			excludeNonPrimitives(instance, type);
+			excludeNonPrimitives(instance, type, Arrays.asList(config.getIncludes()));
 			//exclude(instance, type, config.getExcludes());
 			//include(instance, type, config.getIncludes());
 		}
@@ -57,16 +59,18 @@ public class XStreamConfig {
 		return instance;
 	}
 
-	private void excludeNonPrimitives(XStream stream, Class type) {
+	private void excludeNonPrimitives(XStream stream, Class type, List<String> forcedIncludes) {
 		if(type.equals(Object.class)) {
 			return;
 		}
 		for(Field f: type.getDeclaredFields()) {
-			if(!isPrimitive(f.getType())) {
-				stream.omitField(type, f.getName());
+			boolean forceInclude = forcedIncludes.contains(f.getName());
+			if(forceInclude || isPrimitive(f.getType())) {
+				continue;
 			}
+			stream.omitField(type, f.getName());
 		}
-		excludeNonPrimitives(stream, type.getSuperclass());
+		excludeNonPrimitives(stream, type.getSuperclass(), forcedIncludes);
 	}
 
 	private void exclude(XStream xstream, Class type, String... names) {
