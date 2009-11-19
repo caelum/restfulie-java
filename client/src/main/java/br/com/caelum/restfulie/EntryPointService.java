@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.caelum.restfulie.config.Configuration;
+import br.com.caelum.restfulie.config.SerializationConfig;
+import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;

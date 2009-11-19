@@ -1,9 +1,14 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Basic configuration implementation.
+ * 
+ * @author guilherme silveira
+ */
 public class SimpleConfiguration implements Configuration {
 
 	private final Class type;

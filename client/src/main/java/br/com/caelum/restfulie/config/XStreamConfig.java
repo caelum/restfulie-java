@@ -1,4 +1,5 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.config;
+
 
 import com.thoughtworks.xstream.XStream;
 

@@ -4,6 +4,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.caelum.restfulie.config.Configuration;
+import br.com.caelum.restfulie.config.SimpleConfiguration;
+
 public class Server {
 	
 	public static Server server() {

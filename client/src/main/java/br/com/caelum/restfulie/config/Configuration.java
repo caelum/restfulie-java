@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.config;
 
 /**
  * Configuration representation for a resource.

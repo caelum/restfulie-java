@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import br.com.caelum.restfulie.Configuration;
-import br.com.caelum.restfulie.SimpleConfiguration;
+import br.com.caelum.restfulie.config.Configuration;
+import br.com.caelum.restfulie.config.SimpleConfiguration;
 
 import com.thoughtworks.xstream.XStream;
 

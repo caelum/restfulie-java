@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.config;
 
 /**
  * Basic xml configuration for xml serialization.
