@@ -36,8 +36,12 @@ public class EntryPointService implements BasicResourceSerializer{
 	}
 	
 	public EntryPointService(URI uri, Map<Class, Configuration> configs) {
+		this(uri, new SerializationConfig(configs));
+	}
+
+	public EntryPointService(URI uri, SerializationConfig config) {
 		this.uri = uri;
-		this.config = new SerializationConfig(configs);
+		this.config = config;
 	}
 
 	public static EntryPointService service(URI uri) {
@@ -82,7 +86,7 @@ public class EntryPointService implements BasicResourceSerializer{
 			writer.flush();
 	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(), new IdentityContentProcessor());
 	        if(response.getCode()==201) {
-	        	return service(new URI(response.getHeader("Location").get(0))).get();
+	        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
 	        return null;
 		} catch (IOException e) {
