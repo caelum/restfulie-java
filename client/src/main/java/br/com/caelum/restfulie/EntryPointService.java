@@ -88,7 +88,7 @@ public class EntryPointService implements BasicResourceSerializer{
 			BasicSerializer serializer = new XStreamXmlSerializer(new XStream(), writer, new DefaultTypeNameExtractor()).from(customObject, config.type(customObject.getClass()));
 			serializer.serialize();
 			writer.flush();
-	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(), new IdentityContentProcessor());
+	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(getConfig()), new IdentityContentProcessor());
 	        if(response.getCode()==201) {
 	        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
@@ -106,23 +106,17 @@ public class EntryPointService implements BasicResourceSerializer{
 			connection.addRequestProperty("Accepts", "application/xml"); // read from some previous configured place
 			connection.setDoOutput(false);
 			connection.setRequestMethod("GET");
-			XStreamDeserializer deserializer = new XStreamDeserializer() {
-				protected XStream getXStream() {
-					XStream xstream = super.getXStream();
-					new XStreamConfig(config).applyTo(xstream);
-					return xstream;
-				}
-			};
-			Collection<Configuration> types = config.getAllTypes();
-			for (Configuration c : types) {
-				deserializer.enhanceResource(c.getType());
-			}
+			XStreamDeserializer deserializer = new XStreamDeserializer(getConfig());
 			DefaultResponse response = new DefaultResponse(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
 	        return response.getResource();
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		}
 
+	}
+
+	private XStreamConfig getConfig() {
+		return new XStreamConfig(this.config);
 	}
 
 }

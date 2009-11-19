@@ -8,6 +8,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.restfulie.config.SerializationConfig;
+import br.com.caelum.restfulie.config.XStreamConfig;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -25,15 +28,15 @@ public class XStreamDeserializerTest {
 	
 	@Before
 	public void setup() {
-		deserializer = new XStreamDeserializer() {
-			@Override
+		XStreamConfig config = new XStreamConfig(new SerializationConfig()) {
 			protected XStream getXStream() {
 				XStream stream = super.getXStream();
 				stream.processAnnotations(Order.class);
 				return stream;
 			}
 		};
-		deserializer.enhanceResource(Order.class);
+		config.enhanceResource(Order.class);
+		this.deserializer = new XStreamDeserializer(config);
 	}
 	
 	@Test
