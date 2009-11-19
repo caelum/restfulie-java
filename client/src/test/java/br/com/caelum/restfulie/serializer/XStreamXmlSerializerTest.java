@@ -17,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 public class XStreamXmlSerializerTest {
 
@@ -27,7 +28,10 @@ public class XStreamXmlSerializerTest {
 	@Before
     public void setup() {
         this.stream = new ByteArrayOutputStream();
-        this.serializer = new XStreamXmlSerializer(new XStream(), new OutputStreamWriter(stream), new DefaultTypeNameExtractor());
+        XStream xstream = new XStream();
+        xstream.processAnnotations(Order.class);
+        xstream.processAnnotations(Item.class);
+		this.serializer = new XStreamXmlSerializer(xstream, new OutputStreamWriter(stream), new DefaultTypeNameExtractor());
     }
 
 	public static class Address {
@@ -47,6 +51,7 @@ public class XStreamXmlSerializerTest {
 			this.address = address;
 		}
 	}
+	@XStreamAlias("item")
 	public static class Item {
 		String name;
 		double price;
@@ -55,6 +60,7 @@ public class XStreamXmlSerializerTest {
 			this.price = price;
 		}
 	}
+	@XStreamAlias("order")
 	public static class Order {
 		Client client;
 		double price;
