@@ -2,11 +2,11 @@ package br.com.caelum.restfulie;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import br.com.caelum.restfulie.http.IdentityContentProcessor;
 
 /**
  * Default implementation of a transition.
@@ -54,11 +54,11 @@ public class DefaultTransition implements Transition {
 			connection.setDoOutput(false);
 			String methodName = methodName();
 			connection.setRequestMethod(methodName);
-	        return new DefaultResponse(connection, deserializer, methodName.equals("GET"));
-		} catch (MalformedURLException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
-		} catch (ProtocolException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			if(methodName.equals("GET")) {
+				return new DefaultResponse(connection, deserializer);
+			} else {
+				return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
+			}
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		}

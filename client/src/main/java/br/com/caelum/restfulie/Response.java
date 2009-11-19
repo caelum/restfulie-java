@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,13 +15,14 @@ public interface Response {
 
 	public int getCode();
 
-	public String getContent();
+	public String getContent() throws IOException;
 
 	public List<String> getHeader(String key);
 
 	/**
 	 * Returns the resource if any resource can be parsed from this response's content.
+	 * @throws IOException 
 	 */
-	public <T> T getResource();
+	public <T> T getResource() throws IOException;
 
 }

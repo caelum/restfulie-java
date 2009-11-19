@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import br.com.caelum.restfulie.Configuration;
+import br.com.caelum.restfulie.SimpleConfiguration;
+
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -88,19 +91,7 @@ public class XStreamXmlSerializer implements BasicSerializer {
 	}
 
 	public <T> BasicSerializer from(T object) {
-		if (object == null) {
-			throw new NullPointerException("You can't serialize null objects");
-		}
-		if (Collection.class.isInstance(object)) {
-			throw new IllegalArgumentException("It's not possible to serialize colections yet. " +
-					"Create a class that wraps this collections by now.");
-		}
-		Class<?> type = object.getClass();
-		String name = extractor.nameFor(type);
-		xstream.alias(name, type);
-		excludeNonPrimitiveFields(type, type);
-		this.toSerialize = object;
-		return this;
+		return from(object, null);
 	}
 
 	private void excludeNonPrimitiveFields(Class<?> baseType, Class<?> type) {
@@ -162,6 +153,27 @@ public class XStreamXmlSerializer implements BasicSerializer {
 			}
 		}
 		xstream.toXML(toSerialize, writer);
+	}
+
+	public BasicSerializer from(Object object, Configuration config) {
+		if (object == null) {
+			throw new NullPointerException("You can't serialize null objects");
+		}
+		if (Collection.class.isInstance(object)) {
+			throw new IllegalArgumentException("It's not possible to serialize colections yet. " +
+					"Create a class that wraps this collections by now.");
+		}
+		if(config==null) {
+			config = new SimpleConfiguration(object.getClass());
+		}
+		this.toSerialize = object;
+		include(config.getIncludes());
+		exclude(config.getExcludes());
+		Class<?> type = object.getClass();
+		String name = extractor.nameFor(type);
+		xstream.alias(name, type);
+		excludeNonPrimitiveFields(type, type);
+		return this;
 	}
 
 

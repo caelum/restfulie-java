@@ -10,7 +10,7 @@ public class Server {
 		return new Server();
 	}
 
-	private Map<Class, Configuration> configurations = new HashMap<Class, Configuration>();
+	private final Map<Class, Configuration> configurations = new HashMap<Class, Configuration>();
 	
 	public Configuration configure(Class type) {
 		Configuration config = new SimpleConfiguration(type);

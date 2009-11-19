@@ -1,12 +1,12 @@
 package br.com.caelum.restfulie;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
+
+import br.com.caelum.restfulie.http.ContentProcessor;
+import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -20,6 +20,7 @@ public class DefaultResponse implements Response {
 	private Map<String, List<String>> headers;
 	private HttpURLConnection connection;
 	private final Deserializer deserializer;
+	private ContentProcessor processor;
 
 	/**
 	 * Will use this connection to retrieve the response data. The deserializer
@@ -27,39 +28,25 @@ public class DefaultResponse implements Response {
 	 */
 	public DefaultResponse(HttpURLConnection connection,
 			Deserializer deserializer) throws IOException {
-		this(connection, deserializer, true);
+		this(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
 	}
 
 	public DefaultResponse(HttpURLConnection connection,
-			Deserializer deserializer, boolean shouldReadContent)
+			Deserializer deserializer, ContentProcessor processor)
 			throws IOException {
 		this.deserializer = deserializer;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
-		if (shouldReadContent) {
-			InputStream stream = (InputStream) connection.getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					stream));
-			while (true) {
-				String partial = reader.readLine();
-				if (partial == null) {
-					break;
-				}
-				if (content.length() != 0) {
-					content += "\n";
-				}
-				content += partial;
-			}
-		}
 		this.headers = connection.getHeaderFields();
+		this.processor = processor;
 	}
 
 	public int getCode() {
 		return code;
 	}
 
-	public String getContent() {
-		return content;
+	public String getContent() throws IOException {
+		return processor.read();
 	}
 
 	public List<String> getHeader(String key) {
@@ -70,7 +57,7 @@ public class DefaultResponse implements Response {
 		return connection;
 	}
 
-	public <T> T getResource() {
+	public <T> T getResource() throws IOException {
 		return (T) deserializer.fromXml(getContent());
 	}
 

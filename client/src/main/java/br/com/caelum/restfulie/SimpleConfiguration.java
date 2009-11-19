@@ -22,4 +22,12 @@ public class SimpleConfiguration implements Configuration {
 		this.includes.addAll(Arrays.asList(fields));
 	}
 
+	public String[] getExcludes() {
+		return excludes.toArray(new String[excludes.size()]);
+	}
+
+	public String[] getIncludes() {
+		return includes.toArray(new String[includes.size()]);
+	}
+
 }

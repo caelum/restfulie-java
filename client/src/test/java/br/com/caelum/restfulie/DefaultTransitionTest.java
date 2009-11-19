@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +27,7 @@ public class DefaultTransitionTest {
 	}
 	
 	@Test
-	public void shouldExecuteAnHttpRequest() {
+	public void shouldExecuteAnHttpRequest() throws IOException {
 		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1", null);
 		Response result = transition.execute();
 		assertThat(result.getCode(), is(200));
@@ -33,7 +35,7 @@ public class DefaultTransitionTest {
 	}
 	
 	@Test
-	public void shouldParseAnObjectIfDesired() {
+	public void shouldParseAnObjectIfDesired() throws IOException {
 		when(deserializer.fromXml(defaultPayment)).thenReturn("my resulting resource");
 		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", deserializer);
 		Response result = transition.execute();
@@ -42,7 +44,7 @@ public class DefaultTransitionTest {
 
 
 	@Test
-	public void shouldAllowMethodOverriding() {
+	public void shouldAllowMethodOverriding() throws IOException {
 		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null);
 		Response result = transition.method("GET").execute();
 		assertThat(result.getContent(), is(defaultPayment));
