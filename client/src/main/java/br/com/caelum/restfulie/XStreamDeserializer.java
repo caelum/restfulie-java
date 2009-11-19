@@ -111,6 +111,7 @@ public class XStreamDeserializer implements Deserializer {
 	public <T> void enhanceResource(Class<T> originalType) {
 		ClassPool pool = ClassPool.getDefault();
 		try {
+			// TODO extract this enhancement to an interface and test it appart
 			CtClass custom =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
 			custom.setSuperclass(pool.get(originalType.getName()));
 			custom.addInterface(pool.get(Resource.class.getName()));
