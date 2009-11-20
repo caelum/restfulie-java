@@ -1,5 +1,7 @@
 package br.com.caelum.restfulie.config;
 
+import java.util.List;
+
 /**
  * Configuration representation for a resource.
  * 
@@ -7,11 +9,17 @@ package br.com.caelum.restfulie.config;
  */
 public interface Configuration {
 
-	void include(String... fields);
+	Configuration include(String... fields);
 
-	void exclude(String... fields);
+	Configuration exclude(String... fields);
+	
+	/**
+	 * Add implicit collections for those fields
+	 */
+	Configuration implicit(String... fields);
 
-	String[] getIncludes();
+	List<String> getIncludes();
+	List<String> getImplicits();
 
 	String[] getExcludes();
 

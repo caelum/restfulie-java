@@ -50,6 +50,25 @@ public class XStreamXmlSerializer implements BasicSerializer {
 		this.writer = writer;
 		this.extractor = extractor;
 	}
+	
+	
+	
+	// REMOVE ALL THE INCLUDE EXCLUDE METHODS HERE
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private boolean isPrimitive(Class<?> type) {
 		return (type.isPrimitive() || type.getName().startsWith("java") || type.isEnum()) &&

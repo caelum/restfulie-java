@@ -16,7 +16,7 @@ public class SerializationConfigTest {
 	public void shouldReturnANewConfigurationIfThereIsNoneAvailable() {
 		SerializationConfig configs = new SerializationConfig();
 		Configuration config = configs.type(String.class);
-		assertThat(config.getIncludes().length, is(equalTo(0)));
+		assertThat(config.getIncludes().size(), is(equalTo(0)));
 		assertThat(config.getExcludes().length, is(equalTo(0)));
 		assertThat(config.getType(), is(equalTo(String.class)));
 	}

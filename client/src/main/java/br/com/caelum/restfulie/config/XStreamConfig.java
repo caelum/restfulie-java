@@ -1,7 +1,6 @@
 package br.com.caelum.restfulie.config;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +17,6 @@ import javax.xml.namespace.QName;
 
 import br.com.caelum.restfulie.DefaultTransition;
 import br.com.caelum.restfulie.Resource;
-import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
-import br.com.caelum.restfulie.serializer.TypeNameExtractor;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -46,7 +43,7 @@ public class XStreamConfig {
 			Class type = config.getType();
 			enhanceResource(type);
 			instance.processAnnotations(type);
-			excludeNonPrimitives(instance, type, Arrays.asList(config.getIncludes()));
+			excludeNonPrimitives(instance, type, config.getIncludes(), config.getImplicits());
 		}
 		for(Class customType : realTypes.values()) {
 			instance.addImplicitCollection(customType, "link","link", DefaultTransition.class);
@@ -54,18 +51,21 @@ public class XStreamConfig {
 		return instance;
 	}
 
-	private void excludeNonPrimitives(XStream stream, Class type, List<String> forcedIncludes) {
+	private void excludeNonPrimitives(XStream stream, Class type, List<String> forcedIncludes, List<String> implicits) {
 		if(type.equals(Object.class)) {
 			return;
 		}
 		for(Field f: type.getDeclaredFields()) {
-			boolean forceInclude = forcedIncludes.contains(f.getName());
+			boolean forceInclude = forcedIncludes.contains(f.getName()) || implicits.contains(f.getName());
+			if(implicits.contains(f.getName())) {
+				stream.addImplicitCollection(type, f.getName());
+			}
 			if(forceInclude || isPrimitive(f.getType())) {
 				continue;
 			}
 			stream.omitField(type, f.getName());
 		}
-		excludeNonPrimitives(stream, type.getSuperclass(), forcedIncludes);
+		excludeNonPrimitives(stream, type.getSuperclass(), forcedIncludes, implicits);
 	}
 
 	/**

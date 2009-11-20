@@ -168,16 +168,29 @@ public class XStreamConfigTest {
 //		assertThat(result(), containsString("<client/>"));
 //		assertThat(result(), not(containsString("<name>guilherme silveira</name>")));
 //	}
-//	@Test
-//	public void shouldOptionallyIncludeListChildFields() {
-//		Order order = new Order(new Client("guilherme silveira"), 15.0, "pack it nicely, please",
-//				new Item("any item", 12.99));
-//		serializer.from(order).include("items").serialize();
-//		assertThat(result(), containsString("<items>"));
-//		assertThat(result(), containsString("<name>any item</name>"));
-//		assertThat(result(), containsString("<price>12.99</price>"));
-//		assertThat(result(), containsString("</items>"));
-//	}
+	@Test
+	public void shouldOptionallyIncludeListChildFields() {
+		config.type(Order.class).include("client", "items");
+		config.type(Client.class);
+		Order order = new Order(new Client("guilherme silveira"), 15.0, "pack it nicely, please",
+				new Item("any item", 12.99));
+		assertThat(create().toXML(order), containsString("<items>"));
+		assertThat(create().toXML(order), containsString("<name>any item</name>"));
+		assertThat(create().toXML(order), containsString("<price>12.99</price>"));
+		assertThat(create().toXML(order), containsString("</items>"));
+	}
+
+	@Test
+	public void shouldSupportImplicitCollections() {
+		config.type(Order.class).include("client").implicit("items");
+		config.type(Client.class);
+		Order order = new Order(new Client("guilherme silveira"), 15.0, "pack it nicely, please",
+				new Item("any item", 12.99));
+		assertThat(create().toXML(order), not(containsString("<items>")));
+		assertThat(create().toXML(order), containsString("<name>any item</name>"));
+		assertThat(create().toXML(order), containsString("<price>12.99</price>"));
+		assertThat(create().toXML(order), not(containsString("</items>")));
+	}
 //	@Test
 //	public void shouldOptionallyExcludeFieldsFromIncludedListChildFields() {
 //		Order order = new Order(new Client("guilherme silveira"), 15.0, "pack it nicely, please", new Item("bala", 10.5), new Item("chocolate", 3.3));
