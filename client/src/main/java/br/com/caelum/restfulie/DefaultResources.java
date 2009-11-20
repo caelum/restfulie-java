@@ -6,22 +6,24 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.config.SimpleConfiguration;
+import br.com.caelum.restfulie.marshall.ResourceSerializer;
 
-public class Server {
-	
-	public static Server server() {
-		return new Server();
-	}
+/**
+ * Configured service entry point.
+ * 
+ * @author guilherme silveira
+ */
+public class DefaultResources implements Resources {
 
 	private final Map<Class, Configuration> configurations = new HashMap<Class, Configuration>();
-	
+
 	public Configuration configure(Class type) {
 		Configuration config = new SimpleConfiguration(type);
-		this.configurations.put(type,config);
+		this.configurations.put(type, config);
 		return config;
 	}
-	
-	public EntryPointService service(URI uri) {
+
+	public ResourceSerializer entryAt(URI uri) {
 		return new EntryPointService(uri, configurations);
 	}
 

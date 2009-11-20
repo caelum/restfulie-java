@@ -33,13 +33,15 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 	private final Restfulie restfulie;
 	private final Routes routes;
 	private final RequestInfo info;
+	private final ConflictResolver resolver;
 
-	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, RequestInfo info, Routes routes) {
+	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, RequestInfo info, Routes routes, ConflictResolver resolver) {
 		this.control = control;
 		this.restfulie = restfulie;
 		this.status = status;
 		this.info = info;
 		this.routes = routes;
+		this.resolver = resolver;
 		this.controllers = Arrays.asList(control.getControllers());
 	}
 

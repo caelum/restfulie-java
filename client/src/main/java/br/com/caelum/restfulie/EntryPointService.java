@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,19 +16,17 @@ import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
-import br.com.caelum.restfulie.marshall.BasicResourceSerializer;
+import br.com.caelum.restfulie.marshall.ResourceSerializer;
 import br.com.caelum.restfulie.serializer.BasicSerializer;
 import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
 import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
-
-import com.thoughtworks.xstream.XStream;
 
 /**
  * A service's entry point.
  * 
  * @author guilherme silveira
  */
-public class EntryPointService implements BasicResourceSerializer{
+public class EntryPointService implements ResourceSerializer{
 
 	private final URI uri;
 	private Object customObject;
@@ -52,7 +49,7 @@ public class EntryPointService implements BasicResourceSerializer{
 		return new EntryPointService(uri);
 	}
 	
-	public <T> BasicResourceSerializer custom(T object) {
+	public <T> ResourceSerializer custom(T object) {
 		this.customObject = object;
 		return this;
 	}
@@ -61,7 +58,7 @@ public class EntryPointService implements BasicResourceSerializer{
 		return custom(object).post();
 	}
 
-	public BasicResourceSerializer exclude(String... names) {
+	public ResourceSerializer exclude(String... names) {
 		if(customObject==null) {
 			throw new IllegalStateException("Unable to exclude fields if you do not define on which type you will exclude it.");
 		}
@@ -69,7 +66,7 @@ public class EntryPointService implements BasicResourceSerializer{
 		return this;
 	}
 
-	public BasicResourceSerializer include(String... names) {
+	public ResourceSerializer include(String... names) {
 		if(customObject==null) {
 			throw new IllegalStateException("Unable to include fields if you do not define on which type you will include it.");
 		}
@@ -84,8 +81,9 @@ public class EntryPointService implements BasicResourceSerializer{
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
-			Writer writer = new OutputStreamWriter(System.out);
+			Writer writer = new OutputStreamWriter(output);
 			BasicSerializer serializer = new XStreamXmlSerializer(getConfig().create(), writer, new DefaultTypeNameExtractor()).from(customObject, config.type(customObject.getClass()));
+//			BasicSerializer serializer = new XStreamXmlSerializer(getConfig().create(), writer, new DefaultTypeNameExtractor()).from(customObject);
 			serializer.serialize();
 			writer.flush();
 	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(getConfig()), new IdentityContentProcessor());

@@ -6,4 +6,8 @@ public class Restfulie {
 		return (Resource) object;
 	}
 
+	public static Resources server() {
+		return new DefaultResources();
+	}
+
 }

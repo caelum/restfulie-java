@@ -147,11 +147,11 @@ public class XStreamXmlSerializer implements BasicSerializer {
 	}
 
 	public void serialize() {
-		for (Entry<Class<?>, List<String>> excludes : this.excludes.entrySet()) {
+		/*for (Entry<Class<?>, List<String>> excludes : this.excludes.entrySet()) {
 			for(String exclude : excludes.getValue()) {
 				xstream.omitField(excludes.getKey(), exclude);
 			}
-		}
+		}*/
 		xstream.toXML(toSerialize, writer);
 	}
 
@@ -167,8 +167,8 @@ public class XStreamXmlSerializer implements BasicSerializer {
 			config = new SimpleConfiguration(object.getClass());
 		}
 		this.toSerialize = object;
-		include(config.getIncludes());
-		exclude(config.getExcludes());
+		//include(config.getIncludes());
+		//exclude(config.getExcludes());
 		Class<?> type = object.getClass();
 		//String name = extractor.nameFor(type);
 		//xstream.alias(name, type);
