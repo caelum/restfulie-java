@@ -10,6 +10,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.restfulie.http.HttpMethod;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 public class DefaultTransitionTest {
@@ -48,7 +49,7 @@ public class DefaultTransitionTest {
 	@Test
 	public void shouldAllowMethodOverriding() throws IOException {
 		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null);
-		Response result = transition.method("GET").execute();
+		Response result = transition.method(HttpMethod.GET).execute();
 		assertThat(result.getContent(), is(defaultPayment));
 	}
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.caelum.restfulie.http.DefaultResponse;
+import br.com.caelum.restfulie.http.HttpMethod;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
@@ -20,7 +21,7 @@ public class DefaultTransition implements Transition {
 
 	private String rel;
 	private String href;
-	private String methodToUse;
+	private HttpMethod methodToUse;
 	private Deserializer deserializer;
 	
 	private static final Map<String,String> defaultMethods = new HashMap<String,String>();
@@ -68,7 +69,7 @@ public class DefaultTransition implements Transition {
 
 	private String methodName() {
 		if(methodToUse != null) {
-			return methodToUse;
+			return methodToUse.name();
 		}
 		if(defaultMethods.containsKey(rel)) {
 			return defaultMethods.get(rel);
@@ -80,7 +81,7 @@ public class DefaultTransition implements Transition {
 		return execute(null);
 	}
 
-	public DefaultTransition method(String methodToUse) {
+	public TransitionToExecute method(HttpMethod methodToUse) {
 		this.methodToUse = methodToUse;
 		return this;
 	}

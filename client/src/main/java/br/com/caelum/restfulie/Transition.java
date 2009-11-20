@@ -1,24 +1,16 @@
 package br.com.caelum.restfulie;
 
+import br.com.caelum.restfulie.http.HttpMethod;
+
 /**
  * Represents a specific transition that can be executed with a resource.
  * @author guilherme silveira
  *
  */
-public interface Transition {
+public interface Transition extends TransitionToExecute{
 	
 	String getHref();
 	
 	String getRel();
-
-	/**
-	 * Executes this transition passing some parameters.
-	 */
-	<T> Response execute(T arg);
-
-	/**
-	 * Executes this transition without any parameters.
-	 */
-	<T> Response execute();
-
+	
 }
