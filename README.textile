@@ -141,7 +141,7 @@ resources.configure(Order.class).include("items");
 resources.entryAt("http://www.caelum.com.br/clients").post(new Client());
 </pre>
 
-
+The entire serialization process can be configured either through the *Resources* interface's methods or using *XStream*'s explicit configuration.
 
 
 
@@ -292,12 +292,6 @@ end
 Or simply define a status reader and writer on your own.
 
 
-
-h2. Help
-
-If you are looking for or want to help, let us know at the mailing list:
-
-"http://groups.google.com/group/restfulie":http://groups.google.com/group/restfulie
 
 h2. Client-side configuration: how to customize your request
 
@@ -519,6 +513,23 @@ You can do it by passing the *use_name_based_link* argument:
 <pre>
     order.to_xml(:controller => my_controller, :use_name_based_link => true)
 </pre>
+
+
+
+
+
+
+
+
+
+h2. Getting help and mailing lists
+
+If you are looking for or want to help, let us know at the mailing list:
+
+"http://groups.google.com/group/restfulie":http://groups.google.com/group/restfulie
+
+"VRaptor's website":http://www.vraptor.org also contain its own mailing list which can be used to get help on implementing controller's.
+
 
 h2. Team
 
