@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,10 @@ public class DefaultResources implements Resources {
 
 	public ResourceSerializer entryAt(URI uri) {
 		return new EntryPointService(uri, configurations);
+	}
+
+	public ResourceSerializer entryAt(String uri) throws URISyntaxException {
+		return entryAt(new URI(uri));
 	}
 
 }

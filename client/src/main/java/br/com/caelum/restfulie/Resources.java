@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
@@ -22,4 +23,9 @@ public interface Resources {
 	 */
 	ResourceSerializer entryAt(URI uri);
 
+	/**
+	 * Gives access to a system's entry point.
+	 * @throws URISyntaxException 
+	 */
+	ResourceSerializer entryAt(String uri) throws URISyntaxException;
 }
