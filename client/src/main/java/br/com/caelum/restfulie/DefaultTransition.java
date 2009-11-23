@@ -1,14 +1,22 @@
 package br.com.caelum.restfulie;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpMethod;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
+import br.com.caelum.restfulie.serializer.BasicSerializer;
+import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
+import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
@@ -25,6 +33,7 @@ public class DefaultTransition implements Transition {
 	private Deserializer deserializer;
 	
 	private static final Map<String,String> defaultMethods = new HashMap<String,String>();
+	private final XStreamConfig config;
 	static {
 		defaultMethods.put("latest", "GET");
 		defaultMethods.put("show", "GET");
@@ -34,10 +43,11 @@ public class DefaultTransition implements Transition {
 		defaultMethods.put("suspend", "DELETE");
 	}
 
-	public DefaultTransition(String rel, String href, Deserializer deserializer) {
+	public DefaultTransition(String rel, String href, Deserializer deserializer, XStreamConfig config) {
 		this.rel = rel;
 		this.href = href;
 		this.deserializer = deserializer;
+		this.config = config;
 	}
 
 	public String getHref() {
@@ -48,23 +58,8 @@ public class DefaultTransition implements Transition {
 		return rel;
 	}
 
-	public <T> Response execute(T arg) {
-		// TODO 5: receive parameters by default
-		// TODO 6: support other methods appart from default url system
-		try {
-			URL url = new URL(href);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(false);
-			String methodName = methodName();
-			connection.setRequestMethod(methodName);
-			if(methodName.equals("GET")) {
-				return new DefaultResponse(connection, deserializer);
-			} else {
-				return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
-			}
-		} catch (IOException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
-		}
+	public <T, Z> Z execute(T arg) {
+		return (Z) execute(arg, false);
 	}
 
 	private String methodName() {
@@ -77,13 +72,51 @@ public class DefaultTransition implements Transition {
 		return "POST";
 	}
 	
-	public <T> Response execute() {
-		return execute(null);
-	}
-
 	public TransitionToExecute method(HttpMethod methodToUse) {
 		this.methodToUse = methodToUse;
 		return this;
+	}
+
+	public <T> Response execute(T arg) {
+		return (Response) execute(null, false);
+	}
+
+	private <T> Object execute(T parameter, boolean shouldFollowAndDeserialize) {
+        try {
+			URL url = new URL(href);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.addRequestProperty("Content-type", "application/xml");
+			connection.setRequestMethod(methodName());
+			if(parameter != null) {
+				connection.setDoOutput(true);
+				OutputStream output = connection.getOutputStream();
+				Writer writer = new OutputStreamWriter(output);
+				BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer, new DefaultTypeNameExtractor()).from(parameter);
+				serializer.serialize();
+				writer.flush();
+			} else {
+				connection.setDoOutput(false);
+			}
+			if(shouldFollowAndDeserialize) {
+		        DefaultResponse response = new DefaultResponse(connection, deserializer);
+		        if(response.getCode()==201) {
+		        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
+		        }
+				return response.getResource();
+			} else {
+				return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
+			}
+		} catch (IOException e) {
+			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+		}
+	}
+
+	public <T, R> R executeAndRetrieve(T arg) {
+		return (R) execute(arg, true);
+	}
+
+	public Response execute() {
+		return (Response) execute(null, false);
 	}
 
 }

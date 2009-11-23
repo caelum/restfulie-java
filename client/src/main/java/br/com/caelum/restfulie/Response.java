@@ -24,5 +24,5 @@ public interface Response {
 	 * @throws IOException 
 	 */
 	public <T> T getResource() throws IOException;
-
+	
 }

@@ -150,4 +150,8 @@ public class XStreamConfig {
 			!Collection.class.isAssignableFrom(type);
 	}
 
+	public Configuration type(Class<? extends Object> type) {
+		return configs.type(type);
+	}
+
 }

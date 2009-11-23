@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie;
 
 import br.com.caelum.restfulie.client.DefaultTransitionConverter;
+import br.com.caelum.restfulie.config.SerializationConfig;
 import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
@@ -19,12 +20,12 @@ public class XStreamDeserializer implements Deserializer {
 	
 	public XStreamDeserializer(XStreamConfig config) {
 		this.xstream = config.create();
-		this.xstream.registerConverter(new DefaultTransitionConverter(this));
+		this.xstream.registerConverter(new DefaultTransitionConverter(config, this));
 	}
 
 	public XStreamDeserializer(XStream xStream) {
 		this.xstream = xStream;
-		this.xstream.registerConverter(new DefaultTransitionConverter(this));
+		this.xstream.registerConverter(new DefaultTransitionConverter(new XStreamConfig(new SerializationConfig()), this));
 	}
 
 	public Object fromXml(String xml) {

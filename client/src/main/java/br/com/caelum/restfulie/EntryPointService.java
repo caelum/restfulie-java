@@ -30,7 +30,7 @@ public class EntryPointService implements ResourceSerializer{
 
 	private final URI uri;
 	private Object customObject;
-	private final SerializationConfig config;
+	private final XStreamConfig config;
 	
 	public EntryPointService(URI uri) {
 		this(uri, new HashMap<Class, Configuration>());
@@ -41,8 +41,12 @@ public class EntryPointService implements ResourceSerializer{
 	}
 
 	public EntryPointService(URI uri, SerializationConfig config) {
-		this.uri = uri;
+		this(uri, new XStreamConfig(config));
+	}
+
+	public EntryPointService(URI uri, XStreamConfig config) {
 		this.config = config;
+		this.uri = uri;
 	}
 
 	public static EntryPointService service(URI uri) {
@@ -82,11 +86,10 @@ public class EntryPointService implements ResourceSerializer{
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
-//			BasicSerializer serializer = new XStreamXmlSerializer(getConfig().create(), writer, new DefaultTypeNameExtractor()).from(customObject, config.type(customObject.getClass()));
-			BasicSerializer serializer = new XStreamXmlSerializer(getConfig().create(), writer, new DefaultTypeNameExtractor()).from(customObject);
+			BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer, new DefaultTypeNameExtractor()).from(customObject);
 			serializer.serialize();
 			writer.flush();
-	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(getConfig()), new IdentityContentProcessor());
+	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(config), new IdentityContentProcessor());
 	        if(response.getCode()==201) {
 	        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
@@ -104,17 +107,13 @@ public class EntryPointService implements ResourceSerializer{
 			connection.addRequestProperty("Accepts", "application/xml"); // read from some previous configured place
 			connection.setDoOutput(false);
 			connection.setRequestMethod("GET");
-			XStreamDeserializer deserializer = new XStreamDeserializer(getConfig());
+			XStreamDeserializer deserializer = new XStreamDeserializer(config);
 			DefaultResponse response = new DefaultResponse(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
 	        return response.getResource();
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		}
 
-	}
-
-	private XStreamConfig getConfig() {
-		return new XStreamConfig(this.config);
 	}
 
 }

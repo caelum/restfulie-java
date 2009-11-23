@@ -2,6 +2,7 @@ package br.com.caelum.restfulie.client;
 
 import br.com.caelum.restfulie.DefaultTransition;
 import br.com.caelum.restfulie.XStreamDeserializer;
+import br.com.caelum.restfulie.config.XStreamConfig;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -19,8 +20,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class DefaultTransitionConverter implements Converter {
 
 	private final XStreamDeserializer deserializer;
+	private final XStreamConfig config;
 
-	public DefaultTransitionConverter(XStreamDeserializer deserializer) {
+	public DefaultTransitionConverter(XStreamConfig config, XStreamDeserializer deserializer) {
+		this.config = config;
 		this.deserializer = deserializer;
 	}
 
@@ -33,7 +36,7 @@ public class DefaultTransitionConverter implements Converter {
 			UnmarshallingContext context) {
 		String rel = reader.getAttribute("rel");
 		String href = reader.getAttribute("href");
-		return new DefaultTransition(rel, href, deserializer);
+		return new DefaultTransition(rel, href, deserializer, config);
 	}
 
 	public boolean canConvert(Class type) {
