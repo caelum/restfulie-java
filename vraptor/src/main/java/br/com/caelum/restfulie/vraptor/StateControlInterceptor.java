@@ -12,6 +12,7 @@ import br.com.caelum.vraptor.core.InterceptorStack;
 import br.com.caelum.vraptor.core.RequestInfo;
 import br.com.caelum.vraptor.core.Routes;
 import br.com.caelum.vraptor.interceptor.Interceptor;
+import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.HttpMethod;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.rest.Restfulie;
@@ -25,6 +26,7 @@ import br.com.caelum.vraptor.view.Status;
  * @author pedro mariano
  */
 @SuppressWarnings("unchecked")
+@RequestScoped
 public class StateControlInterceptor<T extends StateResource> implements Interceptor {
 
 	private final StateControl<T> control;
@@ -33,15 +35,14 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 	private final Restfulie restfulie;
 	private final Routes routes;
 	private final RequestInfo info;
-	private final ConflictResolver resolver;
+	private final ParameterizedTypeSearcher searcher = new ParameterizedTypeSearcher();
 
-	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, RequestInfo info, Routes routes, ConflictResolver resolver) {
+	public StateControlInterceptor(StateControl<T> control, Restfulie restfulie, Status status, RequestInfo info, Routes routes) {
 		this.control = control;
 		this.restfulie = restfulie;
 		this.status = status;
 		this.info = info;
 		this.routes = routes;
-		this.resolver = resolver;
 		this.controllers = Arrays.asList(control.getControllers());
 	}
 
@@ -51,32 +52,10 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 
 	public void intercept(InterceptorStack stack, ResourceMethod method,
 			Object instance) throws InterceptionException {
-		if(executeFor(control.getClass(), method)) {
+		ParameterizedType type = searcher.search(control.getClass());
+		if(analyzeImplementation(method,type)) {
 			stack.next(method, instance);
 		}
-	}
-
-	private boolean executeFor(Class<?> baseType, ResourceMethod method) {
-		if(baseType.equals(Object.class)) {
-			throw new IllegalStateException(
-					"Unable to detect which state control it is because "
-							+ control.getClass()
-							+ " does not implement StateControl at all.");
-		}
-		Type[] interfaces = baseType.getGenericInterfaces();
-		for (Type type : interfaces) {
-			if (!(type instanceof ParameterizedType)) {
-				throw new IllegalStateException(
-						"Unable to detect which state control it is because "
-								+ control.getClass()
-								+ " does not implement StateControl of an specific type");
-			}
-			ParameterizedType parameterized = (ParameterizedType) type;
-			if(parameterized.getRawType().equals(StateControl.class)) {
-				return analyzeImplementation(method, parameterized);
-			}
-		}
-		return executeFor(baseType.getSuperclass(), method);
 	}
 
 	private boolean analyzeImplementation(ResourceMethod method,
