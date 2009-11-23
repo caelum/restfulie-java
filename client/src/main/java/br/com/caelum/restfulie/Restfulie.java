@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
 
@@ -28,8 +29,16 @@ public class Restfulie {
 	/**
 	 * Entry point to direct access an uri.
 	 */
-	public static ResourceSerializer service(URI uri) {
+	public static ResourceSerializer resource(URI uri) {
 		return new EntryPointService(uri);
+	}
+
+	/**
+	 * Entry point to direct access an uri.
+	 * @throws URISyntaxException 
+	 */
+	public static ResourceSerializer resource(String uri) throws URISyntaxException {
+		return new EntryPointService(new URI(uri));
 	}
 
 }

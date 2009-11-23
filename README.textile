@@ -96,26 +96,50 @@ Download "vraptor's blank project":http://www.vraptor.org and add all server sid
 
 h1. Client side usage
 
-One should first acquire the representation from the server through your common GET request and process it through the usual from_* methods:
-<pre>xml = Net::HTTP.get(URI.parse('http://www.caelum.com.br/orders/1'))
-order = Order.from_xml(xml)</pre>
-or use the restfulie *from_web*:
-<pre>order = Order.from_web 'http://www.caelum.com.br/orders/1'</pre>
-
-And now you can invoke all those actions in order to change your resource's state:
+The entry point for *Restfulie's* api is the *Restfulie* class. It's basic usage is through the *resource* method which, given an URI, will allow
+you to retrieve a resource or post to a resource controller:
 
 <pre>
-order.refresh
-order.update
-order.destroy
-order.pay
+  Order order = Restfulie.resource("http://www.caelum.com.br/orders/1").get();
+  
+  Client client = new Client();
+  Restfulie.resource("http://www.caelum.com.br/clients").post(client);
 </pre>
 
-Note that:
-* refresh is get
-* update is put (and you have to put everything back)
-* destroy is delete
-* pay (unknown methods) is post
+Due to the nature of the entry point and the java bytecode, Restfulie is still unable to allow the user to make the http verb even more transparent.
+
+As seen earlier, as soon as you have aquired an object through the use of the restfulie api, you can invoke its transitions:
+
+<pre>
+Order order = Restfulie.resource("http://www.caelum.com.br/orders/1").get();
+resource(order).getTransition("cancel").execute();
+</pre>
+
+The *resource* method can be statically imported from the *Restfulie* class.
+
+h2. Serialization configuration
+
+Restfulie uses XStream behind the scenes, therefore all XStream related annotations are supported by default when using it.
+The following example shows how to alias a type:
+
+<pre>
+@XStreamAlias("order")
+public class Order {
+}
+</pre>
+
+More info on how to configure XStream through the use of annotations can be "found in its website":"http://xstream.codehaus.org".
+
+By default, Restfulie serializes all primitive, String and enum types. In order to serialize child elements, one has pre-configure Restfulie. This is
+the typical usage-pattern applications will face while using restfulie:
+
+<pre>
+Resources resources = Restfulie.resources();
+resources.configure(Order.class).include("items");
+
+// the configuration step is completed, so lets use it now:
+resources.entryAt("http://www.caelum.com.br/clients").post(new Client());
+</pre>
 
 
 
