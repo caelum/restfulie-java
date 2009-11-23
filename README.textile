@@ -86,6 +86,11 @@ public class Order implements StateResource {
 
 h1. Installation
 
+h2. Download everything
+
+Start downloading all data: the client jars, server jars and both server side and client side application.
+Those will be helpful for you too understand how to use Restfulie.
+
 h2. Client side installation
 
 In order to use Restfulie in your client side app, simply add all required jars to your classpath.
@@ -179,73 +184,25 @@ h2. More info
 Once you have found the entry point you want to use (retrieving a resource or creating one), the javadoc api is a resourcefull place for more info.
 
 
+h1. Server side usage
 
+The default way to use Restfulie is to define the getFollowingTransitions method in your resource. The method receives a *Restfulie* instance (server side version)
+which allows you to dsl-like create transitions. In order to do that, given a *Restfulie* object, invoke the transition method with your *rel* name and the relative
+*controller action*:
 
+<pre>
+	public List<Transition> getFollowingTransitions(Restfulie control) {
+		control.transition("delete").uses(OrderingController.class).cancel(this);
+		return control.getTransitions();
+	}
+</pre>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Note that both the *OrderingController* class with its *cancel* method are web methods made available through the use of vraptor:
 
 <pre>
 @Resource
-public class OrderingController {
+public OrderingController {
 
-	private final Status status;
-	private final OrderDatabase database;
-	private final Routes routes;
-	private final Result result;
-
-	public OrderingController(Result result, Status status, OrderDatabase database, Routes routes) {
-		// sets all fields
-	}
-
-	@Get
-	@Path("/order/{order.id}")
-	public void get(Order order) {
-		order = database.getOrder(order.getId());
-		result.use(xml()).from(order).include("items").serialize();
-	}
-	
-	@Post
-	@Path("/order")
-	@Consumes("application/xml")
-	public void add(Order order) {
-		database.save(order);
-		routes.uriFor(OrderingController.class).get(order);
-		status.created(routes.getUri());
-	}
-	
 	@Delete
 	@Path("/order/{order.id}")
 	@Transition
@@ -254,101 +211,22 @@ public class OrderingController {
 		order.cancel();
 		status.ok();
 	}
-	
 }
 </pre>
 
-This is a simple example how to make your state changes available to your resource consumers:
+h2. Transition invocation
 
+By using the *@Transition* to annotate your method, Restfulie will automatically load the order from the database and check for either 404 (object not found), 405 (method not allowed), 409 (conflict: transition is not allowed for this resource's state).
+
+This is one of the advantages of using Restfulie over other level 2 Rest frameworks. By supporting hypermedia content and handling transitions out of the box, Restfulie creates a new layer capable
+of helping the server to deal with unexpected states.  
+
+h2. Typical example
+
+1. Create your model (i.e. Order)
 <pre>
-public class Order implements StateResource {
-
-	public List<Transition> getFollowingTransitions(Restfulie control) {
-		if (status.equals("unpaid")) {
-			control.transition("latest").uses(OrderingController.class).get(this);
-			control.transition("cancel").uses(OrderingController.class).cancel(this);
-		}
-		return control.getTransitions();
-	}
-
-}
-</pre>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-The *pay* method shows another difference between JAX-RS and Restfulie: methods are allowed to have 
-
-
-*Do not forget to create a migration with a string field named status for your resource:*
-
-<pre>
-scripts/generate migration add_status_to_order	
-</pre>
-
-Content:
-
-<pre>
-class AddStatusToOrder < ActiveRecord::Migration
-  def self.up
-    add_column :orders, :status, :string
-	Order.all.each do |order|
-		order.status = "unpaid"
-		order.save
-	end
-  end
-
-  def self.down
-    remove_column :orders, :status
-  end
-end
-</pre>
-
-Or simply define a status reader and writer on your own.
-
-
-
-
-h2. Server-side configuration
-
-There are two different approaches that can be combined to create a full hypermedia aware resource based service, including awareness of its states and transitions.
-
-h3. Simple usage: following transitions
-
-The most easy way to use restfulie is to write the *following_transitions* method.
-There are two easy steps to make it work:
-
-1. Create your model (i.e. Order) with an *status* field
-<pre>
-script/generate scaffold Order status:string location:string
-rake db:create
-rake db:migrate
-</pre>
-
-Note that with this usage the status field is optional (from 0.3.0 onwards).
-
-2. Add the *following_transitions* method returning an array of possible transitions:
-
-<pre>
-public class Order implements StateResource {
+@XStreamAlias("order")
+public class Order {
 
 	private String id;
 	private Location location;
@@ -361,18 +239,34 @@ public class Order implements StateResource {
 	public enum Location {
 		takeAway, drinkIn
 	};
-
-	public Order(String status, List<Item> items, Location location) {
-		this.status = status;
-		this.items = items;
-		this.location = location;
-	}
-
-	public Order() {
-	}
 	
-	// add id setter
+		// add id setter
 	// add desired getters
+	
+
+}
+@XStreamAlias("item")
+public class Item {
+	enum Coffee {latte, cappuccino, espresso};
+	enum Milk {skim, semi, whole};
+	enum Size {small, medium, large};
+
+	private Coffee name;
+	private int quantity;
+	private  Milk milk;
+	private Size size;
+
+	// getters and setters
+
+}
+</pre>
+
+2. Usually the *getFollowingTransitions* method would check the resource state in order to coordinate which transitions can be executed:
+So add the *following_transitions* method returning an array of possible transitions:
+
+<pre>
+public class Order implements StateResource {
+
 
 	public List<Transition> getFollowingTransitions(Restfulie control) {
 		if (status.equals("unpaid")) {
@@ -385,94 +279,37 @@ public class Order implements StateResource {
 
 }</pre>
 
-3. Update your *show* method within the *OrdersController* to show the hypermedia content:
+
+3. Create your *retrieval* method:
 
 <pre>
- def show
-   @order = Order.find(params[:id])
-
-   respond_to do |format|
-     format.html # show.html.erb
-     format.xml  { render :xml => @order.to_xml(:controller=>self) }
-   end
- end
+	@Get
+	@Path("/order/{order.id}")
+	public void get(Order order) {
+		order = database.getOrder(order.getId());
+		result.use(xml()).from(order).include("items").serialize();
+	}
 </pre>
 
-You are ready to go, create a new order and save it into the database:
+You are ready to go. Create a new order and access it through your /order/id path.
+The best way to start is to download the sample application and go through the *OrderingController* and *Order* classes.
+
+h2. Accepting more than one argument
+
+While JAX-RS will deserialize your request body into your method argument and require you to retrieve extra URI information through the requested URI, Restfulie accepts one
+core parameter (based on its alias) and extra parameters to be extracted through the URI itself:
 
 <pre>
-	order = Order.new
-	order.location = "take away"
-	order.status = "unpaid"
-	order.save
-	puts "Order #{order.id} saved"
+	@Post
+	@Path("/order/{order.id}/pay")
+	@Consumes("application/xml")
+	@Transition
+	public void pay(Order order, Payment payment) {
+		order = database.getOrder(order.getId());
+		order.pay(payment);
+		status.ok();
+	}
 </pre>
-
-Start up the server:
-
-<pre>
-	script/server
-</pre>
-
-And now access your server at http://localhost:3000/orders/1.xml
-
-<pre>
-<?xml version="1.0" encoding="UTF-8"?>
-<order>
-  <created-at>2009-11-23T00:15:15Z</created-at>
-  <id>1</id>
-  <location>take away</location>
-  <status>unpaid</status>
-  <updated-at>2009-11-23T00:15:15Z</updated-at>
-  <atom:link rel="show" xmlns:atom="http://www.w3.org/2005/Atom" href="http://localhost:3000/orders/3"/>
-</order>
-</pre>
-
-h3. Customizing the rel name
-
-You can also override the action used, but still keep the rel
-
-<pre>
-def following_transitions
-  transitions = []
-  transitions << [:cancel, { :action => :destroy }]
-  transitions
-end
-</pre>
-
-Which will generate an hyperlink as
-
-<pre><atom:link rel="cancel" rel="http://yourserver/orders/15" /></pre>
-
-h3. Checking the possibility of following transitions
-
-By following the advanced usage, one receives also all *can_* method. i.e.:
-
-<pre>
-	order.status = :unpaid
-	puts(order.can_pay?)              # will print true
-	order.status = :paid
-	puts(order.can_pay?)              # will print false
-</pre>
-
-You can use the *can_xxx* methods in your controllers to check if your current resource's state can be changed:
-
-<pre>
-def pay
-  @order = Order.find(params[:id])
-  raise "impossible to pay due to this order status #{order.status}" if !@order.can_pay?
-
-  # payment code
-end
-</pre>
-
-
-
-
-
-
-
-
 
 h2. Getting help and mailing lists
 
