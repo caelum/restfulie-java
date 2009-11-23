@@ -143,7 +143,40 @@ resources.entryAt("http://www.caelum.com.br/clients").post(new Client());
 
 The entire serialization process can be configured either through the *Resources* interface's methods or using *XStream*'s explicit configuration.
 
+h2. Accessing all possible transitions
 
+One can access all possible transitions for an object by invoking a resource's *getTransitions* method:
+
+<pre>
+	List<Transition> transitions = resource(order).getTransitions();
+</pre>
+
+h2. HTTP verbs
+
+By default, restfulie uses a well known table of defaults for http verb detection according to the rel element:
+
+* destroy, cancel and delete send a DELETE request
+* update sends a PUT request
+* refresh, reload, show, latest sends a GET request
+* other methods sends a POST request
+
+If you want to use a custom http verb in order to send your request, you can do it:
+
+<pre>
+ payment = resource(order).getTransition("pay").method(HttpMethod.PUT).executeAndRetrieve(payment);
+ </pre>
+
+h2. Sending some parameters
+
+If you need to send some information to the server, this can be done by passing an argument to the execute method, which will be serialized and sent as the request body's content:
+
+<pre>
+ payment = resource(order).getTransition("pay").method(HttpMethod.PUT).executeAndRetrieve(payment);
+ </pre>
+
+h2. More info
+
+Once you have found the entry point you want to use (retrieving a resource or creating one), the javadoc api is a resourcefull place for more info.
 
 
 
@@ -293,42 +326,6 @@ Or simply define a status reader and writer on your own.
 
 
 
-h2. Client-side configuration: how to customize your request
-
-h3. HTTP verbs
-
-By default, restfulie uses the following table:
-
-* destroy, cancel and delete send a DELETE request
-* update sends a PUT request
-* refresh, reload, show, latest sends a GET request
-* other methods sends a POST request
-
-If you want to use a custom http verb in order to send your request, you can do it by setting the optional string 'method':
-
-<pre>order.update(:method=>"post")</pre>
-
-h3. Request parameters
-
-If you want to send extra parameters, you can do it through the *data* parameter:
-
-<pre>order.pay(:data => {:payment => my_payment})</pre>
-
-The parameters will be serialized either to xml or json according to which format was used to deserialize the order at first place.
-
-h3. Executing another GET request
-
-If your method executes another GET request, it will automatically deserialize its result as:
-
-<pre>order = Order.from_web order_uri
-payment = order.check_payment_info</pre>
-
-If you want to parse the response yourself, instead of receiving just the final deserialized object, you can do it by passing a body to your method
-
-<pre>order = Order.from_web order_uri
-successful = order.check_payment_info do |response|
-  return response.code==200
-end</pre>
 
 h2. Server-side configuration
 
@@ -447,29 +444,6 @@ Which will generate an hyperlink as
 
 <pre><atom:link rel="cancel" rel="http://yourserver/orders/15" /></pre>
 
-h3. Example
-
-A full example showing all capabilities of this method follows:
-
-<pre>
-def following_transitions
-  transitions = []
-  transitions << [:show, {}]
-  transitions << [:destroy, {}] if can_cancel?
-  transitions << [:pay, {:id => id}] if can_pay?
-  transitions << [:show, {:controller => :payments, :payment_id => payment.id }] if paid?
-  transitions
-end
-</pre>
-
-h3. Accessing all possible transitions
-
-One can access all possible transitions for an object by invoking a resource's *getTransitions* method:
-
-<pre>
-	List<Transition> transitions = resource(order).getTransitions();
-</pre>
-
 h3. Checking the possibility of following transitions
 
 By following the advanced usage, one receives also all *can_* method. i.e.:
@@ -490,28 +464,6 @@ def pay
 
   # payment code
 end
-</pre>
-  
-h3. Using xml+rel links instead of atom links
-
-Atom is everywhere and can be consumed by a number of existing tools but if your system wants to supply its
-services through commons rel+link xml as
-
-<pre>
-	<order>
-		<product>basic rails course</product>
-		<product>RESTful training</product>
-		<refresh>http://www.caelum.com.br/orders/1</refresh>
-		<update>http://www.caelum.com.br/orders/1</update>
-		<pay>http://www.caelum.com.br/orders/1/pay</pay>
-		<destroy>http://www.caelum.com.br/orders/1</destroy>
-	</order>
-</pre>
-
-You can do it by passing the *use_name_based_link* argument:
-
-<pre>
-    order.to_xml(:controller => my_controller, :use_name_based_link => true)
 </pre>
 
 
@@ -564,6 +516,7 @@ h2. Coming soon
 
 * javadoc
 * release 0.3
+* customize the rel name
 * public cruise build
 * routes.uriFor(OrderingController.class).get(order); status.created(routes.getUri()); should become status.created(order);
 * release 0.4
