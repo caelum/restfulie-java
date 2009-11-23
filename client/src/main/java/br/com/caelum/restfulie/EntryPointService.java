@@ -48,10 +48,6 @@ public class EntryPointService implements ResourceSerializer{
 		this.config = config;
 		this.uri = uri;
 	}
-
-	public static EntryPointService service(URI uri) {
-		return new EntryPointService(uri);
-	}
 	
 	public <T> ResourceSerializer custom(T object) {
 		this.customObject = object;
