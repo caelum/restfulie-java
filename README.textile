@@ -137,6 +137,53 @@ h2. Server side installation
 
 Download "vraptor's blank project":http://www.vraptor.org and add all server side jars to your application's classpath.
 
+h1. Client side usage
+
+One should first acquire the representation from the server through your common GET request and process it through the usual from_* methods:
+<pre>xml = Net::HTTP.get(URI.parse('http://www.caelum.com.br/orders/1'))
+order = Order.from_xml(xml)</pre>
+or use the restfulie *from_web*:
+<pre>order = Order.from_web 'http://www.caelum.com.br/orders/1'</pre>
+
+And now you can invoke all those actions in order to change your resource's state:
+
+<pre>
+order.refresh
+order.update
+order.destroy
+order.pay
+</pre>
+
+Note that:
+* refresh is get
+* update is put (and you have to put everything back)
+* destroy is delete
+* pay (unknown methods) is post
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -178,62 +225,6 @@ end
 
 Or simply define a status reader and writer on your own.
 
-h1. Installing
-
-Just add in your environment.rb the following line:
-
-<pre>
-config.gem "restfulie", :source => "http://gemcutter.org"
-</pre>
-
-And then execute:
-<pre>rake gems:install</pre>
-
-or, if you prefer to install it as a plugin:
-
-<pre>script/plugin install git://github.com/caelum/restfulie.git</pre>
-
-h2. Typical hypermedia aware example
-
-Trying to follow the definition of a RESTful application supporting resources with hypermedia content, a resource would be:
-
-<pre>
-<order>
-	<product>basic rails course</product>
-	<product>RESTful training</product>
-	<atom:link rel="refresh" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
-	<atom:link rel="update" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
-	<atom:link rel="pay" href="http://www.caelum.com.br/orders/1/pay" xmlns:atom="http://www.w3.org/2005/Atom"/>
-	<atom:link rel="destroy" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
-</order>
-</pre>
-
-h2. Client Usage
-
-One should first acquire the representation from the server through your common GET request and process it through the usual from_* methods:
-<pre>xml = Net::HTTP.get(URI.parse('http://www.caelum.com.br/orders/1'))
-order = Order.from_xml(xml)</pre>
-or use the restfulie *from_web*:
-<pre>order = Order.from_web 'http://www.caelum.com.br/orders/1'</pre>
-
-And now you can invoke all those actions in order to change your resource's state:
-
-<pre>
-order.refresh
-order.update
-order.destroy
-order.pay
-</pre>
-
-Note that:
-* refresh is get
-* update is put (and you have to put everything back)
-* destroy is delete
-* pay (unknown methods) is post
-
-h2. Resource format support
-
-Restfulie currently supports full xml+atom, partial xml+rel and will soon expand its support to json+links.
 
 
 h2. Help
@@ -411,77 +402,12 @@ def following_transitions
 end
 </pre>
 
-h2. Advanced usage: Defining the state machine and its transitions
-
-The second way of defining your available transitions is to explicitely define the states and transitions.
-
-By using this approach, one has to define a new column named *status* in a database migration file.
-
-The first step involves defining all your states, each one with its own name and possible transitions, as:
-
-<pre>
-	state :state_name, :allow => [ :first_transition_name, :second_transition_name]
-</pre>
-
-The following example shows all possible states for an order:
-
-<pre>
-class Order < ActiveRecord::Base
-	state :unpaid, :allow => [:latest, :pay, :cancel]
-	state :cancelled, :allow => :latest
-	state :received, :allow => [:latest, :check_payment_info]
-	state :preparing, :allow => [:latest, :check_payment_info]
-	state :ready, :allow => [:latest, :receive, :check_payment_info]
-end
-</pre>
-
-Now its time to define which controller and action each transition invokes, in a much similar way to
-the transition definitions in the following_transitions method:
-
-<pre>
-class Order < ActiveRecord::Base
-end
-</pre>
-
-Once a transition has been given a name, its name can be used in the following_transitions method also.
-The next example does not configure the transition because it was already defined, only adding it to the
-list of available transition whenever the *can_pay?* method returns true:
-
-<pre>
-class Order < ActiveRecord::Base
-	transition :pay, {:action => pay_this_order, :controller => :payments}, :preparing
-
-	def following_transitions
-	  transitions = []
-	  transitions << :pay if can_pay?
-	  transitions
-	end
-end
-</pre>
-
-Note that whenever one defines a transition, there is a third - optional - argument, this is the
-transition's target's state. Whenever the method *order.pay* method is invoked in the *server*, it will
-automatically change the order's status to *preparing*.
-
-You can download the server side example to see the complete code.
-
-The last usage of the transition definition involves passing a block which receives the element in which
-the transition URI's is required. The block should return all the necessary information for retrieving the URI, now having access to your element's instance variables:
-
-<pre>
-class Order < ActiveRecord::Base
-	transition :check_payment_info do |order|
-	   {:controller => :payments, :action => :show, :order_id => order.id, :payment_id => order.payments[0].id, :rel => "check_payment_info"}
-	end
-end
-</pre>
-
 h3. Accessing all possible transitions
 
-One can access all possible transitions for an object by invoking its available_transitions method:
+One can access all possible transitions for an object by invoking a resource's *getTransitions* method:
 
 <pre>
-	transitions = order.available_transitions
+	List<Transition> transitions = resource(order).getTransitions();
 </pre>
 
 h3. Checking the possibility of following transitions
@@ -533,16 +459,11 @@ h2. Team
 Restfulie was created and is maintained within Caelum by
 
 Projetct Founder
-* "Guilherme Silveira":mailto:guilherme.silveira@caelum.com.br
-
-Active Commiters
-* "Caue Guerra":mailto:caue.guerra@gmail.com
-* "Guilherme Silveira":mailto:guilherme.silveira@caelum.com.br
+* "Guilherme Silveira":http://guilhermesilveira.wordpress.com ( "email":mailto:guilherme.silveira@caelum.com.br )
 
 Contributors
-* Diego Carrion
-* Leandro Silva
-* Gavin-John Noonan
+* Lucas Cavalcanti ("email":mailto:lucas.cavalcanti@caelum.com.br)
+* Adriano Almeida ("email":mailto:adriano.almeida@caelum.com.br)
 
 h2. Try it online
 
@@ -585,30 +506,19 @@ h3. Sources
 
 You can see an application's source code here, both client and server side were implemented using *restfulie*:
 
-"Client":http://github.com/caelum/restfulie-client
-"Server":http://github.com/caelum/restfulie-test
+"Client":http://github.com/caelum/restbook/chapter05/client
+"Server":http://github.com/caelum/restbook/chapter05/server
 
 h3. More tutorials
 
 There is a "portuguese tutorial on the server-side support":http://wakethedead.com.br/blog/70-restfulie and a "blog post on the entire ecosystem in english":http://guilhermesilveira.wordpress.com/2009/11/03/quit-pretending-use-the-web-for-real-restfulie/
 
 
-h2. News
+h2. What's new
 
 h3. next release
-* implemented support to can_*** methods
-* post data through http POST body
-* no need for the *status* field if you use the following_transition approach on the server side
-* bug fixed when *status* was nil
-* lots of internal refactoring
-* lots of new documentation
 
-h3. 0.2
-* support to state machine configuration
-* resources must contain a status field
-
-h3. 0.1
-* first release
+* first java release (similar to 0.3 restfulie's ruby version)
 
 h2. Coming soon
 
@@ -622,7 +532,7 @@ h2. Coming soon
 * pure href definition of link
 * get entry point support
 * Set the correct media type instead of application/xml
-
+* full support to extended json
 * allow servers to define transitions by accessing other systems
 * allow servers to define a state method instead of internal variable
 * controller filtering and methods
