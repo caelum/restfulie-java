@@ -27,10 +27,6 @@ public interface BasicSerializer {
 
 	<T> BasicSerializer from(T object);
 
-	BasicSerializer exclude(String... names);
-
 	void serialize();
-
-	BasicSerializer include(String... names);
 
 }

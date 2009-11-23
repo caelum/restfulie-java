@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +108,8 @@ public class DefaultTransition implements Transition {
 				return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
 			}
 		} catch (IOException e) {
+			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+		} catch (URISyntaxException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		}
 	}

@@ -31,7 +31,7 @@ public class DefaultTransitionTest {
 	
 	@Test
 	public void shouldExecuteAnHttpRequest() throws IOException {
-		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1", null);
+		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/1", null, null);
 		Response result = transition.execute();
 		assertThat(result.getCode(), is(200));
 		assertThat(result.getContent(), is("<content/>"));
@@ -40,7 +40,7 @@ public class DefaultTransitionTest {
 	@Test
 	public void shouldParseAnObjectIfDesired() throws IOException {
 		when(deserializer.fromXml(defaultPayment)).thenReturn("my resulting resource");
-		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", deserializer);
+		DefaultTransition transition = new DefaultTransition("latest", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", deserializer, null);
 		Response result = transition.execute();
 		assertThat((String) result.getResource(), is("my resulting resource"));
 	}
@@ -48,7 +48,7 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldAllowMethodOverriding() throws IOException {
-		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null);
+		DefaultTransition transition = new DefaultTransition("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null, null);
 		Response result = transition.method(HttpMethod.GET).execute();
 		assertThat(result.getContent(), is(defaultPayment));
 	}
@@ -56,7 +56,7 @@ public class DefaultTransitionTest {
 
 	@Test
 	public void shouldAllowDeleteInvocations() {
-		DefaultTransition transition = new DefaultTransition("cancel", "http://localhost:8080/chapter05-service/order/1", null);
+		DefaultTransition transition = new DefaultTransition("cancel", "http://localhost:8080/chapter05-service/order/1", null, null);
 		Response result = transition.execute();
 		assertThat(result.getCode(), is(200));
 	}
