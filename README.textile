@@ -88,16 +88,17 @@ h1. Installation
 
 h2. Download everything
 
-Start downloading all data: the client jars, server jars and both server side and client side application.
-Those will be helpful for you too understand how to use Restfulie.
+Start "downloading all data":http://code.google.com/p/restfulie : the client jars, server jars and both server side and client side application.
+
+You can download a sample client and server side application on the same link, those will be helpful for you too understand how to use Restfulie.
 
 h2. Client side installation
 
-In order to use Restfulie in your client side app, simply add all required jars to your classpath.
+In order to use Restfulie in your client side app, simply add "all required jars":http://code.google.com/p/restfulie/ to your classpath.
 
 h2. Server side installation
 
-Download "vraptor's blank project":http://www.vraptor.org and add all server side jars to your application's classpath.
+Download "vraptor's blank project":http://www.vraptor.org and add "all server side jars":http://code.google.com/p/restfulie/ to your application's classpath.
 
 h1. Client side usage
 
@@ -212,6 +213,15 @@ public OrderingController {
 		status.ok();
 	}
 }
+</pre>
+
+Now you need to set up your application package in web.xml. This is the only configuration required:
+
+<pre>
+	<context-param>
+        <param-name>br.com.caelum.vraptor.packages</param-name>
+        <param-value>br.com.caelum.vraptor.rest,com.your.app.package.without.leading.whitespace</param-value>
+    </context-param>
 </pre>
 
 h2. Transition invocation
