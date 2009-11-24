@@ -10,9 +10,14 @@ public interface TransitionToExecute {
 	<T> Response execute(T arg);
 
 	/**
-	 * Executes this transition passing some parameters and will automatically.
+	 * Executes this transition passing some parameters and return its result.
 	 */
 	<T, R> R executeAndRetrieve(T arg);
+	
+	/**
+	 * Executes this transition and return its result.
+	 */
+	<R> R executeAndRetrieve();
 
 	/**
 	 * Executes this transition without any parameters.

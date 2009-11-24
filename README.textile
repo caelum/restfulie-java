@@ -17,7 +17,7 @@ h2. Could you compare it with Spring or JAX-RS based APIs?
 Restfulie is the first API which tries to somehow implement "Jim Webber":http://jim.webber.name/ and "Ian Robinson":http://iansrobinson.com/ opinion on how RESTFul systems use hypermedia
 as the way to lead your client's path through a business process.
 
-Therefore Restfulie is unique both in its feature set when compared to both Spring and JAX-RS based implementations, and its implementation: looking for simple code and favoring conventions over manual configurations.
+Therefore Restfulie is unique both in its feature set when compared to both Spring and JAX-RS based implementations, and its implementation: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system.
 
 According to "xxxxxx's model":http://www , systems are only to be called RESTFul if they support this kind of state flow transition through hypermedia content contained within resources representations:
 
@@ -325,11 +325,11 @@ h2. Team
 Restfulie was created and is maintained within Caelum by
 
 Projetct Founder
-* "Guilherme Silveira":http://guilhermesilveira.wordpress.com ( "email":mailto:guilherme.silveira@caelum.com.br )
+* "Guilherme Silveira":http://guilhermesilveira.wordpress.com ( "email":mailto:guilherme.silveira@caelum.com.br ) - twitter:http://www.twitter.com/guilhermecaelum
 
 Contributors
-* Lucas Cavalcanti ("email":mailto:lucas.cavalcanti@caelum.com.br)
-* Adriano Almeida ("email":mailto:adriano.almeida@caelum.com.br)
+* Lucas Cavalcanti ("email":mailto:lucas.cavalcanti@caelum.com.br) - twitter:http://www.twitter.com/lucascs
+* "Adriano Almeida":http://ahalmeida.com/ ("email":mailto:adriano.almeida@caelum.com.br) - twitter:http://www.twitter.com/adrianoalmeida7
 
 h3. Sources
 
@@ -357,6 +357,9 @@ h2. Coming soon
 * rename getHref to getUri
 * javadoc
 * release 0.3
+* if all deserialized objects return an enhanced type, it should be able to do resource(order).getResponseCode??
+* how to survive errors as 500 when expecting an entity?
+* allows pure String/byte array client side post and server side retrieval
 * customize the rel name
 * public cruise build
 * routes.uriFor(OrderingController.class).get(order); status.created(routes.getUri()); should become status.created(order);
