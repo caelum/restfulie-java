@@ -4,10 +4,10 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/optional/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/vraptor-3.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.3.1.jar" sourcepath="/Users/guilherme/Documents/java/xstream-1.3.1/xstream/src"/>
 	<classpathentry kind="lib" path="lib/test/hamcrest-all-1.2RC3.jar"/>
 	<classpathentry kind="lib" path="lib/test/mockito-all-1.8.1-rc1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/vraptor-3.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
