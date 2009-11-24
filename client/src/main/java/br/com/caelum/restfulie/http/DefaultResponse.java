@@ -58,6 +58,7 @@ public class DefaultResponse implements Response {
 
 	public <T> T getResource() throws IOException {
 		String content = getContent();
+		System.out.println("USing " + deserializer + " to deserialize") ;
 		return (T) deserializer.fromXml(content);
 	}
 

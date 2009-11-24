@@ -18,7 +18,6 @@ import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
 import br.com.caelum.restfulie.serializer.BasicSerializer;
-import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
 import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 
 /**
@@ -82,7 +81,7 @@ public class EntryPointService implements ResourceSerializer{
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
-			BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer, new DefaultTypeNameExtractor()).from(customObject);
+			BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer).from(customObject);
 			serializer.serialize();
 			writer.flush();
 	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(config), new IdentityContentProcessor());

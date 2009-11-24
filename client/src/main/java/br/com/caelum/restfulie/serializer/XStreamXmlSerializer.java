@@ -34,13 +34,10 @@ public class XStreamXmlSerializer implements BasicSerializer {
 	private final XStream xstream;
 	private final Writer writer;
 	private Object toSerialize;
-	private final TypeNameExtractor extractor;
 
-	public XStreamXmlSerializer(XStream xstream, Writer writer,
-			TypeNameExtractor extractor) {
+	public XStreamXmlSerializer(XStream xstream, Writer writer) {
 		this.xstream = xstream;
 		this.writer = writer;
-		this.extractor = extractor;
 	}
 
 	public <T> BasicSerializer from(T object) {
@@ -59,8 +56,6 @@ public class XStreamXmlSerializer implements BasicSerializer {
 			config = new SimpleConfiguration(object.getClass());
 		}
 		this.toSerialize = object;
-		Class<?> type = object.getClass();
-		xstream.processAnnotations(type);
 		return this;
 	}
 

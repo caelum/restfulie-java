@@ -19,6 +19,7 @@ import br.com.caelum.restfulie.DefaultTransition;
 import br.com.caelum.restfulie.Resource;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
@@ -32,13 +33,17 @@ public class XStreamConfig {
 
 	private final SerializationConfig configs;
 	private final Map<Class,Class> realTypes= new HashMap<Class,Class>();
+	private XStream instance;
 
 	public XStreamConfig(SerializationConfig configs) {
 		this.configs = configs;
 	}
 	
-	public XStream create() {
-		XStream instance = getXStream();
+	public synchronized XStream create() {
+		if (instance != null) {
+			return instance;
+		}
+		instance = getXStream();
 		for(Configuration config : configs.getAllTypes()) {
 			Class type = config.getType();
 			enhanceResource(type);
@@ -83,10 +88,29 @@ public class XStreamConfig {
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new LinkSupportWrapper(next);
 			}
+			@Override
+			public Mapper getMapper() {
+				return new CustomWrapper(super.getMapper());
+			}
 		};
 		xstream.useAttributeFor(DefaultTransition.class, "rel");
 		xstream.useAttributeFor(DefaultTransition.class, "href");
 		return xstream;
+	}
+	
+	class CustomWrapper extends MapperWrapper {
+
+		public CustomWrapper(Mapper wrapped) {
+			super(wrapped);
+		}
+		
+		@Override
+		public String getFieldNameForItemTypeAndName(Class definedIn,
+				Class itemType, String itemFieldName) {
+			System.out.println("Looking for " + itemFieldName);
+			return super.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
+		}
+		
 	}
 
 
@@ -124,7 +148,7 @@ public class XStreamConfig {
 	
 	}
 
-	public <T> void enhanceResource(Class<T> originalType) {
+	public <T> Class enhanceResource(Class<T> originalType) {
 		ClassPool pool = ClassPool.getDefault();
 		try {
 			// TODO extract this enhancement to an interface and test it appart
@@ -138,6 +162,7 @@ public class XStreamConfig {
 			Class customType = custom.toClass();
 			// xstream.addImplicitCollection(customType, "link","link", DefaultTransition.class);
 			this.realTypes.put(originalType, customType);
+			return customType;
 		} catch (NotFoundException e) {
 			throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
 		} catch (CannotCompileException e) {

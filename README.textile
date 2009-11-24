@@ -351,6 +351,7 @@ h3. next release
 
 h2. Coming soon
 
+* links are stacking up between requests
 * question: does jersey uses toString in order to serialize? fromXmlString? createResponseOrderRepresentation?... if it does use those static methods, there are a lot of static configs. if it doesnt, it doesnt allow you to config?
 * comparison: jersey client api is just an http helper (not wrapper), once there are no conventions, you have to do everything by hand
 * refactor order, receipt and paymento to have methods as order.pay

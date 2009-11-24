@@ -16,7 +16,6 @@ import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpMethod;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
 import br.com.caelum.restfulie.serializer.BasicSerializer;
-import br.com.caelum.restfulie.serializer.DefaultTypeNameExtractor;
 import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
@@ -88,15 +87,14 @@ public class DefaultTransition implements Transition {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.addRequestProperty("Content-type", "application/xml");
 			connection.setRequestMethod(methodName());
-			if(parameter != null) {
-				connection.setDoOutput(true);
+			boolean hasParameter = parameter != null;
+			connection.setDoOutput(hasParameter);
+			if(hasParameter) {
 				OutputStream output = connection.getOutputStream();
 				Writer writer = new OutputStreamWriter(output);
-				BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer, new DefaultTypeNameExtractor()).from(parameter);
+				BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer).from(parameter);
 				serializer.serialize();
 				writer.flush();
-			} else {
-				connection.setDoOutput(false);
 			}
 			if(shouldFollowAndDeserialize) {
 		        DefaultResponse response = new DefaultResponse(connection, deserializer);
@@ -104,9 +102,8 @@ public class DefaultTransition implements Transition {
 		        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 		        }
 				return response.getResource();
-			} else {
-				return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
 			}
+			return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
 		} catch (URISyntaxException e) {

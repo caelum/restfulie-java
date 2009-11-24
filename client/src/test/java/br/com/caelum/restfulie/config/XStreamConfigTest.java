@@ -1,11 +1,15 @@
 package br.com.caelum.restfulie.config;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Before;
@@ -202,5 +206,77 @@ public class XStreamConfigTest {
 	private XStream create() {
 		return new XStreamConfig(config).create();
 	}
+	
+	@XStreamAlias("receipt")
+	public class Receipt {
+
+		private Calendar paymentTime;
+
+		public Calendar getPaymentTime() {
+			return paymentTime;
+		}
+
+	}
+
+	@Test
+	public void shouldSupportDeserialization() {
+		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
+		Configuration config = new SimpleConfiguration(Receipt.class);
+		map.put(Receipt.class, config);
+		SerializationConfig configs = new SerializationConfig(map);
+		XStreamConfig xstreamConfig = new XStreamConfig(configs);
+
+		String xml = "<receipt></receipt>";
+		Object result = xstreamConfig.create().fromXML(xml);
+		assertThat(Receipt.class.isAssignableFrom(result.getClass()), is(equalTo(true)));
+	}
+
+
+	@Test
+	public void shouldSupportDeserializationWithLink() {
+		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
+		Configuration config = new SimpleConfiguration(Receipt.class);
+		map.put(Receipt.class, config);
+		SerializationConfig configs = new SerializationConfig(map);
+		XStreamConfig xstreamConfig = new XStreamConfig(configs);
+
+		String xml = "<receipt><link rel=\"hell\" href=\"hell.com\" /></receipt>";
+		Object result = xstreamConfig.create().fromXML(xml);
+		assertThat(Receipt.class.isAssignableFrom(result.getClass()), is(equalTo(true)));
+	}
+
+
+	@Test
+	public void shouldSupportDeserializationWithLinks() {
+		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
+		Configuration config = new SimpleConfiguration(Receipt.class);
+		map.put(Receipt.class, config);
+		SerializationConfig configs = new SerializationConfig(map);
+		XStreamConfig xstreamConfig = new XStreamConfig(configs);
+
+		String xml = "<receipt><link rel=\"hell\" href=\"hell.com\" /><link rel=\"heaven\" href=\"heaven\" /></receipt>";
+		Object result = xstreamConfig.create().fromXML(xml);
+		assertThat(Receipt.class.isAssignableFrom(result.getClass()), is(equalTo(true)));
+	}
+
+
+	@Test
+	public void shouldSupportDeserializationWithLinksFromDifferentRoots() {
+		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
+		Configuration config = new SimpleConfiguration(Receipt.class);
+		map.put(Receipt.class, config);
+		map.put(Item.class, new SimpleConfiguration(Item.class));
+		SerializationConfig configs = new SerializationConfig(map);
+		XStreamConfig xstreamConfig = new XStreamConfig(configs);
+
+		XStream xstream = xstreamConfig.create();
+		Object first = xstream.fromXML("<item><link rel=\"hell\" href=\"hell.com\" /><link rel=\"heaven\" href=\"heaven\" /></item>");
+		assertThat(Item.class.isAssignableFrom(first.getClass()), is(equalTo(true)));
+		xstream = xstreamConfig.create();
+		String xml = "<receipt><link rel=\"hell\" href=\"hell.com\" /><link rel=\"heaven\" href=\"heaven\" /></receipt>";
+		Object second = xstreamConfig.create().fromXML(xml);
+		assertThat(Receipt.class.isAssignableFrom(second.getClass()), is(equalTo(true)));
+	}
+
 
 }
