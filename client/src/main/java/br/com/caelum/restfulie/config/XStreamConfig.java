@@ -1,7 +1,9 @@
 package br.com.caelum.restfulie.config;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,29 +90,10 @@ public class XStreamConfig {
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new LinkSupportWrapper(next);
 			}
-			@Override
-			public Mapper getMapper() {
-				return new CustomWrapper(super.getMapper());
-			}
 		};
 		xstream.useAttributeFor(DefaultTransition.class, "rel");
 		xstream.useAttributeFor(DefaultTransition.class, "href");
 		return xstream;
-	}
-	
-	class CustomWrapper extends MapperWrapper {
-
-		public CustomWrapper(Mapper wrapped) {
-			super(wrapped);
-		}
-		
-		@Override
-		public String getFieldNameForItemTypeAndName(Class definedIn,
-				Class itemType, String itemFieldName) {
-			System.out.println("Looking for " + itemFieldName);
-			return super.getFieldNameForItemTypeAndName(definedIn, itemType, itemFieldName);
-		}
-		
 	}
 
 
@@ -160,7 +143,6 @@ public class XStreamConfig {
 			custom.addMethod(CtNewMethod.make("public java.util.List getTransitions() { return link; }", custom));
 			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Transition getTransition(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Transition t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", custom));
 			Class customType = custom.toClass();
-			// xstream.addImplicitCollection(customType, "link","link", DefaultTransition.class);
 			this.realTypes.put(originalType, customType);
 			return customType;
 		} catch (NotFoundException e) {
@@ -171,8 +153,14 @@ public class XStreamConfig {
 	}
 
 	private boolean isPrimitive(Class<?> type) {
-		return (type.isPrimitive() || type.getName().startsWith("java") || type.isEnum()) &&
-			!Collection.class.isAssignableFrom(type);
+		return type.isPrimitive()
+		|| type.isEnum()
+		|| Number.class.isAssignableFrom(type)
+		|| type.equals(String.class)
+		|| Date.class.isAssignableFrom(type)
+		|| Calendar.class.isAssignableFrom(type)
+		|| Boolean.class.equals(type)
+		|| Character.class.equals(type);
 	}
 
 	public Configuration type(Class<? extends Object> type) {

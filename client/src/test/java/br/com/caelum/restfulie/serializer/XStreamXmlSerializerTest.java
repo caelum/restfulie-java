@@ -28,7 +28,7 @@ public class XStreamXmlSerializerTest {
         XStream xstream = new XStream();
         xstream.processAnnotations(Order.class);
         xstream.processAnnotations(Item.class);
-		this.serializer = new XStreamXmlSerializer(xstream, new OutputStreamWriter(stream), new DefaultTypeNameExtractor());
+		this.serializer = new XStreamXmlSerializer(xstream, new OutputStreamWriter(stream));
     }
 
 	public static class Address {

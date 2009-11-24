@@ -358,6 +358,8 @@ h2. Coming soon
 * rename getHref to getUri
 * javadoc
 * release 0.3
+* if transition does not exist, getTransition should throw an exception?
+* support custom namespaces
 * if all deserialized objects return an enhanced type, it should be able to do resource(order).getResponseCode??
 * how to survive errors as 500 when expecting an entity?
 * allows pure String/byte array client side post and server side retrieval
