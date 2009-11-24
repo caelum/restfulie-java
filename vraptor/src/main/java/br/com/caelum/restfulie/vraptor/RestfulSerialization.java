@@ -2,6 +2,7 @@ package br.com.caelum.restfulie.vraptor;
 
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.caelum.vraptor.config.Configuration;
 import br.com.caelum.vraptor.interceptor.TypeNameExtractor;
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.ioc.RequestScoped;
@@ -16,10 +17,12 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 public class RestfulSerialization extends XStreamXMLSerialization {
 	
 	private final Restfulie restfulie;
+	private final Configuration config;
 
-	public RestfulSerialization(HttpServletResponse response, TypeNameExtractor extractor, Restfulie restfulie) {
+	public RestfulSerialization(HttpServletResponse response, TypeNameExtractor extractor, Restfulie restfulie, Configuration config) {
 		super(response,extractor);
 		this.restfulie = restfulie;
+		this.config = config;
 	}
 
 	/**
@@ -29,7 +32,7 @@ public class RestfulSerialization extends XStreamXMLSerialization {
 	@Override
 	protected XStream getXStream() {
 		XStream xStream = new XStream();
-		xStream.registerConverter(new LinkConverter(new ReflectionConverter(xStream.getMapper(), xStream.getReflectionProvider()), restfulie));
+		xStream.registerConverter(new LinkConverter(new ReflectionConverter(xStream.getMapper(), xStream.getReflectionProvider()), restfulie, config));
 		return xStream;
 	}
 
