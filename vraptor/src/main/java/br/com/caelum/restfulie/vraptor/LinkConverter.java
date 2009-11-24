@@ -37,12 +37,17 @@ public class LinkConverter implements Converter {
 			MarshallingContext context) {
 		base.marshal(root, writer, context);
 		StateResource resource = (StateResource) root;
-		for (Transition t : resource.getFollowingTransitions(restfulie)) {
-			writer.startNode("atom:link");
-			writer.addAttribute("rel", t.getName());
-			writer.addAttribute("href", config.getApplicationPath() + t.getUri());
-			writer.addAttribute("xmlns:atom", "http://www.w3.org/2005/Atom");
-			writer.endNode();
+		try {
+			for (Transition t : resource.getFollowingTransitions(restfulie)) {
+				writer.startNode("atom:link");
+				writer.addAttribute("rel", t.getName());
+				writer.addAttribute("href", config.getApplicationPath() + t.getUri());
+				writer.addAttribute("xmlns:atom", "http://www.w3.org/2005/Atom");
+				writer.endNode();
+			}
+		} finally {
+			// TODO remove this thing from here
+			restfulie.clear();
 		}
 	}
 

@@ -89,13 +89,17 @@ public class StateControlInterceptor<T extends StateResource> implements Interce
 	}
 
 	private boolean allows(T resource, Method method) {
-		List<br.com.caelum.vraptor.rest.Transition> transitions = resource.getFollowingTransitions(restfulie);
-		for (br.com.caelum.vraptor.rest.Transition transition : transitions) {
-			if(transition.matches(method)) {
-				return true;
+		try {
+			List<br.com.caelum.vraptor.rest.Transition> transitions = resource.getFollowingTransitions(restfulie);
+			for (br.com.caelum.vraptor.rest.Transition transition : transitions) {
+				if(transition.matches(method)) {
+					return true;
+				}
 			}
+			return false;
+		} finally {
+			restfulie.clear();
 		}
-		return false;
 	}
 
 	private String lowerFirstChar(String simpleName) {
