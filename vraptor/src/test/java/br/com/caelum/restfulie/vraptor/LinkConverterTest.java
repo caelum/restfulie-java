@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.vraptor.config.Configuration;
 import br.com.caelum.vraptor.rest.Restfulie;
 import br.com.caelum.vraptor.rest.StateResource;
 import br.com.caelum.vraptor.rest.Transition;
@@ -39,7 +40,9 @@ public class LinkConverterTest {
 	@Before
 	public void setup() {
 		this.xstream = new XStream();
-		xstream.registerConverter(new LinkConverter(new ReflectionConverter(xstream.getMapper(), xstream.getReflectionProvider()), null));
+		Configuration config = mock(Configuration.class);
+		when(config.getApplicationPath()).thenReturn("http://www.caelum.com.br");
+		xstream.registerConverter(new LinkConverter(new ReflectionConverter(xstream.getMapper(), xstream.getReflectionProvider()), null, config));
 	}
 	
 	@Test
@@ -52,7 +55,7 @@ public class LinkConverterTest {
 	public void shouldSerializeOneLinkIfThereIsATransition() {
 		Transition t = mock(Transition.class);
 		when(t.getName()).thenReturn("kill");
-		when(t.getUri()).thenReturn("http://www.caelum.com.br/kill");
+		when(t.getUri()).thenReturn("/kill");
 		
 		String xml = xstream.toXML(new Client(t));
 		assertThat(xml, containsString("<atom:link rel=\"kill\" href=\"http://www.caelum.com.br/kill\" xmlns:atom=\"http://www.w3.org/2005/Atom\"/>"));
@@ -62,11 +65,11 @@ public class LinkConverterTest {
 	public void shouldSerializeAllLinksIfThereAreTransitions() {
 		Transition t = mock(Transition.class);
 		when(t.getName()).thenReturn("kill");
-		when(t.getUri()).thenReturn("http://www.caelum.com.br/kill");
+		when(t.getUri()).thenReturn("/kill");
 		
 		Transition t2 = mock(Transition.class);
 		when(t2.getName()).thenReturn("ressurect");
-		when(t2.getUri()).thenReturn("http://www.caelum.com.br/ressurect");
+		when(t2.getUri()).thenReturn("/ressurect");
 		
 		String xml = xstream.toXML(new Client(t,t2));
 		assertThat(xml, containsString("<atom:link rel=\"kill\" href=\"http://www.caelum.com.br/kill\" xmlns:atom=\"http://www.w3.org/2005/Atom\"/>"));

@@ -1,5 +1,7 @@
 package br.com.caelum.restfulie.vraptor;
 
+import br.com.caelum.vraptor.config.Configuration;
+import br.com.caelum.vraptor.core.RequestInfo;
 import br.com.caelum.vraptor.rest.Restfulie;
 import br.com.caelum.vraptor.rest.StateResource;
 import br.com.caelum.vraptor.rest.Transition;
@@ -23,10 +25,12 @@ public class LinkConverter implements Converter {
 
 	private final Restfulie restfulie;
 	private final Converter base;
+	private final Configuration config;
 
-	public LinkConverter(Converter base, Restfulie restfulie) {
+	public LinkConverter(Converter base, Restfulie restfulie, Configuration config) {
 		this.base = base;
 		this.restfulie = restfulie;
+		this.config = config;
 	}
 
 	public void marshal(Object root, HierarchicalStreamWriter writer,
@@ -36,7 +40,7 @@ public class LinkConverter implements Converter {
 		for (Transition t : resource.getFollowingTransitions(restfulie)) {
 			writer.startNode("atom:link");
 			writer.addAttribute("rel", t.getName());
-			writer.addAttribute("href", t.getUri());
+			writer.addAttribute("href", config.getApplicationPath() + t.getUri());
 			writer.addAttribute("xmlns:atom", "http://www.w3.org/2005/Atom");
 			writer.endNode();
 		}
