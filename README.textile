@@ -351,13 +351,9 @@ h3. next release
 
 h2. Coming soon
 
-* links are stacking up between requests
-* question: does jersey uses toString in order to serialize? fromXmlString? createResponseOrderRepresentation?... if it does use those static methods, there are a lot of static configs. if it doesnt, it doesnt allow you to config?
-* comparison: jersey client api is just an http helper (not wrapper), once there are no conventions, you have to do everything by hand
+* release 0.3
 * refactor order, receipt and paymento to have methods as order.pay
 * rename getHref to getUri
-* javadoc
-* release 0.3
 * allow vraptor to map two different methods to the same path and verb in different states
 * if transition does not exist, getTransition should throw an exception?
 * support custom namespaces

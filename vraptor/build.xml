@@ -44,10 +44,29 @@
 		</javac>
 	</target>
 
-	<target name="artifacts" depends="compile" description="--> generate project's artifacts">
+	<target name="jar" depends="compile" description="--> generate project's jar">
 		<jar destfile="${jar.file}" compress="true">
 			<fileset dir="${tmp.classes.dir}" includes="**/*.class" />
 		</jar>
+	</target>
+
+	<!-- ================================= 
+          target: javadoc              
+         ================================= -->
+    <target name="javadoc" description="generates javadoc">
+    	<exec executable="rm">
+			<arg line="-rf src/content/javadoc"/>
+		</exec>
+    	<mkdir dir="src/content/javadoc"/>
+		<javadoc destdir="src/content/javadoc">
+			<classpath>
+				<fileset dir="lib" includes="**/*.jar" />
+			</classpath>
+			<fileset dir="src/main/java" includes="**/*.java" />
+		</javadoc>
+    </target>
+
+	<target name="artifacts" depends="jar, javadoc">
 	</target>
 
 </project>
