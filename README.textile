@@ -355,13 +355,8 @@ There is a "portuguese tutorial on the server-side support":http://wakethedead.c
 
 h2. What's new
 
-h3. next release
-
-* first java release (similar to 0.3 restfulie's ruby version)
-
 h2. Coming soon
 
-* release 0.3
 * refactor order, receipt and paymento to have methods as order.pay
 * rename getHref to getUri
 * allow vraptor to map two different methods to the same path and verb in different states

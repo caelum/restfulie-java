@@ -4,7 +4,7 @@
 		
 		<ant dir="vraptor" target="artifacts" />
 		<ant dir="client" target="artifacts" />
-		<zip destfile="restfulie-0.3.0.zip">
+		<zip destfile="restfulie-1.0.0-beta1.zip">
 			<zipfileset dir="vraptor/target" includes="*.jar" prefix="server"/>
 			<zipfileset dir="vraptor/lib" prefix="server/lib" />
 			<zipfileset dir="vraptor/src/content/" prefix="server"/>
