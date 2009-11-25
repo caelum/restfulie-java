@@ -19,7 +19,7 @@ as the way to lead your client's path through a business process.
 
 Therefore Restfulie is unique both in its feature set when compared to both Spring and JAX-RS based implementations, and its implementation: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system.
 
-According to "xxxxxx's model":http://www , systems are only to be called RESTFul if they support this kind of state flow transition through hypermedia content contained within resources representations:
+According to Richardson Maturity Model , systems are only to be called RESTFul if they support this kind of state flow transition through hypermedia content contained within resources representations:
 
 <pre>
 <order>
