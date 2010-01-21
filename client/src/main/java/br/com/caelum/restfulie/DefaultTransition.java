@@ -137,7 +137,7 @@ public class DefaultTransition implements Transition {
 	}
 
 	public <R> R executeAndRetrieve() {
-		return executeAndRetrieve(null);
+		return (R) executeAndRetrieve(null);
 	}
 
 }

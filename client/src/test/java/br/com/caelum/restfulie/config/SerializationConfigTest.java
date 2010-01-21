@@ -35,7 +35,7 @@ public class SerializationConfigTest {
 		Configuration config = configs.type(String.class);
 		assertThat(config.getIncludes().size(), is(equalTo(0)));
 		assertThat(config.getExcludes().length, is(equalTo(0)));
-		assertThat(config.getType(), is(equalTo(String.class)));
+		assertThat(config.getType().toString(), is(equalTo(String.class.toString())));
 	}
 
 	@Test

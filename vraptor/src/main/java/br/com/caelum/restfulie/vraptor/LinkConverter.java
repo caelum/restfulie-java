@@ -64,7 +64,7 @@ public class LinkConverter implements Converter {
 			}
 		} finally {
 			// TODO remove this thing from here
-			restfulie.clear();
+			// restfulie.clear();
 		}
 	}
 

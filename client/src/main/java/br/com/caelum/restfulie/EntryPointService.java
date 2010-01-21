@@ -71,7 +71,7 @@ public class EntryPointService implements ResourceSerializer{
 	}
 	
 	public <T, R> R post(T object) {
-		return custom(object).post();
+		return (R) custom(object).post();
 	}
 
 	public ResourceSerializer exclude(String... names) {
@@ -103,7 +103,7 @@ public class EntryPointService implements ResourceSerializer{
 			writer.flush();
 	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(config), new IdentityContentProcessor());
 	        if(response.getCode()==201) {
-	        	return new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
+	        	return (R) new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
 	        return null;
 		} catch (IOException e) {
@@ -121,7 +121,7 @@ public class EntryPointService implements ResourceSerializer{
 			connection.setRequestMethod("GET");
 			XStreamDeserializer deserializer = new XStreamDeserializer(config);
 			DefaultResponse response = new DefaultResponse(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
-	        return response.getResource();
+	        return (R) response.getResource();
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		}
