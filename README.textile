@@ -304,6 +304,19 @@ public class Order implements StateResource {
 You are ready to go. Create a new order and access it through your /order/id path.
 The best way to start is to download the sample application and go through the *OrderingController* and *Order* classes.
 
+h3. Creating relations to other servers
+
+<pre>
+public class Order implements HypermediaResource {
+
+
+	public List<Transition> getFollowingTransitions(Restfulie control) {
+		control.transition("up").at('http://caelumobjects.com');
+		return control.getTransitions();
+	}
+
+}</pre>
+
 h2. Accepting more than one argument
 
 While JAX-RS will deserialize your request body into your method argument and require you to retrieve extra URI information through the requested URI, Restfulie accepts one
@@ -354,6 +367,11 @@ There is a "portuguese tutorial on the server-side support":http://wakethedead.c
 
 
 h2. What's new
+
+h3. 1.1
+
+*API CHANGE*: StateResource changed to HypermediaResource. getFollowingTransitions changed to getRelations. Transition class renamed to Relation
+*API CHANGE*: Package restfulie.vraptor changed to vraptor.restfulie
 
 h2. Coming soon
 
