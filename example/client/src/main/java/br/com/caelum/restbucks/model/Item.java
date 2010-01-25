@@ -24,32 +24,22 @@ public class Item {
 		small, medium, large
 	};
 
-	private Coffee name;
-	private int quantity;
+	private Coffee drink;
 	private Milk milk;
 	private Size size;
 
-	public Item(Coffee name, int quantity, Milk milk, Size size) {
-		this.name = name;
-		this.quantity = quantity;
+	public Item(Coffee name, Milk milk, Size size) {
+		this.drink = name;
 		this.milk = milk;
 		this.size = size;
 	}
 
-	public Coffee getName() {
-		return name;
+	public Coffee getDrink() {
+		return drink;
 	}
 
-	public void setName(Coffee name) {
-		this.name = name;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setDrink(Coffee name) {
+		this.drink = name;
 	}
 
 	public Milk getMilk() {
@@ -69,7 +59,7 @@ public class Item {
 	}
 
 	public BigDecimal getPrice() {
-		return name.price;
+		return drink.price;
 	}
 
 }

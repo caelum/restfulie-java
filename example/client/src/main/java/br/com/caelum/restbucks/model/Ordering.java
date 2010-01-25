@@ -16,7 +16,7 @@ public class Ordering {
 	public Ordering withRandomItems() {
 		int quantity = random(2, 5);
 		for (int i = 0; i < quantity; i++) {
-			Item item = new Item(random(Coffee.class), random(1, 3), random(Milk.class), random(Size.class));
+			Item item = new Item(random(Coffee.class), random(Milk.class), random(Size.class));
 			order.add(item);
 		}
 		return this;

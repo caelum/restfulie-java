@@ -24,13 +24,13 @@ public class Entry {
     private static void happyPathTest(URI uri) throws Exception {
     	
         Resources server = Restfulie.resources();
-        server.configure(Order.class).implicit("items");
+        server.configure(Order.class).include("items");
         server.configure(Payment.class);
         server.configure(Receipt.class);
 
         // Place the order
         System.out.println(String.format("About to start happy path test. Placing order at [%s] via POST", uri.toString()));
-        Order order = order().withRandomItems().build();
+        Order order = createOrder();
         order = server.entryAt(uri).post(order);
         
         System.out.println(String.format("Order placed at [%s]", order.getLatestUri()));
@@ -59,6 +59,10 @@ public class Entry {
             System.out.println(String.format("Order status [%s], enjoy your drink", finalResponse.getCode()));
         }
     }
+
+	private static Order createOrder() {
+		return order().withRandomItems().build();
+	}
     
 
 	/**
