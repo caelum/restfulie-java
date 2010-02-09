@@ -17,11 +17,14 @@
 
 package br.com.caelum.restfulie;
 
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
+import br.com.caelum.restfulie.serializer.BasicSerializer;
+import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
@@ -51,4 +54,6 @@ public interface Resources {
 	 * Allows retrieving an instance of the deserializer for testing.
 	 */
 	Deserializer getDeserializer();
+
+	BasicSerializer getSerializerFor(Writer writer, Object customObject);
 }

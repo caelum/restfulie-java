@@ -107,19 +107,24 @@ public class EntryPointService implements ResourceSerializer{
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
-			BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer).from(customObject);
+			BasicSerializer serializer = getSerializer(writer);
 			serializer.serialize();
 			writer.flush();
 	        DefaultResponse response = responseFor(connection, new IdentityContentProcessor());
 	        if(response.getCode()==201) {
 	        	return (R) new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
+	        // TODO return dumb proxy with access to the response
 	        return null;
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		} catch (URISyntaxException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		}
+	}
+
+	private BasicSerializer getSerializer(Writer writer) {
+		return new XStreamXmlSerializer(config.create(), writer).from(customObject);
 	}
 
 	public <R> R get() {

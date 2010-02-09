@@ -1,10 +1,16 @@
 package br.com.caelum.restbucks;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
+import br.com.caelum.restbucks.model.Item;
 import br.com.caelum.restbucks.model.Order;
+import br.com.caelum.restbucks.model.Order.Location;
 import br.com.caelum.restfulie.Resources;
 
 public class MappingConfigTest {
@@ -49,6 +55,23 @@ public class MappingConfigTest {
     	Resources resources = new MappingConfig().getServer();
     	Order order = (Order) resources.getDeserializer().fromXml(content);
     	assertTrue(order!=null); // dumb test for config
+	}
+
+	@Test
+	public void shouldSerializeSimpleOrder() {
+
+		String expected = "<?xml version='1.0' encoding='utf-8'?>"+
+	"<order>"+
+	"<location>takeAway</location>"+
+	"<items></items>"+
+	"<status>unpaid</status>"+
+	"</order>";
+		
+    	Resources resources = new MappingConfig().getServer();
+    	Order order = new Order("unpaid", new ArrayList<Item>(), Location.takeAway);
+    	StringWriter w  = new StringWriter();
+    	resources.getSerializerFor(w, order).serialize();
+    	assertEquals(expected, w.getBuffer().toString());
 	}
 
 }

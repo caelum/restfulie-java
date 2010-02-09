@@ -17,6 +17,7 @@
 
 package br.com.caelum.restfulie;
 
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import br.com.caelum.restfulie.config.SerializationConfig;
 import br.com.caelum.restfulie.config.SimpleConfiguration;
 import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
+import br.com.caelum.restfulie.serializer.BasicSerializer;
+import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
@@ -49,11 +52,19 @@ public class DefaultResources implements Resources {
 	}
 
 	public Deserializer getDeserializer() {
-		return new XStreamDeserializer(new XStreamConfig(new SerializationConfig(configurations)));
+		return new XStreamDeserializer(createConfig());
+	}
+
+	XStreamConfig createConfig() {
+		return new XStreamConfig(new SerializationConfig(configurations));
 	}
 
 	public ResourceSerializer entryAt(String uri) throws URISyntaxException {
 		return entryAt(new URI(uri));
+	}
+	
+	public BasicSerializer getSerializerFor(Writer writer, Object customObject) {
+		return new XStreamXmlSerializer(createConfig().create(), writer).from(customObject);
 	}
 
 }

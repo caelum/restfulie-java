@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("order")
 public class Order {
@@ -25,6 +26,7 @@ public class Order {
 	@XStreamAlias("updated-at")
 	private String updatedAt;
 	
+	@XStreamOmitField
 	private double cost;
 
 	public enum Location {
