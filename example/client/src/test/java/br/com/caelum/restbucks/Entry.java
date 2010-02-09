@@ -33,12 +33,12 @@ public class Entry {
         
         // Pay for the order 
         Payment payment = new Payment("12345677878", "guilherme silveira", 12, 2999, order.getCost());
-        System.out.println(String.format("About to create a payment resource at [%s] via PUT", resource(order).getTransition("pay").getHref()));
+        System.out.println(String.format("About to create a payment resource at [%s] via PUT", resource(order).getRelation("pay").getHref()));
         Receipt receipt =  order.pay(payment);
         System.out.println("Payment made, receipt created at: " + receipt.getPaymentTime().getTime());
 
         // Check on the order status
-        System.out.println(String.format("About to check order status at [%s] via GET", resource(receipt).getTransition("order").getHref()));
+        System.out.println(String.format("About to check order status at [%s] via GET", resource(receipt).getRelation("order").getHref()));
         Order finalOrder = receipt.getOrder();
         System.out.println(String.format("Final order placed, current status [%s]", finalOrder.getStatus()));
         
@@ -47,9 +47,9 @@ public class Entry {
         System.in.read();
         
         // Take the order if possible
-        System.out.println(String.format("Trying to take the ready order from [%s] via DELETE. Note: the internal state machine must progress the order to ready before this should work, otherwise expect a 405 response.", resource(receipt).getTransition("order").getHref()));
+        System.out.println(String.format("Trying to take the ready order from [%s] via DELETE. Note: the internal state machine must progress the order to ready before this should work, otherwise expect a 405 response.", resource(receipt).getRelation("order").getHref()));
         finalOrder = receipt.getOrder();
-        Response finalResponse = resource(finalOrder).getTransition("retrieve").method(HttpMethod.DELETE).execute();
+        Response finalResponse = resource(finalOrder).getRelation("retrieve").method(HttpMethod.DELETE).access();
         System.out.println(String.format("Tried to take final order, HTTP status [%d]", finalResponse.getCode()));
         if(finalResponse.getCode() == 200) {
             System.out.println(String.format("Order status [%s], enjoy your drink", finalResponse.getCode()));

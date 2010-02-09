@@ -80,15 +80,15 @@ public class Order {
 	}
 
 	public String getLatestUri() {
-		return resource(this).getTransition("latest").getHref();
+		return resource(this).getRelation("self").getHref();
 	}
 	
 	public Receipt pay(Payment payment) {
-		return resource(this).getTransition("pay").executeAndRetrieve(payment);
+		return resource(this).getRelation("pay").accessAndRetrieve(payment);
 	}
 
 	public void cancel() {
-		resource(this).getTransition("cancel").execute();
+		resource(this).getRelation("cancel").access();
 	}
 	
 }

@@ -18,7 +18,7 @@ public class Receipt {
 	}
 
 	public Order getOrder() {
-		return resource(this).getTransition("order").method(HttpMethod.GET).executeAndRetrieve();
+		return resource(this).getRelation("order").method(HttpMethod.GET).accessAndRetrieve();
 	}
 
 }
