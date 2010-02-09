@@ -30,12 +30,16 @@ import java.util.List;
 public interface Resource {
 
 	/**
-	 * Returns a list of possible transitions given this resource's state.
-	 * 
-	 * @return the collection of transitions
+	 * Returns a relation, if found, or null if it was not found.
 	 */
-	List<Transition> getTransitions();
-	
-	Transition getTransition(String rel);
+	Relation getRelation(String rel);
+
+	/**
+	 * Returns a list of possible relations given this resource's state.
+	 * 
+	 * @return the collection of relation
+	 */
+	List<Relation> getRelations();
+
 
 }

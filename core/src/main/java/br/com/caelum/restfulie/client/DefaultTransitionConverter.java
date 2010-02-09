@@ -17,7 +17,7 @@
 
 package br.com.caelum.restfulie.client;
 
-import br.com.caelum.restfulie.DefaultTransition;
+import br.com.caelum.restfulie.DefaultRelation;
 import br.com.caelum.restfulie.XStreamDeserializer;
 import br.com.caelum.restfulie.config.XStreamConfig;
 
@@ -53,11 +53,11 @@ public class DefaultTransitionConverter implements Converter {
 			UnmarshallingContext context) {
 		String rel = reader.getAttribute("rel");
 		String href = reader.getAttribute("href");
-		return new DefaultTransition(rel, href, deserializer, config);
+		return new DefaultRelation(rel, href, deserializer, config);
 	}
 
 	public boolean canConvert(Class type) {
-		return type.equals(DefaultTransition.class);
+		return type.equals(DefaultRelation.class);
 	}
 
 }

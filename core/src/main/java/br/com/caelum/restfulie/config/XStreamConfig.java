@@ -34,7 +34,7 @@ import javassist.NotFoundException;
 
 import javax.xml.namespace.QName;
 
-import br.com.caelum.restfulie.DefaultTransition;
+import br.com.caelum.restfulie.DefaultRelation;
 import br.com.caelum.restfulie.Resource;
 
 import com.thoughtworks.xstream.XStream;
@@ -70,7 +70,7 @@ public class XStreamConfig {
 			excludeNonPrimitives(instance, type, config.getIncludes(), config.getImplicits());
 		}
 		for(Class customType : realTypes.values()) {
-			instance.addImplicitCollection(customType, "link","link", DefaultTransition.class);
+			instance.addImplicitCollection(customType, "link","link", DefaultRelation.class);
 		}
 		return instance;
 	}
@@ -100,7 +100,7 @@ public class XStreamConfig {
 	protected XStream getXStream() {
 		QNameMap qnameMap = new QNameMap();
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
-		qnameMap.registerMapping(qname, DefaultTransition.class);
+		qnameMap.registerMapping(qname, DefaultRelation.class);
 		ReflectionProvider provider = getProvider();
 		XStream xstream = new XStream(provider, new StaxDriver(qnameMap)) {
 			@Override
@@ -108,8 +108,8 @@ public class XStreamConfig {
 				return new LinkSupportWrapper(next);
 			}
 		};
-		xstream.useAttributeFor(DefaultTransition.class, "rel");
-		xstream.useAttributeFor(DefaultTransition.class, "href");
+		xstream.useAttributeFor(DefaultRelation.class, "rel");
+		xstream.useAttributeFor(DefaultRelation.class, "href");
 		return xstream;
 	}
 
@@ -157,8 +157,8 @@ public class XStreamConfig {
 			custom.addInterface(pool.get(Resource.class.getName()));
 			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
 			custom.addField(field);
-			custom.addMethod(CtNewMethod.make("public java.util.List getTransitions() { return link; }", custom));
-			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Transition getTransition(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Transition t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", custom));
+			custom.addMethod(CtNewMethod.make("public java.util.List getRelations() { return link; }", custom));
+			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Relation getRelation(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Relation t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", custom));
 			Class customType = custom.toClass();
 			this.realTypes.put(originalType, customType);
 			return customType;

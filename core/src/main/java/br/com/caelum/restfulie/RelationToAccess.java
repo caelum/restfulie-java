@@ -19,28 +19,28 @@ package br.com.caelum.restfulie;
 
 import br.com.caelum.restfulie.http.HttpMethod;
 
-public interface TransitionToExecute {
+public interface RelationToAccess {
 
 	/**
-	 * Executes this transition passing some parameters.
+	 * Executes this transition or access a relation  passing some parameters.
 	 */
-	<T> Response execute(T arg);
+	<T> Response access(T arg);
 
 	/**
-	 * Executes this transition passing some parameters and return its result.
+	 * Executes this transitio or access a relation n passing some parameters and return its result.
 	 */
-	<T, R> R executeAndRetrieve(T arg);
+	<T, R> R accessAndRetrieve(T arg);
 	
 	/**
-	 * Executes this transition and return its result.
+	 * Executes this transition or access a relation  and return its result.
 	 */
-	<R> R executeAndRetrieve();
+	<R> R accessAndRetrieve();
 
 	/**
-	 * Executes this transition without any parameters.
+	 * Executes this transition or access a relation without any parameters.
 	 */
-	Response execute();
+	Response access();
 
-	TransitionToExecute method(HttpMethod method);
+	RelationToAccess method(HttpMethod method);
 
 }

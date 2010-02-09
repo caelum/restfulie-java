@@ -42,7 +42,7 @@ import br.com.caelum.restfulie.unmarshall.Deserializer;
  * @author guilherme silveira
  * @author lucas souza
  */
-public class DefaultTransition implements Transition {
+public class DefaultRelation implements Relation {
 
 	private String rel;
 	private String href;
@@ -60,7 +60,7 @@ public class DefaultTransition implements Transition {
 		defaultMethods.put("suspend", "DELETE");
 	}
 
-	public DefaultTransition(String rel, String href, Deserializer deserializer, XStreamConfig config) {
+	public DefaultRelation(String rel, String href, Deserializer deserializer, XStreamConfig config) {
 		this.rel = rel;
 		this.href = href;
 		this.deserializer = deserializer;
@@ -75,7 +75,7 @@ public class DefaultTransition implements Transition {
 		return rel;
 	}
 
-	public <T, Z> Z execute(T arg) {
+	public <T, Z> Z access(T arg) {
 		return (Z) execute(arg, false);
 	}
 
@@ -89,12 +89,12 @@ public class DefaultTransition implements Transition {
 		return "POST";
 	}
 	
-	public TransitionToExecute method(HttpMethod methodToUse) {
+	public RelationToAccess method(HttpMethod methodToUse) {
 		this.methodToUse = methodToUse;
 		return this;
 	}
 
-	public <T> Response execute(T arg) {
+	public <T> Response access(T arg) {
 		return (Response) execute(null, false);
 	}
 
@@ -128,16 +128,16 @@ public class DefaultTransition implements Transition {
 		}
 	}
 
-	public <T, R> R executeAndRetrieve(T arg) {
+	public <T, R> R accessAndRetrieve(T arg) {
 		return (R) execute(arg, true);
 	}
 
-	public Response execute() {
+	public Response access() {
 		return (Response) execute(null, false);
 	}
 
-	public <R> R executeAndRetrieve() {
-		return (R) executeAndRetrieve(null);
+	public <R> R accessAndRetrieve() {
+		return (R) accessAndRetrieve(null);
 	}
 
 }
