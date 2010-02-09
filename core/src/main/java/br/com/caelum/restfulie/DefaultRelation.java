@@ -54,6 +54,7 @@ public class DefaultRelation implements Relation {
 	static {
 		defaultMethods.put("latest", "GET");
 		defaultMethods.put("show", "GET");
+		defaultMethods.put("self", "GET");
 		defaultMethods.put("update", "POST");
 		defaultMethods.put("cancel", "DELETE");
 		defaultMethods.put("destroy", "DELETE");
@@ -103,6 +104,7 @@ public class DefaultRelation implements Relation {
 			URL url = new URL(href);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.addRequestProperty("Content-type", "application/xml");
+			connection.addRequestProperty("Accept", "application/xml");
 			connection.setRequestMethod(methodName());
 			boolean hasParameter = parameter != null;
 			connection.setDoOutput(hasParameter);

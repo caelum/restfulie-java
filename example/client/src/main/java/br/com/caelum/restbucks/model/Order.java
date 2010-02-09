@@ -71,24 +71,20 @@ public class Order {
 		this.items.add(item);
 	}
 
-	public BigDecimal getCost() {
-		BigDecimal total = BigDecimal.ZERO;
-		for (Item item : items) {
-			total= total.add(item.getPrice());
-		}
-		return total;
-	}
-
-	public String getLatestUri() {
+	public String getSelfUri() {
 		return resource(this).getRelation("self").getHref();
 	}
 	
-	public Receipt pay(Payment payment) {
+	public Payment pay(Payment payment) {
 		return resource(this).getRelation("pay").accessAndRetrieve(payment);
 	}
 
 	public void cancel() {
 		resource(this).getRelation("cancel").access();
+	}
+	
+	public double getCost() {
+		return cost;
 	}
 	
 }

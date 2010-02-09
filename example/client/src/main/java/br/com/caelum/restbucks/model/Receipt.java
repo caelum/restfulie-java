@@ -13,6 +13,12 @@ public class Receipt {
 
 	private Calendar paymentTime;
 
+	@XStreamAlias("created-at")
+	private String createdAt;
+
+	@XStreamAlias("updated-at")
+	private String updatedAt;
+
 	public Calendar getPaymentTime() {
 		return paymentTime;
 	}
