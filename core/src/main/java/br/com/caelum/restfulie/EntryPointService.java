@@ -30,6 +30,7 @@ import java.util.Map;
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.config.SerializationConfig;
 import br.com.caelum.restfulie.config.XStreamConfig;
+import br.com.caelum.restfulie.http.ContentProcessor;
 import br.com.caelum.restfulie.http.DefaultResponse;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 import br.com.caelum.restfulie.http.IdentityContentProcessor;
@@ -109,7 +110,7 @@ public class EntryPointService implements ResourceSerializer{
 			BasicSerializer serializer = new XStreamXmlSerializer(config.create(), writer).from(customObject);
 			serializer.serialize();
 			writer.flush();
-	        DefaultResponse response = new DefaultResponse(connection, new XStreamDeserializer(config), new IdentityContentProcessor());
+	        DefaultResponse response = responseFor(connection, new IdentityContentProcessor());
 	        if(response.getCode()==201) {
 	        	return (R) new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
 	        }
@@ -127,13 +128,21 @@ public class EntryPointService implements ResourceSerializer{
 			connection.addRequestProperty("Accept", accept);
 			connection.setDoOutput(false);
 			connection.setRequestMethod("GET");
-			XStreamDeserializer deserializer = new XStreamDeserializer(config);
-			DefaultResponse response = new DefaultResponse(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
+			DefaultResponse response = responseFor(connection, new HttpURLConnectionContentProcessor(connection));
 	        return (R) response.getResource();
 		} catch (IOException e) {
 			throw new TransitionException("Unable to execute " + uri, e);
 		}
 
+	}
+
+	private DefaultResponse responseFor(HttpURLConnection connection, ContentProcessor processor)
+			throws IOException {
+		return new DefaultResponse(connection, getDeserializer(), processor);
+	}
+
+	private XStreamDeserializer getDeserializer() {
+		return new XStreamDeserializer(this.config);
 	}
 
 }

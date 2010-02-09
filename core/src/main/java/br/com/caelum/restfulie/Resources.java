@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
+import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
  * Allows resources configuration and access.
@@ -45,4 +46,9 @@ public interface Resources {
 	 * @throws URISyntaxException 
 	 */
 	ResourceSerializer entryAt(String uri) throws URISyntaxException;
+
+	/**
+	 * Allows retrieving an instance of the deserializer for testing.
+	 */
+	Deserializer getDeserializer();
 }

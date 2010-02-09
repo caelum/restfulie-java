@@ -23,8 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.caelum.restfulie.config.Configuration;
+import br.com.caelum.restfulie.config.SerializationConfig;
 import br.com.caelum.restfulie.config.SimpleConfiguration;
+import br.com.caelum.restfulie.config.XStreamConfig;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
+import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
  * Configured service entry point.
@@ -43,6 +46,10 @@ public class DefaultResources implements Resources {
 
 	public ResourceSerializer entryAt(URI uri) {
 		return new EntryPointService(uri, configurations);
+	}
+
+	public Deserializer getDeserializer() {
+		return new XStreamDeserializer(new XStreamConfig(new SerializationConfig(configurations)));
 	}
 
 	public ResourceSerializer entryAt(String uri) throws URISyntaxException {
