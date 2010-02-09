@@ -48,6 +48,8 @@ public class EntryPointService implements ResourceSerializer{
 	private Object customObject;
 	private final XStreamConfig config;
 	
+	private String accept = "application/xml";
+	
 	public EntryPointService(URI uri) {
 		this(uri, new HashMap<Class, Configuration>());
 	}
@@ -67,6 +69,11 @@ public class EntryPointService implements ResourceSerializer{
 	
 	public <T> ResourceSerializer custom(T object) {
 		this.customObject = object;
+		return this;
+	}
+	
+	public EntryPointService accept(String type) {
+		this.accept = type;
 		return this;
 	}
 	
@@ -93,7 +100,8 @@ public class EntryPointService implements ResourceSerializer{
 	public <R> R post() {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-			connection.addRequestProperty("Content-type", "application/xml"); // read from some previous configured place
+			connection.addRequestProperty("Accept", accept);
+			connection.addRequestProperty("Content-type", "application/xml");
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
@@ -116,7 +124,7 @@ public class EntryPointService implements ResourceSerializer{
 	public <R> R get() {
 		try {
 			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-			connection.addRequestProperty("Accepts", "application/xml"); // read from some previous configured place
+			connection.addRequestProperty("Accept", accept);
 			connection.setDoOutput(false);
 			connection.setRequestMethod("GET");
 			XStreamDeserializer deserializer = new XStreamDeserializer(config);

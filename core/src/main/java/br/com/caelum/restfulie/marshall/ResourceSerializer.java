@@ -17,6 +17,8 @@
 
 package br.com.caelum.restfulie.marshall;
 
+import br.com.caelum.restfulie.EntryPointService;
+
 /**
  * Basic resource serialization support.
  * 
@@ -27,6 +29,11 @@ public interface ResourceSerializer {
 	ResourceSerializer exclude(String... names);
 
 	ResourceSerializer include(String... names);
+	
+	/**
+	 * Accepts one specific content type.
+	 */
+	ResourceSerializer accept(String type);
 
 	<R> R post();
 	
