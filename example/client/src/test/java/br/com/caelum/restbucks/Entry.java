@@ -11,7 +11,6 @@ import br.com.caelum.restbucks.model.Payment;
 import br.com.caelum.restbucks.model.Receipt;
 import br.com.caelum.restfulie.Resources;
 import br.com.caelum.restfulie.Response;
-import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.http.HttpMethod;
 
 public class Entry {
@@ -22,16 +21,13 @@ public class Entry {
     }
 
     private static void happyPathTest(URI uri) throws Exception {
-    	
-        Resources server = Restfulie.resources();
-        server.configure(Order.class).include("items");
-        server.configure(Payment.class);
-        server.configure(Receipt.class);
+
+    	Resources resources = new MappingConfig().getServer();
 
         // Place the order
         System.out.println(String.format("About to start happy path test. Placing order at [%s] via POST", uri.toString()));
         Order order = createOrder();
-        order = server.entryAt(uri).post(order);
+        order = resources.entryAt(uri).post(order);
         
         System.out.println(String.format("Order placed at [%s]", order.getLatestUri()));
         

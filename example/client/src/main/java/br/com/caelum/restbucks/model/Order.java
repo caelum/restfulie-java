@@ -18,10 +18,18 @@ public class Order {
 
 	private String status;
 	private Payment payment;
+	
+	@XStreamAlias("created-at")
+	private String createdAt;
+
+	@XStreamAlias("updated-at")
+	private String updatedAt;
+	
+	private double cost;
 
 	public enum Location {
 		takeAway, drinkIn
-	};
+	}
 
 	public Order(String status, List<Item> items, Location location) {
 		this.status = status;

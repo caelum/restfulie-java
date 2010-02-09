@@ -24,9 +24,16 @@ public class Item {
 		small, medium, large
 	};
 
+	private String id;
 	private Coffee drink;
 	private Milk milk;
 	private Size size;
+	@XStreamAlias("created-at")
+	private String createdAt;
+
+	@XStreamAlias("updated-at")
+	private String updatedAt;
+	
 
 	public Item(Coffee name, Milk milk, Size size) {
 		this.drink = name;
