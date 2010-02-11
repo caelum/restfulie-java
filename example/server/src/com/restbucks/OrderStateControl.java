@@ -1,12 +1,12 @@
 package com.restbucks;
 
-import br.com.caelum.restfulie.vraptor.StateControl;
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
+import br.com.caelum.vraptor.restfulie.controller.ResourceControl;
 
 @Component
 @ApplicationScoped
-public class OrderStateControl implements StateControl<Order> {
+public class OrderStateControl implements ResourceControl<Order> {
 	
 	private final OrderDatabase database;
 

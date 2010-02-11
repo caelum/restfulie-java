@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.caelum.restfulie.vraptor.Transition;
 import br.com.caelum.vraptor.Consumes;
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Get;
@@ -15,6 +14,7 @@ import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.Routes;
+import br.com.caelum.vraptor.restfulie.hypermedia.Transition;
 import br.com.caelum.vraptor.serialization.Serializer;
 import br.com.caelum.vraptor.view.Status;
 
@@ -39,11 +39,11 @@ public class OrderingController {
 	}
 
 	@Get
-	@Path("/order/{order.id}")
+	@Path("/orders/{order.id}")
 	public void get(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
-			Serializer serializer = result.use(xml()).from(order); //.namespace("http://restbucks.com/order", "o");
+			Serializer serializer = result.use(xml()).from(order); //.namespace("http://restbucks.com/orders", "o");
 			serializer.include("items");
 			serializer.include("payment").serialize();
 		} else {
@@ -52,7 +52,7 @@ public class OrderingController {
 	}
 	
 	@Post
-	@Path("/order")
+	@Path("/orders")
 	@Consumes("application/xml")
 	public void add(Order order) {
 		database.save(order);
@@ -61,7 +61,7 @@ public class OrderingController {
 	}
 	
 	@Delete
-	@Path("/order/{order.id}")
+	@Path("/orders/{order.id}")
 	@Transition
 	public void cancel(Order order) {
 		order = database.getOrder(order.getId());
@@ -74,13 +74,13 @@ public class OrderingController {
 	}
 	
 	@Get
-	@Path("/order")
+	@Path("/orders")
 	public List<Order> index() throws IOException {
 		return new ArrayList<Order>(database.all());
 	}
 
 	@Post
-	@Path("/order/{order.id}/pay")
+	@Path("/orders/{order.id}/pay")
 	@Consumes("application/xml")
 	@Transition
 	public void pay(Order order, Payment payment) {
@@ -90,7 +90,7 @@ public class OrderingController {
 	}
 
 	@Get
-	@Path("/order/{order.id}/checkPaymentInfo")
+	@Path("/orders/{order.id}/checkPaymentInfo")
 	public void checkPayment(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {

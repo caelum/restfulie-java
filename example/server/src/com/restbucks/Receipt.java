@@ -3,11 +3,11 @@ package com.restbucks;
 import java.util.Calendar;
 import java.util.List;
 
-import br.com.caelum.vraptor.rest.Restfulie;
-import br.com.caelum.vraptor.rest.StateResource;
-import br.com.caelum.vraptor.rest.Transition;
+import br.com.caelum.vraptor.restfulie.Restfulie;
+import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
+import br.com.caelum.vraptor.restfulie.relation.Relation;
 
-public class Receipt implements StateResource{
+public class Receipt implements HypermediaResource{
 	
 	private final Calendar paymentTime= Calendar.getInstance();
 	private final Order order;
@@ -20,9 +20,9 @@ public class Receipt implements StateResource{
 		return paymentTime;
 	}
 	
-	public List<Transition> getFollowingTransitions(Restfulie control) {
+	public List<Relation> getRelations(Restfulie control) {
 		control.transition("order").uses(OrderingController.class).get(order);
-		return control.getTransitions();
+		return control.getRelations();
 	}
 
 }

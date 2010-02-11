@@ -1,22 +1,23 @@
 package com.restbucks;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import br.com.caelum.vraptor.rest.Restfulie;
-import br.com.caelum.vraptor.rest.StateResource;
-import br.com.caelum.vraptor.rest.Transition;
+import br.com.caelum.vraptor.restfulie.Restfulie;
+import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
+import br.com.caelum.vraptor.restfulie.relation.Relation;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("order")
-public class Order implements StateResource {
+public class Order implements HypermediaResource {
 
 	private String id;
 	private Location location;
 	@XStreamImplicit
-	private List<Item> items;
+	private List<Item> items = new ArrayList<Item>();
 
 	private String status;
 	private Payment payment;
@@ -51,19 +52,17 @@ public class Order implements StateResource {
 		status = "cancelled";
 	}
 
-	public List<Transition> getFollowingTransitions(Restfulie control) {
+	public List<Relation> getRelations(Restfulie control) {
 		control.relation("self").uses(OrderingController.class).get(this);
 		if (status.equals("unpaid")) {
 			control.transition("cancel").uses(OrderingController.class).cancel(this);
 			control.relation("payment").uses(OrderingController.class).pay(this,null);
-//			 when(notFound()).then(404);
-//			 when(invalidState()).then(customWhatever());
 		}
 		if(status.equals("paid") && receipt.getPaymentTime().before(oneMinuteAgo())) {
 			control.transition("retrieve").uses(OrderingController.class).cancel(this);
 		}
 		control.relation("songs").at("http://otherserver");
-		return control.getTransitions();
+		return control.getRelations();
 	}
 
 	private Calendar oneMinuteAgo() {
@@ -92,6 +91,14 @@ public class Order implements StateResource {
 
 	public void finish() {
 		status = "retrieved by the client";
+	}
+	
+	public List<Item> getItems() {
+		return items;
+	}
+	
+	public Location getLocation() {
+		return location;
 	}
 
 }
