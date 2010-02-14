@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import java.util.Calendar;
 import java.util.List;

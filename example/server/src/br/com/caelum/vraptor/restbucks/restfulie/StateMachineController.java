@@ -1,4 +1,4 @@
-package com.restbucks.restfulie;
+package br.com.caelum.vraptor.restbucks.restfulie;
 
 public interface StateMachineController<T> {
 

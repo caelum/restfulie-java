@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 

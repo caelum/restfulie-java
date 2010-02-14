@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;

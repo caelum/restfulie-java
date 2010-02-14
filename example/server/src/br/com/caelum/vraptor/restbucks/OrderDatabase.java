@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -8,11 +8,11 @@ import java.util.Map;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
+import br.com.caelum.vraptor.restbucks.Item.Coffee;
+import br.com.caelum.vraptor.restbucks.Item.Milk;
+import br.com.caelum.vraptor.restbucks.Item.Size;
+import br.com.caelum.vraptor.restbucks.Order.Location;
 
-import com.restbucks.Item.Coffee;
-import com.restbucks.Item.Milk;
-import com.restbucks.Item.Size;
-import com.restbucks.Order.Location;
 
 /**
  * Simple database simulation.

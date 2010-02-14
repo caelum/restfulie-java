@@ -1,9 +1,9 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.ioc.RequestScoped;
+import br.com.caelum.vraptor.restbucks.restfulie.StateMachineController;
 
-import com.restbucks.restfulie.StateMachineController;
 
 @Component
 @RequestScoped

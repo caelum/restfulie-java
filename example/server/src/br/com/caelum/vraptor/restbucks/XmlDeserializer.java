@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import br.com.caelum.vraptor.deserialization.XStreamXMLDeserializer;
 import br.com.caelum.vraptor.http.ParameterNameProvider;
@@ -27,5 +27,7 @@ public class XmlDeserializer extends XStreamXMLDeserializer {
 		instance.processAnnotations(Item.class);
 		return instance;
 	}
+
+	
 
 }

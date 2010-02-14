@@ -1,12 +1,12 @@
-package com.restbucks.restfulie;
+package br.com.caelum.vraptor.restbucks.restfulie;
 
 import java.lang.reflect.TypeVariable;
 
 import br.com.caelum.vraptor.http.route.Router;
 import br.com.caelum.vraptor.http.route.RoutesConfiguration;
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
+import br.com.caelum.vraptor.restbucks.OrderMachineController;
 
-import com.restbucks.OrderMachineController;
 
 @ApplicationScoped
 public class CustomRoutes implements RoutesConfiguration{

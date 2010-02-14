@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,14 +9,12 @@ import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
 import br.com.caelum.vraptor.restfulie.relation.Relation;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("order")
 public class Order implements HypermediaResource {
 
 	private String id;
 	private Location location;
-	@XStreamImplicit
 	private List<Item> items = new ArrayList<Item>();
 
 	private String status;
@@ -24,7 +22,7 @@ public class Order implements HypermediaResource {
 	private Receipt receipt;
 
 	public enum Location {
-		takeAway, drinkIn
+		TO_TAKE, EAT_IN
 	};
 
 	public Order(String status, List<Item> items, Location location) {

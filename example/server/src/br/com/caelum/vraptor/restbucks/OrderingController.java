@@ -1,4 +1,4 @@
-package com.restbucks;
+package br.com.caelum.vraptor.restbucks;
 
 import static br.com.caelum.vraptor.view.Results.xml;
 
@@ -43,7 +43,7 @@ public class OrderingController {
 	public void get(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
-			Serializer serializer = result.use(xml()).from(order); //.namespace("http://restbucks.com/orders", "o");
+			Serializer serializer = result.use(xml()).from(order); //.namespace("http://restbucks.com/order", "o");
 			serializer.include("items");
 			serializer.include("payment").serialize();
 		} else {
@@ -53,7 +53,7 @@ public class OrderingController {
 	
 	@Post
 	@Path("/orders")
-	@Consumes("application/xml")
+	@Consumes
 	public void add(Order order) {
 		database.save(order);
 		routes.uriFor(OrderingController.class).get(order);
@@ -81,7 +81,7 @@ public class OrderingController {
 
 	@Post
 	@Path("/orders/{order.id}/pay")
-	@Consumes("application/xml")
+	@Consumes
 	@Transition
 	public void pay(Order order, Payment payment) {
 		order = database.getOrder(order.getId());

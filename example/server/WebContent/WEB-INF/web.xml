@@ -7,7 +7,7 @@
 
 	<context-param>
         <param-name>br.com.caelum.vraptor.packages</param-name>
-        <param-value>br.com.caelum.vraptor.restfulie,com.restbucks</param-value>
+        <param-value>br.com.caelum.vraptor.restfulie,br.com.caelum.vraptor.restbucks</param-value>
     </context-param>
     
 	<filter>
