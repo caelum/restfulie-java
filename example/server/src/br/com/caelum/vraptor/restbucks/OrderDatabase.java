@@ -25,15 +25,15 @@ public class OrderDatabase {
 	private Map<String, Order> orders = new HashMap<String, Order>();
 
 	public OrderDatabase() {
-		Item item = new Item(Coffee.latte, 1, Milk.whole, Size.small);
+		Item item = new Item(Coffee.LATTE, 1, Milk.WHOLE, Size.SMALL);
 		ArrayList<Item> items = new ArrayList<Item>();
 		items.add(item);
 
-		Order order = new Order("unpaid", items, Location.takeAway);
+		Order order = new Order("unpaid", items, Location.TO_TAKE);
 		order.setId("1");
 		save(order.getId(), order);
 
-		order = new Order("paid", items, Location.takeAway);
+		order = new Order("paid", items, Location.TO_TAKE);
 		order.pay(new Payment("1234123412341234", "guilherme silveira", 11, 12,
 				new BigDecimal(1020.0)));
 		order.setId("2");

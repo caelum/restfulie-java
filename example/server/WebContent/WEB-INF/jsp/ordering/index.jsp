@@ -7,7 +7,7 @@
 	Status: ${order.status }<br/>
 	<ul>
 	<c:forEach var="item" items="${order.items }">
-		<li>${item.quantity} x ${item.name } (${item.size }, ${item.milk })</li>
+		<li>${item.quantity} x ${item.drink } (${item.size }, ${item.milk })</li>
 	</c:forEach>
 	</ul>
 	</div>

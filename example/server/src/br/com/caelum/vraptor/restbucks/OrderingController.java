@@ -1,5 +1,6 @@
 package br.com.caelum.vraptor.restbucks;
 
+import static br.com.caelum.vraptor.view.Results.representation;
 import static br.com.caelum.vraptor.view.Results.xml;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class OrderingController {
 	public void get(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
-			Serializer serializer = result.use(xml()).from(order); //.namespace("http://restbucks.com/order", "o");
+			Serializer serializer = result.use(representation()).from(order);
 			serializer.include("items");
 			serializer.include("payment").serialize();
 		} else {

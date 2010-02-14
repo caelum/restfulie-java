@@ -7,11 +7,12 @@ import java.util.List;
 import br.com.caelum.vraptor.restfulie.Restfulie;
 import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
 import br.com.caelum.vraptor.restfulie.relation.Relation;
+import br.com.caelum.vraptor.restfulie.resource.Cacheable;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("order")
-public class Order implements HypermediaResource {
+public class Order implements HypermediaResource, Cacheable {
 
 	private String id;
 	private Location location;
@@ -20,6 +21,13 @@ public class Order implements HypermediaResource {
 	private String status;
 	private Payment payment;
 	private Receipt receipt;
+	
+	/**
+	 * Cacheable for two hours.
+	 */
+	public int getMaximumAge() {
+		return 2 * 60 * 60; 
+	}
 
 	public enum Location {
 		TO_TAKE, EAT_IN
