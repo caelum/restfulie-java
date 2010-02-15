@@ -66,4 +66,12 @@ public class OrderDatabase {
 		return orders.values();
 	}
 
+	public void delete(Order order) {
+		orders.remove(order.getId());
+	}
+
+	public void update(Order order) {
+		orders.put(order.getId(), order);
+	}
+
 }

@@ -1,17 +1,20 @@
 package br.com.caelum.vraptor.restbucks;
 
-import static br.com.caelum.vraptor.view.Results.representation;
 import static br.com.caelum.vraptor.view.Results.xml;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import br.com.caelum.vraptor.Consumes;
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Post;
+import br.com.caelum.vraptor.Put;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.Routes;
@@ -44,7 +47,7 @@ public class OrderingController {
 	public void get(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
-			Serializer serializer = result.use(representation()).from(order);
+			Serializer serializer = result.use(xml()).from(order);
 			serializer.include("items");
 			serializer.include("payment").serialize();
 		} else {
@@ -70,6 +73,7 @@ public class OrderingController {
 			order.finish();
 		} else {
 			order.cancel();
+			database.delete(order);
 		}
 		status.ok();
 	}
@@ -86,8 +90,11 @@ public class OrderingController {
 	@Transition
 	public void pay(Order order, Payment payment) {
 		order = database.getOrder(order.getId());
-		order.pay(payment);
-		result.use(xml()).from(order.getReceipt()).serialize();
+		if(order.pay(payment)) {
+			result.use(xml()).from(order.getReceipt()).serialize();
+		} else {
+			status.badRequest("Invalid payment value, order costs " + order.getCost());
+		}
 	}
 
 	@Get
@@ -101,4 +108,14 @@ public class OrderingController {
 		}
 	}
 
+	@Put
+	@Path("/orders/{order.id}")
+	@Transition
+	public void update(Order order) {
+		order.setStatus("unpaid");
+		database.update(order);
+		// we could status.ok() or return the representation
+		get(order); 
+	}
+	
 }

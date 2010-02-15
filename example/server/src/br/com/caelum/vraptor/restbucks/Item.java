@@ -1,5 +1,7 @@
 package br.com.caelum.vraptor.restbucks;
 
+import java.math.BigDecimal;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("item")
@@ -50,6 +52,10 @@ public class Item {
 
 	public void setSize(Size size) {
 		this.size = size;
+	}
+
+	public BigDecimal getPrice() {
+		return new BigDecimal("10");
 	}
 
 }

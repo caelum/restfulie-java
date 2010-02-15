@@ -1,5 +1,6 @@
 package br.com.caelum.vraptor.restbucks;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,6 +62,7 @@ public class Order implements HypermediaResource, Cacheable {
 	public List<Relation> getRelations(Restfulie control) {
 		control.relation("self").uses(OrderingController.class).get(this);
 		if (status.equals("unpaid")) {
+			control.transition("update").uses(OrderingController.class).update(this);
 			control.transition("cancel").uses(OrderingController.class).cancel(this);
 			control.relation("payment").uses(OrderingController.class).pay(this,null);
 		}
@@ -77,10 +79,22 @@ public class Order implements HypermediaResource, Cacheable {
 		return c;
 	}
 
-	public void pay(Payment payment) {
+	public boolean pay(Payment payment) {
+		if(!payment.getAmount().equals(getCost())) {
+			return false;
+		}
 		status = "paid";
 		this.receipt = new Receipt(this);
 		this.payment = payment;
+		return true;
+	}
+
+	public BigDecimal getCost() {
+		BigDecimal total = BigDecimal.ZERO;
+		for(Item i : getItems()) {
+			total = total.add(i.getPrice());
+		}
+		return total;
 	}
 
 	public void setStatus(String status) {
