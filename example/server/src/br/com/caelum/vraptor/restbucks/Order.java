@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import br.com.caelum.vraptor.restbucks.web.ItemController;
 import br.com.caelum.vraptor.restbucks.web.OrderingController;
 import br.com.caelum.vraptor.restbucks.web.PaymentController;
 import br.com.caelum.vraptor.restfulie.Restfulie;
@@ -90,6 +91,7 @@ public class Order implements HypermediaResource, Cacheable {
 		if(getStatus().equals("delivered")){
 			control.transition("receipt").uses(PaymentController.class).get(this);
 		}
+		control.relation("items").uses(ItemController.class).index(this);
 		return control.getRelations();
 	}
 
@@ -141,5 +143,5 @@ public class Order implements HypermediaResource, Cacheable {
 		}
 		return null;
 	}
-
+	
 }

@@ -1,7 +1,6 @@
 package br.com.caelum.vraptor.restbucks.web;
 
 import static br.com.caelum.vraptor.view.Results.xml;
-import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -24,12 +23,21 @@ public class ItemController {
 		this.database = database;
 	}
 
-	@Get
-	@Path("/orders/{order.id}/item/{item.id}")
+	@Path("/orders/{order.id}/items/{item.id}")
 	public void get(Order order, Item item) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
 			result.use(xml()).from(order.findItem(item.getId())).serialize();
+		} else {
+			status.notFound();
+		}
+	}
+
+	@Path("/orders/{order.id}/items")
+	public void index(Order order) {
+		order = database.getOrder(order.getId());
+		if (order != null) {
+			result.use(xml()).from(order.getItems(), "items").serialize();
 		} else {
 			status.notFound();
 		}

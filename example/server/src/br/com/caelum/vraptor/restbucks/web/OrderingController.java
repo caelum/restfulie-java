@@ -1,5 +1,6 @@
 package br.com.caelum.vraptor.restbucks.web;
 
+import static br.com.caelum.vraptor.view.Results.representation;
 import static br.com.caelum.vraptor.view.Results.xml;
 
 import java.io.IOException;
@@ -51,8 +52,8 @@ public class OrderingController {
 	public void get(Order order) {
 		order = database.getOrder(order.getId());
 		if (order != null) {
-			Serializer serializer = result.use(xml()).from(order);
-			serializer.include("items");
+			Serializer serializer = result.use(representation()).from(order);
+			serializer.include("items").include("location");
 			serializer.include("payment").serialize();
 		} else {
 			status.notFound();
@@ -119,6 +120,7 @@ public class OrderingController {
 	@Put
 	@Path("/orders/{order.id}")
 	@Transition
+	@Consumes
 	public void update(Order order) {
 		order.setStatus("unpaid");
 		database.update(order);
