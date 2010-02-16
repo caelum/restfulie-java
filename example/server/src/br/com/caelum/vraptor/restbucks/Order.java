@@ -9,6 +9,7 @@ import br.com.caelum.vraptor.restfulie.Restfulie;
 import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
 import br.com.caelum.vraptor.restfulie.relation.Relation;
 import br.com.caelum.vraptor.restfulie.resource.Cacheable;
+import br.com.caelum.vraptor.restfulie.serialization.XStreamSerialize;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -52,7 +53,20 @@ public class Order implements HypermediaResource, Cacheable {
 	}
 
 	public String getStatus() {
+		if(isReady()) {
+			return "ready";
+		}
 		return status;
+	}
+
+	boolean isReady() {
+		return status.equals("preparing") && payment.getCreatedAt().before(tenSecondsAgo());
+	}
+
+	private Calendar tenSecondsAgo() {
+		Calendar now = Calendar.getInstance();
+		now.add(Calendar.SECOND, -10);
+		return now;
 	}
 
 	public void cancel() {
@@ -66,10 +80,9 @@ public class Order implements HypermediaResource, Cacheable {
 			control.transition("cancel").uses(OrderingController.class).cancel(this);
 			control.relation("payment").uses(OrderingController.class).pay(this,null);
 		}
-		if(status.equals("paid") && receipt.getPaymentTime().before(oneMinuteAgo())) {
+		if(status.equals("preparing") && receipt.getPaymentTime().before(oneMinuteAgo())) {
 			control.transition("retrieve").uses(OrderingController.class).cancel(this);
 		}
-		control.relation("songs").at("http://otherserver");
 		return control.getRelations();
 	}
 
@@ -83,18 +96,15 @@ public class Order implements HypermediaResource, Cacheable {
 		if(!payment.getAmount().equals(getCost())) {
 			return false;
 		}
-		status = "paid";
+		status = "preparing";
 		this.receipt = new Receipt(this);
 		this.payment = payment;
 		return true;
 	}
 
+	@XStreamSerialize
 	public BigDecimal getCost() {
-		BigDecimal total = BigDecimal.ZERO;
-		for(Item i : getItems()) {
-			total = total.add(i.getPrice());
-		}
-		return total;
+		return new BigDecimal(this.items.size() * 10);
 	}
 
 	public void setStatus(String status) {

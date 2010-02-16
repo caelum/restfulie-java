@@ -54,8 +54,4 @@ public class Item {
 		this.size = size;
 	}
 
-	public BigDecimal getPrice() {
-		return new BigDecimal("10");
-	}
-
 }

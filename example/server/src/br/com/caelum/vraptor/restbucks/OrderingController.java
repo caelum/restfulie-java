@@ -69,7 +69,7 @@ public class OrderingController {
 	@Transition
 	public void cancel(Order order) {
 		order = database.getOrder(order.getId());
-		if(order.getStatus().equals("paid")) {
+		if(order.getStatus().equals("ready")) {
 			order.finish();
 		} else {
 			order.cancel();
