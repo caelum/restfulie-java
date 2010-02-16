@@ -76,7 +76,7 @@ public class Order {
 	}
 	
 	public Payment pay(Payment payment) {
-		return resource(this).getRelation("pay").accessAndRetrieve(payment);
+		return resource(this).getRelation("payment").accessAndRetrieve(payment);
 	}
 
 	public void cancel() {

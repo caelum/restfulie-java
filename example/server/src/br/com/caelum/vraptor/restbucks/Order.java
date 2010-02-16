@@ -3,8 +3,11 @@ package br.com.caelum.vraptor.restbucks;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import br.com.caelum.vraptor.restbucks.web.OrderingController;
+import br.com.caelum.vraptor.restbucks.web.PaymentController;
 import br.com.caelum.vraptor.restfulie.Restfulie;
 import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
 import br.com.caelum.vraptor.restfulie.relation.Relation;
@@ -20,7 +23,7 @@ public class Order implements HypermediaResource, Cacheable {
 	private Location location;
 	private List<Item> items = new ArrayList<Item>();
 
-	private String status;
+	private transient String status;
 	private Payment payment;
 	private Receipt receipt;
 	
@@ -52,6 +55,7 @@ public class Order implements HypermediaResource, Cacheable {
 		this.id = id;
 	}
 
+	@XStreamSerialize
 	public String getStatus() {
 		if(isReady()) {
 			return "ready";
@@ -80,16 +84,13 @@ public class Order implements HypermediaResource, Cacheable {
 			control.transition("cancel").uses(OrderingController.class).cancel(this);
 			control.relation("payment").uses(OrderingController.class).pay(this,null);
 		}
-		if(status.equals("preparing") && receipt.getPaymentTime().before(oneMinuteAgo())) {
+		if(getStatus().equals("ready")) {
 			control.transition("retrieve").uses(OrderingController.class).cancel(this);
 		}
+		if(getStatus().equals("delivered")){
+			control.transition("receipt").uses(PaymentController.class).get(this);
+		}
 		return control.getRelations();
-	}
-
-	private Calendar oneMinuteAgo() {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MINUTE, -1);
-		return c;
 	}
 
 	public boolean pay(Payment payment) {
@@ -99,6 +100,7 @@ public class Order implements HypermediaResource, Cacheable {
 		status = "preparing";
 		this.receipt = new Receipt(this);
 		this.payment = payment;
+		this.payment.setCreatedAt(new GregorianCalendar());
 		return true;
 	}
 
@@ -120,7 +122,7 @@ public class Order implements HypermediaResource, Cacheable {
 	}
 
 	public void finish() {
-		status = "retrieved by the client";
+		status = "delivered";
 	}
 	
 	public List<Item> getItems() {
@@ -129,6 +131,15 @@ public class Order implements HypermediaResource, Cacheable {
 	
 	public Location getLocation() {
 		return location;
+	}
+
+	public Item findItem(int id) {
+		for(Item i : getItems()) {
+			if(i.getId()==id) {
+				return i;
+			}
+		}
+		return null;
 	}
 
 }

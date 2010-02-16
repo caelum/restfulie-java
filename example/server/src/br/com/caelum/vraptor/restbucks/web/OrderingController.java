@@ -1,4 +1,4 @@
-package br.com.caelum.vraptor.restbucks;
+package br.com.caelum.vraptor.restbucks.web;
 
 import static br.com.caelum.vraptor.view.Results.xml;
 
@@ -18,6 +18,10 @@ import br.com.caelum.vraptor.Put;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.Routes;
+import br.com.caelum.vraptor.restbucks.Item;
+import br.com.caelum.vraptor.restbucks.Order;
+import br.com.caelum.vraptor.restbucks.OrderDatabase;
+import br.com.caelum.vraptor.restbucks.Payment;
 import br.com.caelum.vraptor.restfulie.hypermedia.Transition;
 import br.com.caelum.vraptor.serialization.Serializer;
 import br.com.caelum.vraptor.view.Status;
@@ -59,6 +63,10 @@ public class OrderingController {
 	@Path("/orders")
 	@Consumes
 	public void add(Order order) {
+		int id = 0;
+		for(Item i : order.getItems()) {
+			i.use(order, ++id);
+		}
 		database.save(order);
 		routes.uriFor(OrderingController.class).get(order);
 		status.created(routes.getUri());

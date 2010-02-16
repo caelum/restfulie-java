@@ -2,10 +2,10 @@ package br.com.caelum.vraptor.restbucks;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+@XStreamAlias("payment")
 public class Payment {
 
 	@XStreamAlias("card-number")
@@ -17,7 +17,7 @@ public class Payment {
 	@XStreamAlias("expiry-year")
 	private int expiryYear;
 	private BigDecimal amount;
-	private Calendar createdAt = new GregorianCalendar();
+	private Calendar createdAt;
 
 	public Payment(String cardNumber, String cardholderName, int expiryMonth,
 			int expiryYear, BigDecimal amount) {
@@ -36,5 +36,8 @@ public class Payment {
 	public Calendar getCreatedAt() {
 		return this.createdAt;
 	}
-
+	public void setCreatedAt(Calendar createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 }

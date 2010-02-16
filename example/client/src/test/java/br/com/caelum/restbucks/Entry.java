@@ -33,7 +33,7 @@ public class Entry {
         
         // Pay for the order 
         Payment payment = new Payment("12345677878", "guilherme silveira", 12, 2999, order.getCost());
-        System.out.println(String.format("About to create a payment resource at [%s] via PUT", resource(order).getRelation("pay").getHref()));
+        System.out.println(String.format("About to create a payment resource at [%s] via PUT", resource(order).getRelation("payment").getHref()));
         payment =  order.pay(payment);
         System.out.println("Payment made, receipt created at: " + payment.getCreatedAt());
 
