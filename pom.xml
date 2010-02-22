@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.caelum</groupId>
     <artifactId>restfulie-java</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-beta-2</version>
     <packaging>pom</packaging>
     <name>restfulie-java</name>
     <url>http://restfulie.caelum.com.br</url>
@@ -25,7 +25,7 @@
 	</scm>
 
     <modules>
-        <module>client</module>
+        <module>core</module>
     </modules>
 
     <distributionManagement>
