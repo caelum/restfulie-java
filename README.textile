@@ -22,7 +22,7 @@ Restfulie was the first API trying to somehow implement "Jim Webber":http://jim.
 
 You can see a "3rd party comparison":http://code.google.com/p/implementing-rest/wiki/ByLanguage between all REST frameworks.
 
-Therefore Restfulie is unique both in its feature set when compared to other (JAX-RS) based implementations: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system. Restfulie also handle content negotiation and its client implements cache and other set of features unsupported so far in other frameworks.
+Therefore Restfulie is unique in its feature set when compared to other (JAX-RS) based implementations: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system. Restfulie also handle content negotiation and its client implements cache and other set of features unsupported so far in other frameworks.
 
 According to Richardson Maturity Model , systems are only to be called RESTFul if they support this kind of state flow transition through hypermedia content contained within resources representations:
 
@@ -30,18 +30,18 @@ According to Richardson Maturity Model , systems are only to be called RESTFul i
 <order>
 	<product>basic rails course</product>
 	<product>RESTful training</product>
-	<atom:link rel="refresh" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
-	<atom:link rel="update" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
-	<atom:link rel="pay" href="http://www.caelum.com.br/orders/1/pay" xmlns:atom="http://www.w3.org/2005/Atom"/>
+	<atom:link rel="payment" href="http://www.caelum.com.br/orders/1/pay" xmlns:atom="http://www.w3.org/2005/Atom"/>
 	<atom:link rel="cancel" href="http://www.caelum.com.br/orders/1" xmlns:atom="http://www.w3.org/2005/Atom"/>
 </order>
 </pre>
 
 If you are to implement a 3rd level (restful) service, Restfulie is the way to go. 
 
-h2. Guide
+h2. More examples
 
 There is a "Restfulie guide being built":http://github.com/caelum/restfulie-guide but still in beta version.
+You can also "download a sample application":http://code.google.com/p/restfulie , both client and server code.
+FInally, do not forget to ask your questions at our "mailing list":http://groups.google.com/group/restfulie-java?lnk=srg .
 
 h2. Java or Ruby
 
@@ -358,7 +358,7 @@ h2. Getting help and mailing lists
 
 If you are looking for or want to help, let us know at the mailing list:
 
-"http://groups.google.com/group/restfulie":http://groups.google.com/group/restfulie
+"http://groups.google.com/group/restfulie-java":http://groups.google.com/group/restfulie-java
 
 "VRaptor's website":http://www.vraptor.org also contain its own mailing list which can be used to get help on implementing controller's.
 
