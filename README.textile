@@ -1,3 +1,7 @@
+h1. Website
+
+Check out "Restfulie's website":http://restfulie.caelumobjects.com if you still did not.
+
 h1. Restfulie: quit pretending
 
 CRUD through HTTP is a good step forward to using resources and becoming RESTful, another step further into it is to make use of hypermedia based services and this gem allows you to do it really fast.
@@ -12,12 +16,13 @@ h2. Why would I use restfulie?
 4. HATEOAS --> clients you are unaware of will not bother if you change your URIs
 5. HATEOAS --> services that you consume will not affect your software whenever they change part of their flow or URIs
 
-h2. Could you compare it with Spring or JAX-RS based APIs?
+h2. Could you compare it with other REST related APIs?
 
-Restfulie is the first API which tries to somehow implement "Jim Webber":http://jim.webber.name/ and "Ian Robinson":http://iansrobinson.com/ opinion on how RESTFul systems use hypermedia
-as the way to lead your client's path through a business process.
+Restfulie was the first API trying to somehow implement "Jim Webber":http://jim.webber.name/ point of view on how RESTFul systems use hypermedia as the way to lead your client's path through a business process.
 
-Therefore Restfulie is unique both in its feature set when compared to both Spring and JAX-RS based implementations, and its implementation: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system.
+You can see a "3rd party comparison":http://code.google.com/p/implementing-rest/wiki/ByLanguage between all REST frameworks.
+
+Therefore Restfulie is unique both in its feature set when compared to other (JAX-RS) based implementations: looking for simple code and favoring conventions over manual configurations when creating hypermedia aware system. Restfulie also handle content negotiation and its client implements cache and other set of features unsupported so far in other frameworks.
 
 According to Richardson Maturity Model , systems are only to be called RESTFul if they support this kind of state flow transition through hypermedia content contained within resources representations:
 
@@ -34,20 +39,13 @@ According to Richardson Maturity Model , systems are only to be called RESTFul i
 
 If you are to implement a 3rd level (restful) service, Restfulie is the way to go. 
 
-h2. Inner libraries
+h2. Guide
 
-In its Java version, Restfulie uses by default but allows overriding:
-
-* VRaptor:http://www.vraptor.org as the server-side controller  
-* XStream:"http://xstream.codehaus.org" as its serialization library
-* java.net api for http requests
-* Spring IoC for dependency injection
-
-XStream is the most famous java serialization tool around with support both to json and xml while VRaptor (as Rails) supplies a reverse URI lookup system upon its controller which provides a way to identify URI's from well defined transitions.
+There is a "Restfulie guide being built":http://github.com/caelum/restfulie-guide but still in beta version.
 
 h2. Java or Ruby
 
-Restfulie comes into different flavors, both "java":http://github.com/caelum/restfulie-java and "ruby":http://github.com/caelum/restfulie versions are available to use.
+Restfulie comes many different flavors, "java":http://github.com/caelum/restfulie-java and "ruby":http://github.com/caelum/restfulie.
 
 h1. One minute examples
 
@@ -63,7 +61,7 @@ Order order = new Order();
 order = service("http://www.caelum.com.br/order").post(order);
 
 // cancels it
-resource(order).getTransition("cancel").execute();
+resource(order).getRelation("cancel").execute();
 </pre>
 
 h2. Server side
@@ -71,14 +69,14 @@ h2. Server side
 This is a simple example how to make your state changes available to your resource consumers:
 
 <pre>
-public class Order implements StateResource {
+public class Order implements HypermediaResource {
 
-	public List<Transition> getFollowingTransitions(Restfulie control) {
+	public List<Relation> getRelations(Restfulie control) {
 		if (status.equals("unpaid")) {
-			control.transition("latest").uses(OrderingController.class).get(this);
-			control.transition("cancel").uses(OrderingController.class).cancel(this);
+			control.relation("latest").uses(OrderingController.class).get(this);
+			control.relation("cancel").uses(OrderingController.class).cancel(this);
 		}
-		return control.getTransitions();
+		return control.getRelations();
 	}
 
 }
@@ -88,7 +86,7 @@ h1. Installation
 
 h2. Download everything
 
-Start "downloading all data":http://code.google.com/p/restfulie : the client jars, server jars and both server side and client side application.
+Start "downloading all data":http://code.google.com/p/restfulie : the client jars, "vraptor":http://www.vraptor.org jars and both server side and client side application.
 
 You can download a sample client and server side application on the same link, those will be helpful for you too understand how to use Restfulie.
 
@@ -98,7 +96,7 @@ In order to use Restfulie in your client side app, simply add "all required jars
 
 h2. Server side installation
 
-Download "vraptor's blank project":http://www.vraptor.org and add "all server side jars":http://code.google.com/p/restfulie/ to your application's classpath.
+Download "vraptor's blank project":http://www.vraptor.org and configure your web.xml file. You are ready to go.
 
 h1. Client side usage
 
@@ -118,7 +116,7 @@ As seen earlier, as soon as you have aquired an object through the use of the re
 
 <pre>
 Order order = Restfulie.resource("http://www.caelum.com.br/orders/1").get();
-resource(order).getTransition("cancel").execute();
+resource(order).getRelation("cancel").access();
 </pre>
 
 The *resource* method can be statically imported from the *Restfulie* class.
@@ -149,13 +147,21 @@ resources.entryAt("http://www.caelum.com.br/clients").post(new Client());
 
 The entire serialization process can be configured either through the *Resources* interface's methods or using *XStream*'s explicit configuration.
 
+h2. Caching
+
+Most REST frameworks will not help the developer providing etags, last modified and other cache related headers.
+
+Meanwhile, in the server side, Restfulie might add extra headers to handle last modified, etag and max age situations that will improve response time and avoid useless bandwidth consumption. In order to benefit from such cache characteristics, simply implement the RestfulEntity interface.
+
 h2. Accessing all possible transitions
 
-One can access all possible transitions for an object by invoking a resource's *getTransitions* method:
+One can access all possible transitions for an object by invoking a resource's *getRelations* method:
 
 <pre>
-	List<Transition> transitions = resource(order).getTransitions();
+	List<Relation> relations = resource(order).getRelations();
 </pre>
+
+While typical level 2 frameworks will only provide a statically, compilation time checked, relation/transition invocation, Restfulie allows clients/bots to adapt to REST results, giving your clients even less coupling to your services protocol.
 
 h2. HTTP verbs
 
@@ -169,7 +175,7 @@ By default, restfulie uses a well known table of defaults for http verb detectio
 If you want to use a custom http verb in order to send your request, you can do it:
 
 <pre>
- payment = resource(order).getTransition("pay").method(HttpMethod.PUT).executeAndRetrieve(payment);
+ payment = resource(order).getRelation("payment").method(HttpMethod.PUT).accessAndRetrieve(payment);
  </pre>
 
 h2. Sending some parameters
@@ -177,7 +183,7 @@ h2. Sending some parameters
 If you need to send some information to the server, this can be done by passing an argument to the execute method, which will be serialized and sent as the request body's content:
 
 <pre>
- payment = resource(order).getTransition("pay").method(HttpMethod.PUT).executeAndRetrieve(payment);
+ payment = resource(order).getRelation("payment").method(HttpMethod.PUT).accessAndRetrieve(payment);
  </pre>
 
 h2. More info
@@ -187,14 +193,12 @@ Once you have found the entry point you want to use (retrieving a resource or cr
 
 h1. Server side usage
 
-The default way to use Restfulie is to define the getFollowingTransitions method in your resource. The method receives a *Restfulie* instance (server side version)
-which allows you to dsl-like create transitions. In order to do that, given a *Restfulie* object, invoke the transition method with your *rel* name and the relative
-*controller action*:
+The default way to use Restfulie is to define the getRelations method in your resource. The method receives a *Restfulie* instance (server side version) which allows you to dsl-like create transitions. In order to do that, given a *Restfulie* object, invoke the transition method with your *rel* name and the relative *controller action*:
 
 <pre>
-	public List<Transition> getFollowingTransitions(Restfulie control) {
-		control.transition("delete").uses(OrderingController.class).cancel(this);
-		return control.getTransitions();
+	public List<Relation> getRelations(Restfulie control) {
+		control.relation("delete").uses(OrderingController.class).cancel(this);
+		return control.getRelations();
 	}
 </pre>
 
@@ -220,71 +224,70 @@ Now you need to set up your application package in web.xml. This is the only con
 <pre>
 	<context-param>
         <param-name>br.com.caelum.vraptor.packages</param-name>
-        <param-value>br.com.caelum.vraptor.rest,com.your.app.package.without.leading.whitespace</param-value>
+        <param-value>br.com.caelum.vraptor.restfulie,com.your.app.package.without.leading.whitespace</param-value>
     </context-param>
 </pre>
 
-h2. Transition invocation
+h2. Relation/Transition invocation
 
-By using the *@Transition* to annotate your method, Restfulie will automatically load the order from the database and check for either 404 (object not found), 405 (method not allowed), 409 (conflict: transition is not allowed for this resource's state).
+By using the *@Transition* to annotate your method, Restfulie will automatically load the order from the database and check for either 404 (object not found), 405 (method not allowed), 409 (conflict: transition is not allowed for this resource's state) and 406 (content negotiation failed).
 
 This is one of the advantages of using Restfulie over other level 2 Rest frameworks. By supporting hypermedia content and handling transitions out of the box, Restfulie creates a new layer capable
-of helping the server to deal with unexpected states.  
+of helping the server to deal with unexpected states. 
 
 h2. Typical example
 
 1. Create your model (i.e. Order)
+
 <pre>
 @XStreamAlias("order")
 public class Order {
 
 	private String id;
 	private Location location;
-	@XStreamImplicit
 	private List<Item> items;
 
-	private String status;
+	private transient String status;
 	private Payment payment;
 
 	public enum Location {
 		takeAway, drinkIn
 	};
 	
-		// add id setter
-	// add desired getters
-	
+	// ...
 
 }
+
 @XStreamAlias("item")
 public class Item {
-	enum Coffee {latte, cappuccino, espresso};
-	enum Milk {skim, semi, whole};
-	enum Size {small, medium, large};
+	enum Coffee {LATTE, CAPPUCINO, ESPRESSO};
+	enum Milk {SKIM, SEMI, WHOLE};
+	enum Size {SMALL, MEDIUM, LARGE};
 
-	private Coffee name;
+	private Coffee drink;
 	private int quantity;
 	private  Milk milk;
 	private Size size;
 
-	// getters and setters
+	// ...
 
 }
 </pre>
 
-2. Usually the *getFollowingTransitions* method would check the resource state in order to coordinate which transitions can be executed:
-So add the *following_transitions* method returning an array of possible transitions:
+2. Usually the *getRelations* method would check the resource state in order to coordinate which transitions can be executed:
+So add the *getRelations* method returning an array of possible transitions/relations:
 
 <pre>
-public class Order implements StateResource {
+public class Order implements HypermediaResource {
 
 
-	public List<Transition> getFollowingTransitions(Restfulie control) {
+	public List<Relation> getRelations(Restfulie control) {
 		if (status.equals("unpaid")) {
-			control.transition("latest").uses(OrderingController.class).get(this);
-			control.transition("cancel").uses(OrderingController.class).cancel(this);
-			control.transition("pay").uses(OrderingController.class).pay(this,null);
+			control.relation("latest").uses(OrderingController.class).get(this);
+			control.relation("cancel").uses(OrderingController.class).cancel(this);
+			control.relation("payment").uses(OrderingController.class).pay(this,null);
 		}
-		return control.getTransitions();
+		return control.getRelations();
 	}
 
 }</pre>
@@ -304,28 +307,43 @@ public class Order implements StateResource {
 You are ready to go. Create a new order and access it through your /order/id path.
 The best way to start is to download the sample application and go through the *OrderingController* and *Order* classes.
 
+h3. Content negotiation
+
+While most REST frameworks only support rendering xml out of the box, Restfulie already provides (through VRaptor and Spring) xml, xhtml and json representations of your resource. You can add new serializers as required. In order to take
+content negotiation into play, simply use VRaptor's representation() renderer:
+
+<pre>
+	@Get
+	@Path("/order/{order.id}")
+	public void get(Order order) {
+		order = database.getOrder(order.getId());
+		result.use(representation()).from(order).include("items").serialize();
+	}
+</pre>
+
 h3. Creating relations to other servers
 
 <pre>
 public class Order implements HypermediaResource {
 
 
-	public List<Transition> getFollowingTransitions(Restfulie control) {
-		control.transition("up").at('http://caelumobjects.com');
-		return control.getTransitions();
+	public List<Relation> getRelations(Restfulie control) {
+		control.relation("up").at('http://caelumobjects.com');
+		return control.getRelations();
 	}
 
 }</pre>
 
+Note that you can either create relations or transitions. We suggest clients to only use relations, but for clear semantics in some servers, you might want to invoke control.transition.
+
 h2. Accepting more than one argument
 
-While JAX-RS will deserialize your request body into your method argument and require you to retrieve extra URI information through the requested URI, Restfulie accepts one
-core parameter (based on its alias) and extra parameters to be extracted through the URI itself:
+While typical JAX-RS services will deserialize your request body into your method argument and require you to retrieve extra URI information through the requested URI, Restfulie accepts one core parameter (based on its alias) and extra parameters to be extracted through the URI itself:
 
 <pre>
 	@Post
 	@Path("/order/{order.id}/pay")
-	@Consumes("application/xml")
+	@Consumes
 	@Transition
 	public void pay(Order order, Payment payment) {
 		order = database.getOrder(order.getId());
@@ -334,6 +352,8 @@ core parameter (based on its alias) and extra parameters to be extracted through
 	}
 </pre>
 
+Parameter support is provided through VRaptor, so Iogi and Paranamer support is already built-in.
+
 h2. Getting help and mailing lists
 
 If you are looking for or want to help, let us know at the mailing list:
@@ -341,7 +361,6 @@ If you are looking for or want to help, let us know at the mailing list:
 "http://groups.google.com/group/restfulie":http://groups.google.com/group/restfulie
 
 "VRaptor's website":http://www.vraptor.org also contain its own mailing list which can be used to get help on implementing controller's.
-
 
 h2. Team
 
@@ -354,59 +373,24 @@ Contributors
 * Lucas Cavalcanti ("email":mailto:lucas.cavalcanti@caelum.com.br) - twitter:http://www.twitter.com/lucascs
 * "Adriano Almeida":http://ahalmeida.com/ ("email":mailto:adriano.almeida@caelum.com.br) - twitter:http://www.twitter.com/adrianoalmeida7
 
-h3. Sources
+h3. Example
 
-You can see an application's source code here, both client and server side were implemented using *restfulie*:
-
-"Client":http://github.com/caelum/restbook/chapter05/client
-"Server":http://github.com/caelum/restbook/chapter05/server
-
-h3. More tutorials
-
-There is a "portuguese tutorial on the server-side support":http://wakethedead.com.br/blog/70-restfulie and a "blog post on the entire ecosystem in english":http://guilhermesilveira.wordpress.com/2009/11/03/quit-pretending-use-the-web-for-real-restfulie/
-
-
-h2. What's new
-
-h3. 1.1
-
-*API CHANGE*: StateResource changed to HypermediaResource. getFollowingTransitions changed to getRelations. Transition class renamed to Relation
-*API CHANGE*: Package restfulie.vraptor changed to vraptor.restfulie
-
-h2. Coming soon
-
-* refactor order, receipt and paymento to have methods as order.pay
-* rename getHref to getUri
-* allow vraptor to map two different methods to the same path and verb in different states
-* if transition does not exist, getTransition should throw an exception?
-* support custom namespaces
-* if all deserialized objects return an enhanced type, it should be able to do resource(order).getResponseCode??
-* how to survive errors as 500 when expecting an entity?
-* allows pure String/byte array client side post and server side retrieval
-* customize the rel name
-* public cruise build
-* routes.uriFor(OrderingController.class).get(order); status.created(routes.getUri()); should become status.created(order);
-* release 0.4
-* rel prepend suffix as http://iansrobinson.com/resources/link-relations/preceding
-* automatically generate uri for this rel with its transition description
-* pure href definition of link
-* get entry point support
-* Set the correct media type instead of application/xml
-* full support to extended json
-* allow servers to define transitions by accessing other systems
-* allow servers to define a state method instead of internal variable
-* controller filtering and methods
-* english tutorial
-* when receiving a 201 + content, it should believe the content
-* when receiving a 201 without any content, it should allow to redirect or not
-* client side should allow withTimeStamp, withETag, withAuth
-* is there is an etag, use it by default (maybe NOT use it by default)... modified since and so on (header tags)
-* server side maybe allow hypermedia controls or not
-* server and client side 303 support on alternate uri (or content-location)
+You can see an "application's source code":http://github.com/caelum/restfulie-java/tree/master/example/, both client and server side were implemented using *restfulie*:
 
 h2. Contributing
 
-Users are encourajed to contribute with extra implementations for each layer (i.e. spring mvc implementation for the controller layer).
+Users are encouraged to contribute with extra implementations for each layer (i.e. spring mvc implementation for the controller layer).
+
+h2. Inner libraries
+
+In its Java version, Restfulie uses by default:
+
+* VRaptor:http://www.vraptor.org as the server-side controller  
+* XStream:"http://xstream.codehaus.org" as its serialization library
+* java.net api for http requests
+* Spring IoC for dependency injection
+
+XStream is the most famous java serialization tool around with support both to json and xml while VRaptor (as Rails) supplies a reverse URI lookup system upon its controller which provides a way to identify URI's from well defined transitions.
 
 h2. License
 
