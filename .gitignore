@@ -1,3 +1,7 @@
 target
 javadoc
 *.class
+.project
+.classpath
+.settings/
+*.*~
