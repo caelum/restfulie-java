@@ -22,7 +22,9 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.TransitionException;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
@@ -73,9 +75,29 @@ public class DefaultResponse implements Response {
 		return connection;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T getResource() throws IOException {
 		String content = getContent();
-		return (T) deserializer.fromXml(content);
+		Resource deserializedResource = (Resource) deserializer.fromXml(content);
+		setResponse(deserializedResource);
+		//deserializedResource.
+		return (T) deserializedResource;
+	}
+
+	private void setResponse(Resource deserializedResource) {
+		try {
+			java.lang.reflect.Field fResponse = deserializedResource.getClass().getDeclaredField("response");
+			fResponse.setAccessible(true);
+			fResponse.set(deserializedResource, this);
+		} catch (SecurityException e) {
+			throw new TransitionException("Unable inject web response in resource", e);
+		} catch (NoSuchFieldException e) {
+			throw new TransitionException("Unable inject web response in resource", e);
+		} catch (IllegalArgumentException e) {
+			throw new TransitionException("Unable inject web response in resource", e);
+		} catch (IllegalAccessException e) {
+			throw new TransitionException("Unable inject web response in resource", e);
+		}
 	}
 
 }

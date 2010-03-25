@@ -19,7 +19,6 @@ package br.com.caelum.restfulie.config;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +37,6 @@ import br.com.caelum.restfulie.DefaultRelation;
 import br.com.caelum.restfulie.Resource;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
@@ -157,8 +155,11 @@ public class XStreamConfig {
 			custom.addInterface(pool.get(Resource.class.getName()));
 			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", custom);
 			custom.addField(field);
+			CtField fieldResponse = CtField.make("public br.com.caelum.restfulie.Response response = null;", custom);
+			custom.addField(fieldResponse);
 			custom.addMethod(CtNewMethod.make("public java.util.List getRelations() { return link; }", custom));
 			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Relation getRelation(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Relation t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", custom));
+			custom.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Response getResponse() { return response; }", custom));
 			Class customType = custom.toClass();
 			this.realTypes.put(originalType, customType);
 			return customType;

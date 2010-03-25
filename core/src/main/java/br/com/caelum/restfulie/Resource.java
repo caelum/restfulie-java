@@ -41,5 +41,5 @@ public interface Resource {
 	 */
 	List<Relation> getRelations();
 
-
+	Response getResponse();
 }
