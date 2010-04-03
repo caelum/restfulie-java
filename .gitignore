@@ -4,4 +4,4 @@ javadoc
 .project
 .classpath
 .settings/
-*.*~
+*~
