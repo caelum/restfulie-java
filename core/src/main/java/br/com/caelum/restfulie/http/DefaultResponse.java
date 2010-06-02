@@ -24,7 +24,7 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.Response;
-import br.com.caelum.restfulie.TransitionException;
+import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
@@ -90,13 +90,13 @@ public class DefaultResponse implements Response {
 			fResponse.setAccessible(true);
 			fResponse.set(deserializedResource, this);
 		} catch (SecurityException e) {
-			throw new TransitionException("Unable inject web response in resource", e);
+			throw new RestfulieException("Unable inject web response in resource", e);
 		} catch (NoSuchFieldException e) {
-			throw new TransitionException("Unable inject web response in resource", e);
+			throw new RestfulieException("Unable inject web response in resource", e);
 		} catch (IllegalArgumentException e) {
-			throw new TransitionException("Unable inject web response in resource", e);
+			throw new RestfulieException("Unable inject web response in resource", e);
 		} catch (IllegalAccessException e) {
-			throw new TransitionException("Unable inject web response in resource", e);
+			throw new RestfulieException("Unable inject web response in resource", e);
 		}
 	}
 

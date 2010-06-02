@@ -19,14 +19,18 @@ package br.com.caelum.restfulie;
 
 
 /**
- * Anything went wrong with executing a transition.
+ * Anything went wrong with executing a request.
  * @author guilherme silveira
  *
  */
-public class TransitionException extends RuntimeException {
+public class RestfulieException extends RuntimeException {
 
-	public TransitionException(String msg, Throwable e) {
+	public RestfulieException(String msg, Throwable e) {
 		super(msg, e);
+	}
+
+	public RestfulieException(String string) {
+		super(string);
 	}
 
 	/**

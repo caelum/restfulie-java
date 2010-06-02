@@ -124,9 +124,9 @@ public class DefaultRelation implements Relation {
 			}
 			return new DefaultResponse(connection, deserializer, new IdentityContentProcessor());
 		} catch (IOException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			throw new RestfulieException("Unable to execute transition " + rel + " @ " + href, e);
 		} catch (URISyntaxException e) {
-			throw new TransitionException("Unable to execute transition " + rel + " @ " + href, e);
+			throw new RestfulieException("Unable to execute transition " + rel + " @ " + href, e);
 		}
 	}
 
