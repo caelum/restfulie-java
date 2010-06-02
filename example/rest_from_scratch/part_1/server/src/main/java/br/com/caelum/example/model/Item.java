@@ -5,12 +5,12 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("item")
 public class Item {
 	private Integer id;
-	private String nome;
-	private Double preco;
+	private String name;
+	private Double price;
 
 	public Item(String nome, Double preco) {
-		this.nome = nome;
-		this.preco = preco;
+		this.name = nome;
+		this.price = preco;
 	}
 
 	public Integer getId() {
@@ -21,20 +21,20 @@ public class Item {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String nome) {
+		this.name = nome;
 	}
 
-	public Double getPreco() {
-		return preco;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setPreco(Double preco) {
-		this.preco = preco;
+	public void setPrice(Double preco) {
+		this.price = preco;
 	}
 
 }

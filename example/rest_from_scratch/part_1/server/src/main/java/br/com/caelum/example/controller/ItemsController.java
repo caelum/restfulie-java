@@ -26,27 +26,23 @@ public class ItemsController {
 
 	@Get
 	@Path("/items")
-	public void lista() {
-		List<Item> lista = database.lista();
-		result.use(representation()).from(lista).serialize();
+	public void list() {
+		List<Item> list = database.lista();
+		result.use(representation()).from(list).serialize();
 	}
 
 	@Get
 	@Path("/items/{id}")
-	public void get(int id) {
+	public void show(int id) {
 		Item item = database.get(id);
-		if(item == null) {
-			result.use(status()).notFound();
-		} else {
-			result.use(representation()).from(item).serialize();
-		}
+		result.use(representation()).from(item).serialize();
 	}
 
 	@Post
 	@Consumes
 	@Path("/items")
-	public void adiciona(Item item) {
+	public void create(Item item) {
 		database.adiciona(item);
-		result.use(status()).created("http://localhost:8080/restfulie/items/" + item.getId());
+		result.use(status()).created("http://localhost:3000/restfulie/items/" + item.getId());
 	}
 }

@@ -8,11 +8,11 @@ import br.com.caelum.restfulie.Restfulie;
 
 public class TestGetRepresentation {
 	public static void main(String[] args) throws URISyntaxException {
+		
 		Resources server = Restfulie.resources();
 		server.configure(Item.class);
-
-		Item item = server.entryAt("http://localhost:8080/restfulie/items/3").accept("application/xml").get();
-
-		System.out.println(item.getNome());
+		Item item = server.entryAt("http://localhost:3000/restfulie/items/2").accept("application/xml").get();
+		System.out.println(item.getName());
+		
 	}
 }

@@ -43,6 +43,7 @@ import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
  * 
  * @author guilherme silveira
  */
+@SuppressWarnings("unchecked")
 public class EntryPointService implements ResourceSerializer{
 
 	private final URI uri;
@@ -50,6 +51,8 @@ public class EntryPointService implements ResourceSerializer{
 	private final XStreamConfig config;
 	
 	private String accept = "application/xml";
+	
+	private final Map<String, String> headers = new HashMap<String, String>();
 	
 	public EntryPointService(URI uri) {
 		this(uri, new HashMap<Class, Configuration>());
@@ -102,7 +105,12 @@ public class EntryPointService implements ResourceSerializer{
 		try {
 			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
 			connection.addRequestProperty("Accept", accept);
-			connection.addRequestProperty("Content-type", "application/xml");
+			for(String header : headers.keySet()) {
+				connection.addRequestProperty(header, headers.get(header));
+			}
+			if(!headers.containsKey("Content-type")) {
+				throw new RestfulieException("You should set a content type prior to sending some payload.");
+			}
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
 			OutputStream output = connection.getOutputStream();
@@ -117,9 +125,9 @@ public class EntryPointService implements ResourceSerializer{
 	        // TODO return dumb proxy with access to the response
 	        return null;
 		} catch (IOException e) {
-			throw new TransitionException("Unable to execute " + uri, e);
+			throw new RestfulieException("Unable to execute " + uri, e);
 		} catch (URISyntaxException e) {
-			throw new TransitionException("Unable to execute " + uri, e);
+			throw new RestfulieException("Unable to execute " + uri, e);
 		}
 	}
 
@@ -136,7 +144,7 @@ public class EntryPointService implements ResourceSerializer{
 			DefaultResponse response = responseFor(connection, new HttpURLConnectionContentProcessor(connection));
 	        return (R) response.getResource();
 		} catch (IOException e) {
-			throw new TransitionException("Unable to execute " + uri, e);
+			throw new RestfulieException("Unable to execute " + uri, e);
 		}
 
 	}
@@ -148,6 +156,12 @@ public class EntryPointService implements ResourceSerializer{
 
 	private XStreamDeserializer getDeserializer() {
 		return new XStreamDeserializer(this.config);
+	}
+
+	@Override
+	public ResourceSerializer as(String contentType) {
+		headers.put("Content-type", contentType);
+		return this;
 	}
 
 }

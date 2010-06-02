@@ -12,8 +12,7 @@ public class TestPostRepresentation {
 		server.configure(Item.class);
 
 		Item item = new Item("pipa", 299.0);
-		item = server.entryAt("http://localhost:8080/restfulie/items").post(item);
-
-		System.out.println(item.getNome());
+		item = server.entryAt("http://localhost:3000/restfulie/items").as("application/json").post(item);
+		System.out.println(item.getName());
 	}
 }

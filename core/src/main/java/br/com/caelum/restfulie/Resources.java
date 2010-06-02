@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import br.com.caelum.restfulie.config.Configuration;
 import br.com.caelum.restfulie.marshall.ResourceSerializer;
 import br.com.caelum.restfulie.serializer.BasicSerializer;
-import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
 import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
