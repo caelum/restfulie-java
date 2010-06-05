@@ -48,7 +48,7 @@ public class DefaultTransitionTest {
 	
 	@Test
 	public void shouldExecuteAnHttpRequest() throws IOException {
-		DefaultRelation transition = new DefaultRelation("latest", "http://localhost:8080/chapter05-service/order/1", null, null);
+		DefaultRelation transition = new DefaultRelation("list", "http://localhost:3000/restfulie/items", null, null);
 		Response result = transition.access();
 		assertThat(result.getCode(), is(200));
 		assertThat(result.getContent(), is("<content/>"));

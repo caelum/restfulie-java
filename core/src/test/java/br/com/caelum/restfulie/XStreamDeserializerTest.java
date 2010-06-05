@@ -18,6 +18,7 @@
 package br.com.caelum.restfulie;
 
 import static br.com.caelum.restfulie.Restfulie.resource;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

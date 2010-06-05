@@ -20,7 +20,11 @@ package br.com.caelum.restfulie;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import br.com.caelum.restfulie.marshall.ResourceSerializer;
+import br.com.caelum.restfulie.http.ApacheHttpClientProvider;
+import br.com.caelum.restfulie.http.HttpClientProvider;
+import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.http.Request;
+import br.com.caelum.restfulie.http.XmlMediaType;
 
 /**
  * Restfulie's client API entry point.<br/>
@@ -28,6 +32,14 @@ import br.com.caelum.restfulie.marshall.ResourceSerializer;
  * @author guilherme silveira
  */
 public class Restfulie {
+	
+	private static final MediaTypes types = new MediaTypes();
+	
+	private static final HttpClientProvider provider = new ApacheHttpClientProvider();
+	
+	static {
+		types.register(new XmlMediaType());
+	}
 
 	/**
 	 * Given an retrieved resource, gives access to restfulie's transition api.
@@ -46,16 +58,16 @@ public class Restfulie {
 	/**
 	 * Entry point to direct access an uri.
 	 */
-	public static ResourceSerializer resource(URI uri) {
-		return new EntryPointService(uri);
+	public static Request at(URI uri) {
+		return provider.request(uri).accept("application/xml");
 	}
 
 	/**
 	 * Entry point to direct access an uri.
 	 * @throws URISyntaxException 
 	 */
-	public static ResourceSerializer resource(String uri) throws URISyntaxException {
-		return new EntryPointService(new URI(uri));
+	public static Request at(String uri) throws URISyntaxException {
+		return at(new URI(uri));
 	}
 
 }

@@ -24,8 +24,6 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.Response;
-import br.com.caelum.restfulie.RestfulieException;
-import br.com.caelum.restfulie.unmarshall.Deserializer;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -37,22 +35,22 @@ public class DefaultResponse implements Response {
 	private int code;
 	private Map<String, List<String>> headers;
 	private HttpURLConnection connection;
-	private final Deserializer deserializer;
 	private ContentProcessor processor;
+	private MediaTypes types;
 
 	/**
 	 * Will use this connection to retrieve the response data. The deserializer
 	 * will be used if the user wants to retrieve the resource.
 	 */
 	public DefaultResponse(HttpURLConnection connection,
-			Deserializer deserializer) throws IOException {
-		this(connection, deserializer, new HttpURLConnectionContentProcessor(connection));
+			MediaTypes types) throws IOException {
+		this(connection, types, new HttpURLConnectionContentProcessor(connection));
 	}
 
 	public DefaultResponse(HttpURLConnection connection,
-			Deserializer deserializer, ContentProcessor processor)
+			MediaTypes types, ContentProcessor processor)
 			throws IOException {
-		this.deserializer = deserializer;
+		this.types = types;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
 		this.headers = connection.getHeaderFields();
@@ -78,26 +76,8 @@ public class DefaultResponse implements Response {
 	@SuppressWarnings("unchecked")
 	public <T> T getResource() throws IOException {
 		String content = getContent();
-		Resource deserializedResource = (Resource) deserializer.fromXml(content);
-		setResponse(deserializedResource);
-		//deserializedResource.
+		Resource deserializedResource = (Resource) types.forContentType(headers.get("Content-type").get(0)).unmarshal(content);
 		return (T) deserializedResource;
-	}
-
-	private void setResponse(Resource deserializedResource) {
-		try {
-			java.lang.reflect.Field fResponse = deserializedResource.getClass().getDeclaredField("response");
-			fResponse.setAccessible(true);
-			fResponse.set(deserializedResource, this);
-		} catch (SecurityException e) {
-			throw new RestfulieException("Unable inject web response in resource", e);
-		} catch (NoSuchFieldException e) {
-			throw new RestfulieException("Unable inject web response in resource", e);
-		} catch (IllegalArgumentException e) {
-			throw new RestfulieException("Unable inject web response in resource", e);
-		} catch (IllegalAccessException e) {
-			throw new RestfulieException("Unable inject web response in resource", e);
-		}
 	}
 
 }
