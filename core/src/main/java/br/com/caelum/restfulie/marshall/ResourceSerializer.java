@@ -17,6 +17,8 @@
 
 package br.com.caelum.restfulie.marshall;
 
+import br.com.caelum.restfulie.Response;
+
 /**
  * Basic resource serialization support.
  * 
@@ -35,10 +37,18 @@ public interface ResourceSerializer {
 	 */
 	ResourceSerializer accept(String type);
 
-	<R> R post();
-	
-	<R> R get();
+	Response get();
 
-	public <T, R> R post(T object);
+	<T> Response post(T object);
+
+	<T> Response put(T object);
+
+	<T> Response patch(T object);
+
+	Response delete();
+
+	Response options();
+
+	Response head();
 
 }

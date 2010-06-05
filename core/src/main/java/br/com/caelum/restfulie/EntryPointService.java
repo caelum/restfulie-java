@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -44,20 +45,18 @@ import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
  * @author guilherme silveira
  */
 @SuppressWarnings("unchecked")
-public class EntryPointService implements ResourceSerializer{
+public class EntryPointService implements ResourceSerializer {
 
 	private final URI uri;
 	private Object customObject;
 	private final XStreamConfig config;
-	
-	private String accept = "application/xml";
-	
+
 	private final Map<String, String> headers = new HashMap<String, String>();
-	
+
 	public EntryPointService(URI uri) {
 		this(uri, new HashMap<Class, Configuration>());
 	}
-	
+
 	public EntryPointService(URI uri, Map<Class, Configuration> configs) {
 		this(uri, new SerializationConfig(configs));
 	}
@@ -69,61 +68,54 @@ public class EntryPointService implements ResourceSerializer{
 	public EntryPointService(URI uri, XStreamConfig config) {
 		this.config = config;
 		this.uri = uri;
+		headers.put("Accept", "application/xml");
 	}
-	
-	public <T> ResourceSerializer custom(T object) {
-		this.customObject = object;
-		return this;
-	}
-	
+
 	public EntryPointService accept(String type) {
-		this.accept = type;
+		headers.put("Accept", type);
 		return this;
-	}
-	
-	public <T, R> R post(T object) {
-		return (R) custom(object).post();
 	}
 
 	public ResourceSerializer exclude(String... names) {
-		if(customObject==null) {
-			throw new IllegalStateException("Unable to exclude fields if you do not define on which type you will exclude it.");
+		if (customObject == null) {
+			throw new IllegalStateException(
+					"Unable to exclude fields if you do not define on which type you will exclude it.");
 		}
 		config.type(customObject.getClass()).exclude(names);
 		return this;
 	}
 
 	public ResourceSerializer include(String... names) {
-		if(customObject==null) {
-			throw new IllegalStateException("Unable to include fields if you do not define on which type you will include it.");
+		if (customObject == null) {
+			throw new IllegalStateException(
+					"Unable to include fields if you do not define on which type you will include it.");
 		}
 		config.type(customObject.getClass()).include(names);
 		return this;
 	}
 
-	public <R> R post() {
+	public Response sendPayload(String verb) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-			connection.addRequestProperty("Accept", accept);
-			for(String header : headers.keySet()) {
-				connection.addRequestProperty(header, headers.get(header));
-			}
-			if(!headers.containsKey("Content-type")) {
-				throw new RestfulieException("You should set a content type prior to sending some payload.");
+			HttpURLConnection connection = prepareConnectionWithHeaders();
+			if (!headers.containsKey("Content-type")) {
+				throw new RestfulieException(
+						"You should set a content type prior to sending some payload.");
 			}
 			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod(verb);
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
 			BasicSerializer serializer = getSerializer(writer);
 			serializer.serialize();
 			writer.flush();
-	        DefaultResponse response = responseFor(connection, new IdentityContentProcessor());
-	        if(response.getCode()==201) {
-	        	return (R) new EntryPointService(new URI(response.getHeader("Location").get(0)), this.config).get();
-	        }
-	        // TODO return dumb proxy with access to the response
-	        return null;
+			DefaultResponse response = responseFor(connection,
+					new IdentityContentProcessor());
+			if (response.getCode() == 201) {
+				return new EntryPointService(new URI(response.getHeader(
+						"Location").get(0)), this.config).get();
+			}
+			// TODO return dumb proxy with access to the response
+			return response;
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
 		} catch (URISyntaxException e) {
@@ -131,26 +123,40 @@ public class EntryPointService implements ResourceSerializer{
 		}
 	}
 
-	private BasicSerializer getSerializer(Writer writer) {
-		return new XStreamXmlSerializer(config.create(), writer).from(customObject);
+	private HttpURLConnection prepareConnectionWithHeaders()
+			throws IOException, MalformedURLException {
+		HttpURLConnection connection = (HttpURLConnection) uri.toURL()
+				.openConnection();
+		for (String header : headers.keySet()) {
+			connection.addRequestProperty(header, headers.get(header));
+		}
+		return connection;
 	}
 
-	public <R> R get() {
+	private BasicSerializer getSerializer(Writer writer) {
+		return new XStreamXmlSerializer(config.create(), writer)
+				.from(customObject);
+	}
+
+	private Response retrieve(String verb) {
 		try {
-			HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-			connection.addRequestProperty("Accept", accept);
+			HttpURLConnection connection = prepareConnectionWithHeaders();
 			connection.setDoOutput(false);
-			connection.setRequestMethod("GET");
-			DefaultResponse response = responseFor(connection, new HttpURLConnectionContentProcessor(connection));
-	        return (R) response.getResource();
+			connection.setRequestMethod(verb);
+			DefaultResponse response = responseFor(connection,
+					new HttpURLConnectionContentProcessor(connection));
+			return response;
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
 		}
-
 	}
 
-	private DefaultResponse responseFor(HttpURLConnection connection, ContentProcessor processor)
-			throws IOException {
+	public Response get() {
+		return retrieve("GET");
+	}
+
+	private DefaultResponse responseFor(HttpURLConnection connection,
+			ContentProcessor processor) throws IOException {
 		return new DefaultResponse(connection, getDeserializer(), processor);
 	}
 
@@ -162,6 +168,39 @@ public class EntryPointService implements ResourceSerializer{
 	public ResourceSerializer as(String contentType) {
 		headers.put("Content-type", contentType);
 		return this;
+	}
+
+	@Override
+	public Response delete() {
+		return retrieve("DELETE");
+	}
+
+	@Override
+	public Response head() {
+		return retrieve("HEAD");
+	}
+
+	@Override
+	public Response options() {
+		return retrieve("OPTIONS");
+	}
+
+	@Override
+	public <T> Response patch(T object) {
+		this.customObject = object;
+		return sendPayload("PATCH");
+	}
+
+	@Override
+	public <T> Response post(T object) {
+		this.customObject = object;
+		return sendPayload("POST");
+	}
+
+	@Override
+	public <T> Response put(T object) {
+		this.customObject = object;
+		return sendPayload("PUT");
 	}
 
 }
