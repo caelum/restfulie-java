@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.caelum.restfulie.EntryPointService;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.RestfulieException;

@@ -4,6 +4,6 @@ import java.net.URI;
 
 public interface HttpClientProvider {
 
-	Request request(URI uri);
+	Request request(URI uri, MediaTypes types);
 
 }

@@ -59,7 +59,7 @@ public class Restfulie {
 	 * Entry point to direct access an uri.
 	 */
 	public static Request at(URI uri) {
-		return provider.request(uri).accept("application/xml");
+		return provider.request(uri, types).accept("application/xml");
 	}
 
 	/**
