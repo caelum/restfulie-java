@@ -47,7 +47,8 @@ public class Restfulie {
 	 * Entry point to direct access an uri.
 	 */
 	public static Request at(URI uri) {
-		return custom().getProvider().request(uri).accept("application/xml");
+		RestClient client = custom();
+		return client.getProvider().request(uri, client).accept("application/xml");
 	}
 
 	/**

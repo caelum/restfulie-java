@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.integration;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,22 +30,18 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
 import br.com.caelum.restfulie.http.XmlMediaType;
 
-public class DefaultTransitionTest {
+public class EntryTest {
 	
-	private String defaultPayment;
 	private RestClient restfulie;
 
 	@Before
 	public void setup() {
-		this.defaultPayment = "<payment>\n" +
-			"  <cardNumber>1234123412341234</cardNumber>\n" +
-			"  <cardholderName>guilherme silveira</cardholderName>\n" +
-			"  <expiryMonth>11</expiryMonth>\n" +
-			"  <expiryYear>12</expiryYear>\n" +
-			"</payment>";
 		this.restfulie = Restfulie.custom();
 		this.restfulie.getMediaTypes().register(new MyXmlMediaType());
 	}
@@ -59,12 +56,33 @@ public class DefaultTransitionTest {
 	}
 	
 	@Test
-	public void shouldExecuteASimpleHttpRequest() throws IOException, URISyntaxException {
+	public void shouldBeAbleToGetAndUnmarshall() throws IOException, URISyntaxException {
 		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
-		System.out.println(response.getContent());
 		List<Item> items = response.getResource();
 		assertThat(items.get(0).getName(), is(equalTo("Chave")));
 		assertThat(response.getCode(), is(200));
+	}
+	
+	@Test
+	public void shouldPostCreatingResource() throws IOException, URISyntaxException {
+		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").as("application/xml").post(new Item("rest training", 1500.00));
+		System.out.println(response.getContent());
+		Item item = response.getResource();
+		assertThat(item.getName(), is(equalTo("rest training")));
+		assertThat(response.getCode(), is(200));
+
+		response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
+		List<Item> items = response.getResource();
+		assertTrue(itemIsThere(items));
+	}
+
+	private boolean itemIsThere(List<Item> items) {
+		for(Item i : items) {
+			if(i.getName().equals("rest training")) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

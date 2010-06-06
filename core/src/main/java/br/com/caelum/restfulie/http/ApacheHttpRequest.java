@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.RestfulieException;
 
@@ -23,14 +24,14 @@ public class ApacheHttpRequest implements Request {
 
 	private final URI uri;
 
-	private final MediaTypes mediaTypes;
+	private final RestClient client;
 
-	public ApacheHttpRequest(URI uri, MediaTypes mediaTypes) {
+	public ApacheHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
-		this.mediaTypes = mediaTypes;
+		this.client = client;
 	}
 
-	public Response sendPayload(String verb, Object payload) {
+	private Response sendPayload(Object payload, String verb) {
 		try {
 			HttpURLConnection connection = prepareConnectionWithHeaders();
 			if (!headers.containsKey("Content-type")) {
@@ -41,13 +42,12 @@ public class ApacheHttpRequest implements Request {
 			connection.setRequestMethod(verb);
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
-			mediaTypes.forContentType(headers.get("Content-type")).marshal(payload, writer);
+			client.getMediaTypes().forContentType(headers.get("Content-type")).marshal(payload, writer);
 			DefaultResponse response = responseFor(connection,
 					new IdentityContentProcessor());
 			if (response.getCode() == 201) {
-				return Restfulie.at(response.getHeader("Location").get(0)).get();
+				return client.at(response.getHeader("Location").get(0)).get();
 			}
-			// TODO return dumb proxy with access to the response
 			return response;
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
@@ -82,12 +82,7 @@ public class ApacheHttpRequest implements Request {
 
 	private DefaultResponse responseFor(HttpURLConnection connection,
 			ContentProcessor processor) throws IOException {
-		return new DefaultResponse(connection, mediaTypes, processor);
-	}
-
-	@Override
-	public Request sending(Object payload) {
-		return null;
+		return new DefaultResponse(connection, client.getMediaTypes(), processor);
 	}
 
 	@Override
@@ -139,10 +134,6 @@ public class ApacheHttpRequest implements Request {
 		return sendPayload(object, "PATCH");
 	}
 	
-	private <T> Response sendPayload(T object, String verb) {
-		return using(verb).sending(object).access();
-	}
-
 	@Override
 	public <T> Response post(T object) {
 		return sendPayload(object, "POST");

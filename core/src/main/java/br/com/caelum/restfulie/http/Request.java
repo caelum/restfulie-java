@@ -10,13 +10,6 @@ import br.com.caelum.restfulie.Response;
 public interface Request {
 
 	/**
-	 * Sends an http request with a payload.
-	 * @param payload
-	 * @return
-	 */
-	Request sending(Object payload);
-
-	/**
 	 * Access the resource, returning the request result.
 	 * @return
 	 */

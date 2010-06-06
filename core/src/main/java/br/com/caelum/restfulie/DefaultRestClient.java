@@ -35,9 +35,10 @@ public class DefaultRestClient implements RestClient {
 
 	private final MediaTypes types = new MediaTypes();
 	
-	private final HttpClientProvider provider = new ApacheHttpClientProvider(types);
+	private final HttpClientProvider provider;
 	
 	public DefaultRestClient() {
+		provider = new ApacheHttpClientProvider();
 		types.register(new XmlMediaType());
 	}
 	
@@ -55,7 +56,7 @@ public class DefaultRestClient implements RestClient {
 	 * Entry point to direct access an uri.
 	 */
 	public Request at(URI uri) {
-		return getProvider().request(uri).accept("application/xml");
+		return getProvider().request(uri, this).accept("application/xml");
 	}
 
 	/**
