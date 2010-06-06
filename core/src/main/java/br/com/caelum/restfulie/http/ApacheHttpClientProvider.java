@@ -8,13 +8,19 @@ import java.net.URI;
  * @author guilherme silveira
  */
 public class ApacheHttpClientProvider implements HttpClientProvider {
+	
+	private final MediaTypes types;
+
+	public ApacheHttpClientProvider(MediaTypes types) {
+		this.types = types;
+	}
 
 	/**
 	 * Provides a request for a specific uri basedf on apache http.
 	 * @param types 
 	 */
 	@Override
-	public Request request(URI uri, MediaTypes types) {
+	public Request request(URI uri) {
 		return new ApacheHttpRequest(uri, types);
 	}
 

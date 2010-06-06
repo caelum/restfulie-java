@@ -17,14 +17,7 @@
 
 package br.com.caelum.restfulie;
 
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import br.com.caelum.restfulie.config.Configuration;
-import br.com.caelum.restfulie.marshall.ResourceSerializer;
-import br.com.caelum.restfulie.serializer.BasicSerializer;
-import br.com.caelum.restfulie.unmarshall.Deserializer;
+import br.com.caelum.restfulie.http.HttpClientProvider;
 
 /**
  * Allows resources configuration and access.
@@ -33,26 +26,6 @@ import br.com.caelum.restfulie.unmarshall.Deserializer;
  */
 public interface Resources {
 
-	/**
-	 * Configures an specific type
-	 */
-	Configuration configure(Class type);
-
-	/**
-	 * Gives access to a system's entry point.
-	 */
-	ResourceSerializer entryAt(URI uri);
-
-	/**
-	 * Gives access to a system's entry point.
-	 * @throws URISyntaxException 
-	 */
-	ResourceSerializer entryAt(String uri) throws URISyntaxException;
-
-	/**
-	 * Allows retrieving an instance of the deserializer for testing.
-	 */
-	Deserializer getDeserializer();
-
-	BasicSerializer getSerializerFor(Writer writer, Object customObject);
+	HttpClientProvider getProvider();
+	
 }

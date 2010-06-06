@@ -18,8 +18,7 @@
 package br.com.caelum.restfulie.client;
 
 import br.com.caelum.restfulie.DefaultRelation;
-import br.com.caelum.restfulie.XStreamDeserializer;
-import br.com.caelum.restfulie.config.XStreamConfig;
+import br.com.caelum.restfulie.http.MediaTypes;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -36,12 +35,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class DefaultTransitionConverter implements Converter {
 
-	private final XStreamDeserializer deserializer;
-	private final XStreamConfig config;
+	private final MediaTypes types;
 
-	public DefaultTransitionConverter(XStreamConfig config, XStreamDeserializer deserializer) {
-		this.config = config;
-		this.deserializer = deserializer;
+	public DefaultTransitionConverter(MediaTypes types) {
+		this.types = types;
 	}
 
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -53,9 +50,10 @@ public class DefaultTransitionConverter implements Converter {
 			UnmarshallingContext context) {
 		String rel = reader.getAttribute("rel");
 		String href = reader.getAttribute("href");
-		return new DefaultRelation(rel, href, deserializer, config);
+		return new DefaultRelation(rel, href, types);
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean canConvert(Class type) {
 		return type.equals(DefaultRelation.class);
 	}

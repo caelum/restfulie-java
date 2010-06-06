@@ -32,12 +32,17 @@ import java.net.HttpURLConnection;
 public class HttpURLConnectionContentProcessor implements ContentProcessor {
 
 	private final HttpURLConnection connection;
+	
+	private String cachedContent = null;
 
 	public HttpURLConnectionContentProcessor(HttpURLConnection connection) {
 		this.connection = connection;
 	}
 
 	public String read() throws IOException {
+		if(cachedContent!=null) {
+			return cachedContent;
+		}
 		InputStream stream = (InputStream) connection.getContent();
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(stream));
@@ -52,7 +57,7 @@ public class HttpURLConnectionContentProcessor implements ContentProcessor {
 			}
 			content.append(partial);
 		}
-		return content.toString();
+		return cachedContent = content.toString();
 	}
 
 }

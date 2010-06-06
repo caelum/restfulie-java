@@ -19,25 +19,25 @@ package br.com.caelum.restfulie;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.caelum.restfulie.http.HttpMethod;
-import br.com.caelum.restfulie.unmarshall.Deserializer;
+import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
+import br.com.caelum.restfulie.http.XmlMediaType;
+
+import com.thoughtworks.xstream.XStream;
 
 public class DefaultTransitionTest {
 	
-	private Deserializer deserializer;
 	private String defaultPayment;
 
 	@Before
 	public void setup() {
-		this.deserializer = mock(Deserializer.class);
 		this.defaultPayment = "<payment>\n" +
 			"  <cardNumber>1234123412341234</cardNumber>\n" +
 			"  <cardholderName>guilherme silveira</cardholderName>\n" +
@@ -46,36 +46,21 @@ public class DefaultTransitionTest {
 			"</payment>";
 	}
 	
-	@Test
-	public void shouldExecuteAnHttpRequest() throws IOException {
-		DefaultRelation transition = new DefaultRelation("list", "http://localhost:3000/restfulie/items", null, null);
-		Response result = transition.access();
-		assertThat(result.getCode(), is(200));
-		assertThat(result.getContent(), is("<content/>"));
+	class MyXmlMediaType extends XmlMediaType {
+		@Override
+		protected XStream getXStream() {
+			XStream xstream = super.getXStream();
+			xstream.processAnnotations(Item.class);
+			return xstream;
+		}
 	}
 	
 	@Test
-	public void shouldParseAnObjectIfDesired() throws IOException {
-		when(deserializer.fromXml(defaultPayment)).thenReturn("my resulting resource");
-		DefaultRelation transition = new DefaultRelation("latest", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", deserializer, null);
-		Response result = transition.access();
-		assertThat((String) result.getResource(), is("my resulting resource"));
+	public void shouldExecuteASimpleHttpRequest() throws IOException, URISyntaxException {
+		Response response = Restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
+		System.out.println(response.getContent());
+		List<Item> items = response.getResource();
+		assertThat(response.getCode(), is(200));
 	}
-
-
-	@Test
-	public void shouldAllowMethodOverriding() throws IOException {
-		DefaultRelation transition = new DefaultRelation("checkPayment", "http://localhost:8080/chapter05-service/order/2/checkPaymentInfo", null, null);
-		Response result = transition.method(HttpMethod.GET).access();
-		assertThat(result.getContent(), is(defaultPayment));
-	}
-
-
-	@Test
-	public void shouldAllowDeleteInvocations() {
-		DefaultRelation transition = new DefaultRelation("cancel", "http://localhost:8080/chapter05-service/order/1", null, null);
-		Response result = transition.access();
-		assertThat(result.getCode(), is(200));
-	}
-
+	
 }

@@ -75,9 +75,18 @@ public class DefaultResponse implements Response {
 
 	@SuppressWarnings("unchecked")
 	public <T> T getResource() throws IOException {
+		String contentType = getContentType();
 		String content = getContent();
-		Resource deserializedResource = (Resource) types.forContentType(headers.get("Content-type").get(0)).unmarshal(content);
+		Resource deserializedResource = (Resource) types.forContentType(contentType).unmarshal(content, types);
 		return (T) deserializedResource;
+	}
+
+	private String getContentType() throws IOException {
+		if(!headers.containsKey("Content-Type")) {
+			throw new IOException("Unable to unmarshall as there is no content type set. Check your server.");
+		}
+		String contentType = headers.get("Content-Type").get(0);
+		return contentType;
 	}
 
 }

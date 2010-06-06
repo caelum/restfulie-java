@@ -17,20 +17,10 @@
 
 package br.com.caelum.restfulie;
 
-import java.io.Writer;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
-import br.com.caelum.restfulie.config.Configuration;
-import br.com.caelum.restfulie.config.SerializationConfig;
-import br.com.caelum.restfulie.config.SimpleConfiguration;
-import br.com.caelum.restfulie.config.XStreamConfig;
-import br.com.caelum.restfulie.marshall.ResourceSerializer;
-import br.com.caelum.restfulie.serializer.BasicSerializer;
-import br.com.caelum.restfulie.serializer.XStreamXmlSerializer;
-import br.com.caelum.restfulie.unmarshall.Deserializer;
+import br.com.caelum.restfulie.http.ApacheHttpClientProvider;
+import br.com.caelum.restfulie.http.HttpClientProvider;
+import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.http.XmlMediaType;
 
 /**
  * Configured service entry point.
@@ -39,32 +29,17 @@ import br.com.caelum.restfulie.unmarshall.Deserializer;
  */
 public class DefaultResources implements Resources {
 
-	private final Map<Class, Configuration> configurations = new HashMap<Class, Configuration>();
-
-	public Configuration configure(Class type) {
-		Configuration config = new SimpleConfiguration(type);
-		this.configurations.put(type, config);
-		return config;
-	}
-
-	public ResourceSerializer entryAt(URI uri) {
-		return new EntryPointService(uri, configurations);
-	}
-
-	public Deserializer getDeserializer() {
-		return new XStreamDeserializer(createConfig());
-	}
-
-	XStreamConfig createConfig() {
-		return new XStreamConfig(new SerializationConfig(configurations));
-	}
-
-	public ResourceSerializer entryAt(String uri) throws URISyntaxException {
-		return entryAt(new URI(uri));
+	private final MediaTypes types = new MediaTypes();
+	
+	private final HttpClientProvider provider = new ApacheHttpClientProvider(types);
+	
+	public DefaultResources() {
+		types.register(new XmlMediaType());
 	}
 	
-	public BasicSerializer getSerializerFor(Writer writer, Object customObject) {
-		return new XStreamXmlSerializer(createConfig().create(), writer).from(customObject);
+	@Override
+	public HttpClientProvider getProvider() {
+		return provider;
 	}
 
 }
