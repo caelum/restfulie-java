@@ -118,8 +118,8 @@ public class XStreamHelper {
 			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", newType);
 			newType.addField(field);
 			newType.addMethod(CtNewMethod.make("public java.util.List getLinks() { return link; }", newType));
-			newType.addMethod(CtNewMethod.make("public java.util.List hasLink(String link) { return getLink(link)!=null; }", newType));
-			newType.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Link getLink(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Relation t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", newType));
+			newType.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Link getLink(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Link t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", newType));
+			newType.addMethod(CtNewMethod.make("public boolean hasLink(String link) { return getLink(link)!=null; }", newType));
 			Class customType = newType.toClass();
 			this.realTypes.put(originalType, customType);
 			return customType;

@@ -60,7 +60,6 @@ public class XStreamConfigTest {
 	public static class Item {
 		String name;
 		double price;
-		long id;
 		public Item(String name, double price) {
 			this.name = name;
 			this.price = price;
