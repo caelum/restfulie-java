@@ -17,7 +17,7 @@ public class Enhancer {
 			CtClass newType =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
 			newType.setSuperclass(pool.get(originalType.getName()));
 			newType.addInterface(pool.get(Resource.class.getName()));
-			enhanceMustIgnore(newType);
+//			enhanceMustIgnore(newType);
 			enhanceLinks(newType);
 			return newType.toClass();
 		} catch (NotFoundException e) {
