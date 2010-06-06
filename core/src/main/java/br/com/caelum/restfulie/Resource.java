@@ -18,6 +18,7 @@
 package br.com.caelum.restfulie;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A single resource.<br>
@@ -50,5 +51,7 @@ public interface Resource {
 	 * Returns a property which was unknown at compile time.
 	 */
 	String getUnknownProperty(String key);
+
+	Map<String,String> getUnknownProperties();
 
 }

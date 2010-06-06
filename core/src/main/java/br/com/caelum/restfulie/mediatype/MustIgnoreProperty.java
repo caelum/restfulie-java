@@ -1,8 +1,7 @@
 package br.com.caelum.restfulie.mediatype;
 
-public class MustIgnoreProperty {
-	
-	public MustIgnoreProperty(String key, String value) {
-	}
+import java.util.HashMap;
 
+public class MustIgnoreProperty extends HashMap<String,String>{
+	
 }

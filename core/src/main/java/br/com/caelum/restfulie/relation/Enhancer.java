@@ -37,9 +37,10 @@ public class Enhancer {
 
 	private void enhanceMustIgnore(CtClass newType)
 			throws CannotCompileException {
-		CtField field = CtField.make("public java.util.List _mustIgnoreProperties = new java.util.ArrayList();", newType);
+		CtField field = CtField.make("public java.util.Map _mustIgnoreProperties = new java.util.HashMap();", newType);
 		newType.addField(field);
-		newType.addMethod(CtNewMethod.make("public java.lang.String getUnknownProperty(java.lang.String key) { for(int i=0;i<_mustIgnoreProperties.size();i++) {String t = (String) _mustIgnoreProperties.get(i); if(t.equals(key)) return t; } return null; }", newType));
+		newType.addMethod(CtNewMethod.make("public java.lang.String getUnknownProperty(java.lang.String key) { return (java.lang.String) _mustIgnoreProperties.get(key); }", newType));
+		newType.addMethod(CtNewMethod.make("public java.util.Map getUnknownProperties() { return _mustIgnoreProperties; }", newType));
 	}
 
 }

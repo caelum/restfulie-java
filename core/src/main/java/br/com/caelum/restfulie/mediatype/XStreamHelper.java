@@ -95,7 +95,6 @@ public class XStreamHelper {
 						XStreamHelper.this);
 			}
 		};
-		xstream.registerConverter(new MustIgnoreConverter());
 		xstream.useAttributeFor(DefaultRelation.class, "rel");
 		xstream.useAttributeFor(DefaultRelation.class, "href");
 
