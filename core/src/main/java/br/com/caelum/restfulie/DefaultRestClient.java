@@ -17,9 +17,13 @@
 
 package br.com.caelum.restfulie;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import br.com.caelum.restfulie.http.ApacheHttpClientProvider;
 import br.com.caelum.restfulie.http.HttpClientProvider;
 import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.XmlMediaType;
 
 /**
@@ -27,13 +31,13 @@ import br.com.caelum.restfulie.http.XmlMediaType;
  * 
  * @author guilherme silveira
  */
-public class DefaultResources implements Resources {
+public class DefaultRestClient implements RestClient {
 
 	private final MediaTypes types = new MediaTypes();
 	
 	private final HttpClientProvider provider = new ApacheHttpClientProvider(types);
 	
-	public DefaultResources() {
+	public DefaultRestClient() {
 		types.register(new XmlMediaType());
 	}
 	
@@ -42,4 +46,23 @@ public class DefaultResources implements Resources {
 		return provider;
 	}
 
+	@Override
+	public MediaTypes getMediaTypes() {
+		return types;
+	}
+
+	/**
+	 * Entry point to direct access an uri.
+	 */
+	public Request at(URI uri) {
+		return getProvider().request(uri).accept("application/xml");
+	}
+
+	/**
+	 * Entry point to direct access an uri.
+	 * @throws URISyntaxException 
+	 */
+	public Request at(String uri) throws URISyntaxException {
+		return at(new URI(uri));
+	}
 }

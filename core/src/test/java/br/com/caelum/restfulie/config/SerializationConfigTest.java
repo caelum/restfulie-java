@@ -32,7 +32,7 @@ public class SerializationConfigTest {
 	@Test
 	public void shouldReturnANewConfigurationIfThereIsNoneAvailable() {
 		SerializationConfig configs = new SerializationConfig();
-		Configuration config = configs.type(String.class);
+		RestClient config = configs.type(String.class);
 		assertThat(config.getIncludes().size(), is(equalTo(0)));
 		assertThat(config.getExcludes().length, is(equalTo(0)));
 		assertThat(config.getType().toString(), is(equalTo(String.class.toString())));
@@ -40,9 +40,9 @@ public class SerializationConfigTest {
 
 	@Test
 	public void shouldReturnTheSameConfiguration() {
-		Configuration config = mock(Configuration.class);
+		RestClient config = mock(RestClient.class);
 
-		Map<Class, Configuration> map = new HashMap<Class,Configuration>();
+		Map<Class, RestClient> map = new HashMap<Class,RestClient>();
 		map.put(String.class, config);
 		SerializationConfig configs = new SerializationConfig(map);
 		assertThat(configs.type(String.class), is(equalTo(config)));

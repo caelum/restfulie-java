@@ -67,6 +67,7 @@ public class XStreamConfigTest {
 	public static class Item {
 		String name;
 		double price;
+		long id;
 		public Item(String name, double price) {
 			this.name = name;
 			this.price = price;
@@ -237,8 +238,8 @@ public class XStreamConfigTest {
 
 	@Test
 	public void shouldSupportDeserialization() {
-		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
-		Configuration config = new SimpleConfiguration(Receipt.class);
+		HashMap<Class, RestClient> map = new HashMap<Class,RestClient>();
+		RestClient config = new SimpleConfiguration(Receipt.class);
 		map.put(Receipt.class, config);
 		SerializationConfig configs = new SerializationConfig(map);
 		XStreamConfig xstreamConfig = new XStreamConfig(configs);
@@ -251,8 +252,8 @@ public class XStreamConfigTest {
 
 	@Test
 	public void shouldSupportDeserializationWithLink() {
-		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
-		Configuration config = new SimpleConfiguration(Receipt.class);
+		HashMap<Class, RestClient> map = new HashMap<Class,RestClient>();
+		RestClient config = new SimpleConfiguration(Receipt.class);
 		map.put(Receipt.class, config);
 		SerializationConfig configs = new SerializationConfig(map);
 		XStreamConfig xstreamConfig = new XStreamConfig(configs);
@@ -265,8 +266,8 @@ public class XStreamConfigTest {
 
 	@Test
 	public void shouldSupportDeserializationWithLinks() {
-		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
-		Configuration config = new SimpleConfiguration(Receipt.class);
+		HashMap<Class, RestClient> map = new HashMap<Class,RestClient>();
+		RestClient config = new SimpleConfiguration(Receipt.class);
 		map.put(Receipt.class, config);
 		SerializationConfig configs = new SerializationConfig(map);
 		XStreamConfig xstreamConfig = new XStreamConfig(configs);
@@ -279,8 +280,8 @@ public class XStreamConfigTest {
 
 	@Test
 	public void shouldSupportDeserializationWithLinksFromDifferentRoots() {
-		HashMap<Class, Configuration> map = new HashMap<Class,Configuration>();
-		Configuration config = new SimpleConfiguration(Receipt.class);
+		HashMap<Class, RestClient> map = new HashMap<Class,RestClient>();
+		RestClient config = new SimpleConfiguration(Receipt.class);
 		map.put(Receipt.class, config);
 		map.put(Item.class, new SimpleConfiguration(Item.class));
 		SerializationConfig configs = new SerializationConfig(map);

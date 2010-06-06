@@ -35,6 +35,7 @@ import com.thoughtworks.xstream.XStream;
 public class DefaultTransitionTest {
 	
 	private String defaultPayment;
+	private RestClient restfulie;
 
 	@Before
 	public void setup() {
@@ -44,6 +45,8 @@ public class DefaultTransitionTest {
 			"  <expiryMonth>11</expiryMonth>\n" +
 			"  <expiryYear>12</expiryYear>\n" +
 			"</payment>";
+		this.restfulie = Restfulie.custom();
+		this.restfulie.getMediaTypes().register(new MyXmlMediaType());
 	}
 	
 	class MyXmlMediaType extends XmlMediaType {
@@ -57,7 +60,7 @@ public class DefaultTransitionTest {
 	
 	@Test
 	public void shouldExecuteASimpleHttpRequest() throws IOException, URISyntaxException {
-		Response response = Restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
+		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
 		System.out.println(response.getContent());
 		List<Item> items = response.getResource();
 		assertThat(response.getCode(), is(200));

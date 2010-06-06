@@ -19,8 +19,7 @@ package br.com.caelum.restfulie.serializer;
 
 import java.io.Writer;
 
-import br.com.caelum.restfulie.config.Configuration;
-import br.com.caelum.restfulie.config.SimpleConfiguration;
+import br.com.caelum.restfulie.RestClient;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -50,7 +49,7 @@ public class XStreamXmlSerializer implements BasicSerializer {
 		xstream.toXML(toSerialize, writer);
 	}
 
-	public BasicSerializer from(Object object, Configuration config) {
+	public BasicSerializer from(Object object, RestClient config) {
 		if (object == null) {
 			throw new NullPointerException("You can't serialize null objects");
 		}

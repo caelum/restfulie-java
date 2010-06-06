@@ -39,15 +39,15 @@ public class Restfulie {
 	/**
 	 * Entry point to configure serialization data prior to accessing the resources.
 	 */
-	public static Resources configuration() {
-		return new DefaultResources();
+	public static RestClient custom() {
+		return new DefaultRestClient();
 	}
 
 	/**
 	 * Entry point to direct access an uri.
 	 */
 	public static Request at(URI uri) {
-		return configuration().getProvider().request(uri).accept("application/xml");
+		return custom().getProvider().request(uri).accept("application/xml");
 	}
 
 	/**

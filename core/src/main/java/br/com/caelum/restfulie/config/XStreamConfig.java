@@ -61,7 +61,7 @@ public class XStreamConfig {
 			return instance;
 		}
 		instance = getXStream();
-		for(Configuration config : configs.getAllTypes()) {
+		for(RestClient config : configs.getAllTypes()) {
 			Class type = config.getType();
 			enhanceResource(type);
 			instance.processAnnotations(type);
@@ -181,7 +181,7 @@ public class XStreamConfig {
 		|| Character.class.equals(type);
 	}
 
-	public Configuration type(Class<? extends Object> type) {
+	public RestClient type(Class<? extends Object> type) {
 		return configs.type(type);
 	}
 

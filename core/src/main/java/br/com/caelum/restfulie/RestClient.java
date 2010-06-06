@@ -18,14 +18,23 @@
 package br.com.caelum.restfulie;
 
 import br.com.caelum.restfulie.http.HttpClientProvider;
+import br.com.caelum.restfulie.http.MediaTypes;
 
 /**
  * Allows resources configuration and access.
  * 
  * @author guilherme silveira
  */
-public interface Resources {
+public interface RestClient extends RequestEntry {
 
+	/**
+	 * Returns the http client provider in use.
+	 */
 	HttpClientProvider getProvider();
-	
+
+	/**
+	 * Returns the media type registry.
+	 */
+	MediaTypes getMediaTypes();
+
 }

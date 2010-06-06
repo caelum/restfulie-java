@@ -44,10 +44,10 @@ public class EntryPointService implements ResourceSerializer {
 	private final Request request;
 
 	public EntryPointService(URI uri) {
-		this(uri, new HashMap<Class, Configuration>(), new ApacheHttpClientProvider());
+		this(uri, new HashMap<Class, RestClient>(), new ApacheHttpClientProvider());
 	}
 
-	public EntryPointService(URI uri, Map<Class, Configuration> configs, HttpClientProvider provider) {
+	public EntryPointService(URI uri, Map<Class, RestClient> configs, HttpClientProvider provider) {
 		this(uri, new SerializationConfig(configs), provider);
 	}
 
