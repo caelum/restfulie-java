@@ -13,7 +13,6 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.RestfulieException;
 
 public class ApacheHttpRequest implements Request {

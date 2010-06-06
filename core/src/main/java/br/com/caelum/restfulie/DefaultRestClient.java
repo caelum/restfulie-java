@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.http.ApacheHttpClientProvider;
 import br.com.caelum.restfulie.http.HttpClientProvider;
+import br.com.caelum.restfulie.http.JsonMediaType;
 import br.com.caelum.restfulie.http.MediaTypes;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.XmlMediaType;
@@ -40,6 +41,7 @@ public class DefaultRestClient implements RestClient {
 	public DefaultRestClient() {
 		provider = new ApacheHttpClientProvider();
 		types.register(new XmlMediaType());
+		types.register(new JsonMediaType());
 	}
 	
 	@Override

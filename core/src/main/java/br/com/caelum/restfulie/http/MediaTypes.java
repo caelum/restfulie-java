@@ -2,6 +2,8 @@ package br.com.caelum.restfulie.http;
 
 import java.util.LinkedList;
 
+import br.com.caelum.restfulie.RestfulieException;
+
 /**
  * A media type registry.<br/>
  * Invoke register to add new media types. Whenever two media type handlers can
@@ -20,7 +22,7 @@ public class MediaTypes {
 				return type;
 			}
 		}
-		return null;
+		throw new RestfulieException("Unsupported media type '" + searching + "'");
 	}
 
 	public void register(MediaType mediaType) {

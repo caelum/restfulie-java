@@ -34,8 +34,10 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
+import br.com.caelum.restfulie.http.JsonMediaType;
 import br.com.caelum.restfulie.http.XmlMediaType;
 
+@SuppressWarnings("unchecked")
 public class EntryTest {
 	
 	private RestClient restfulie;
@@ -44,10 +46,18 @@ public class EntryTest {
 	public void setup() {
 		this.restfulie = Restfulie.custom();
 		this.restfulie.getMediaTypes().register(new MyXmlMediaType());
+		this.restfulie.getMediaTypes().register(new MyJsonMediaType());
 	}
 	
 	class MyXmlMediaType extends XmlMediaType {
-		@SuppressWarnings("unchecked")
+		protected List<Class> getTypesToEnhance() {
+			List<Class> list = new ArrayList<Class>();
+			list.add(Item.class);
+			return list;
+		}
+	}
+	
+	class MyJsonMediaType extends JsonMediaType {
 		protected List<Class> getTypesToEnhance() {
 			List<Class> list = new ArrayList<Class>();
 			list.add(Item.class);
@@ -66,23 +76,37 @@ public class EntryTest {
 	@Test
 	public void shouldPostCreatingResource() throws IOException, URISyntaxException {
 		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").as("application/xml").post(new Item("rest training", 1500.00));
-		System.out.println(response.getContent());
 		Item item = response.getResource();
 		assertThat(item.getName(), is(equalTo("rest training")));
 		assertThat(response.getCode(), is(200));
 
-		response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
+		response = restfulie.at("http://localhost:3000/restfulie/items").get();
 		List<Item> items = response.getResource();
-		assertTrue(itemIsThere(items));
+		assertTrue(itemIsThere(items, "rest training"));
 	}
 
-	private boolean itemIsThere(List<Item> items) {
+	private boolean itemIsThere(List<Item> items, String name) {
 		for(Item i : items) {
-			if(i.getName().equals("rest training")) {
+			if(i.getName().equals(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+	@Test
+	public void shouldSupportJson() throws IOException, URISyntaxException {
+		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/json").as("application/json").post(new Item("rest training json", 1500.00));
+		System.out.println(response.getContent());
+		Item item = response.getResource();
+		assertThat(item.getName(), is(equalTo("rest training json")));
+		assertThat(response.getCode(), is(200));
+
+		response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/json").get();
+		System.out.println(response.getContent());
+		List<Item> items = response.getResource();
+		assertTrue(itemIsThere(items, "rest training json"));
+	}
+
+
 }
