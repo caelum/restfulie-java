@@ -70,8 +70,8 @@ public class XStreamDeserializerTest {
 	public void shouldDeserializeWithASimpleLink() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" + linkFor("payment", "http://localhost/pay") + "</order>";
 		Resource resource = Restfulie.resource(deserializer.fromXml(xml));
-		assertThat(resource.getRelations().size(), is(equalTo(1)));
-		Relation first = resource.getRelations().get(0);
+		assertThat(resource.getLinks().size(), is(equalTo(1)));
+		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
 		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
 	}
@@ -80,8 +80,8 @@ public class XStreamDeserializerTest {
 	public void shouldSupportTheLinkWithoutTheXmlns() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\" xmlns:atom=\"http://www.w3.org/2005/Atom\">" + simpleLinkFor("payment", "http://localhost/pay") + "</order>";
 		Resource resource = resource(deserializer.fromXml(xml));
-		assertThat(resource.getRelations().size(), is(equalTo(1)));
-		Relation first = resource.getRelations().get(0);
+		assertThat(resource.getLinks().size(), is(equalTo(1)));
+		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
 		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
 	}
@@ -93,11 +93,11 @@ public class XStreamDeserializerTest {
 			+ linkFor("cancel", "http://localhost/cancel") 
 			+ "</order>";
 		Resource resource = resource(deserializer.fromXml(xml));
-		assertThat(resource.getRelations().size(), is(equalTo(2)));
-		Relation first = resource.getRelations().get(0);
+		assertThat(resource.getLinks().size(), is(equalTo(2)));
+		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
 		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
-		Relation second = resource.getRelations().get(1);
+		Link second = resource.getLinks().get(1);
 		assertThat(second.getRel(), is(equalTo("cancel")));
 		assertThat(second.getHref(), is(equalTo("http://localhost/cancel")));
 	}

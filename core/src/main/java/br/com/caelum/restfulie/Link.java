@@ -5,7 +5,7 @@ package br.com.caelum.restfulie;
  * 
  * @author guilherme silveira
  */
-public interface Relation extends RelationToAccess {
+public interface Link extends RelationToAccess {
 
 	String getHref();
 	

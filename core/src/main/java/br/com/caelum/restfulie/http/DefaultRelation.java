@@ -17,7 +17,7 @@
 
 package br.com.caelum.restfulie.http;
 
-import br.com.caelum.restfulie.Relation;
+import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.RelationToAccess;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -29,7 +29,7 @@ import br.com.caelum.restfulie.mediatype.MediaTypes;
  * @author guilherme silveira
  * @author lucas souza
  */
-public class DefaultRelation implements Relation {
+public class DefaultRelation implements Link {
 
 	private String rel;
 	private String href;

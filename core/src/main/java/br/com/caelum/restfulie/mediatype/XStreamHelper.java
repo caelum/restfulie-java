@@ -63,20 +63,26 @@ public class XStreamHelper {
 	 * @return
 	 */
 	private ReflectionProvider getProvider() {
-		return new ReflectionProviderWrapper(new Sun14ReflectionProvider()) {
-			public Object newInstance(Class originalType) {
-				if(realTypes.containsKey(originalType)) {
-					return super.newInstance(realTypes.get(originalType));
-				} else if(!Modifier.isFinal(originalType.getModifiers())) {
-					// enhance now!
-					Class enhanced = enhanceResource(originalType);
-					return super.newInstance(enhanced);
-				}
-				return super.newInstance(originalType);
-			}
-		};
+		return new EnhancedLookupProvider(new Sun14ReflectionProvider());
 	}
 
+	private final class EnhancedLookupProvider extends
+			ReflectionProviderWrapper {
+		private EnhancedLookupProvider(ReflectionProvider wrapper) {
+			super(wrapper);
+		}
+
+		public Object newInstance(Class originalType) {
+			if(realTypes.containsKey(originalType)) {
+				return super.newInstance(realTypes.get(originalType));
+			} else if(!Modifier.isFinal(originalType.getModifiers())) {
+				// enhance now!
+				Class enhanced = enhanceResource(originalType);
+				return super.newInstance(enhanced);
+			}
+			return super.newInstance(originalType);
+		}
+	}
 
 	private class LinkSupportWrapper extends MapperWrapper{
 
@@ -111,8 +117,9 @@ public class XStreamHelper {
 			newType.addInterface(pool.get(Resource.class.getName()));
 			CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", newType);
 			newType.addField(field);
-			newType.addMethod(CtNewMethod.make("public java.util.List getRelations() { return link; }", newType));
-			newType.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Relation getRelation(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Relation t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", newType));
+			newType.addMethod(CtNewMethod.make("public java.util.List getLinks() { return link; }", newType));
+			newType.addMethod(CtNewMethod.make("public java.util.List hasLink(String link) { return getLink(link)!=null; }", newType));
+			newType.addMethod(CtNewMethod.make("public br.com.caelum.restfulie.Link getLink(String rel) { for(int i=0;i<link.size();i++) {br.com.caelum.restfulie.Relation t = link.get(i); if(t.getRel().equals(rel)) return t; } return null; }", newType));
 			Class customType = newType.toClass();
 			this.realTypes.put(originalType, customType);
 			return customType;

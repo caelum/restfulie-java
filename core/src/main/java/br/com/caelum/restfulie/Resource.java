@@ -32,14 +32,18 @@ public interface Resource {
 	/**
 	 * Returns a relation, if found, or null if it was not found.
 	 */
-	Relation getRelation(String rel);
+	Link getLink(String rel);
+
+	/**
+	 * Returns whether a link relation exists.
+	 */
+	boolean hasLink(String rel);
 
 	/**
 	 * Returns a list of possible relations given this resource's state.
 	 * 
 	 * @return the collection of relation
 	 */
-	List<Relation> getRelations();
+	List<Link> getLinks();
 
-	Response getResponse();
 }
