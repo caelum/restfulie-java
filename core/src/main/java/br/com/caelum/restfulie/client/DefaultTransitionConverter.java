@@ -17,9 +17,9 @@
 
 package br.com.caelum.restfulie.client;
 
-import br.com.caelum.restfulie.DefaultRelation;
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.http.DefaultRelation;
+import br.com.caelum.restfulie.mediatype.MediaTypes;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;

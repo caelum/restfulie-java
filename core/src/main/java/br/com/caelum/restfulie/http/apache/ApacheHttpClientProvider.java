@@ -1,8 +1,10 @@
-package br.com.caelum.restfulie.http;
+package br.com.caelum.restfulie.http.apache;
 
 import java.net.URI;
 
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.http.HttpClientProvider;
+import br.com.caelum.restfulie.http.Request;
 
 /**
  * An apache http based request provider.

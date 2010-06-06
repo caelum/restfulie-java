@@ -15,17 +15,16 @@
  * limitations under the License.
  */
 
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import br.com.caelum.restfulie.http.ApacheHttpClientProvider;
-import br.com.caelum.restfulie.http.HttpClientProvider;
-import br.com.caelum.restfulie.http.JsonMediaType;
-import br.com.caelum.restfulie.http.MediaTypes;
-import br.com.caelum.restfulie.http.Request;
-import br.com.caelum.restfulie.http.XmlMediaType;
+import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.http.apache.ApacheHttpClientProvider;
+import br.com.caelum.restfulie.mediatype.JsonMediaType;
+import br.com.caelum.restfulie.mediatype.MediaTypes;
+import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 /**
  * Configured service entry point.

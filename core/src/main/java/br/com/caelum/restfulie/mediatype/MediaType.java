@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie.http;
+package br.com.caelum.restfulie.mediatype;
 
 import java.io.IOException;
 import java.io.Writer;

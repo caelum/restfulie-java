@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie.http;
+package br.com.caelum.restfulie.mediatype;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
-import br.com.caelum.restfulie.DefaultRelation;
 import br.com.caelum.restfulie.Resource;
+import br.com.caelum.restfulie.http.DefaultRelation;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;

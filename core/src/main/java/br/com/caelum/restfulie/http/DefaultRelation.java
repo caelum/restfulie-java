@@ -15,10 +15,13 @@
  * limitations under the License.
  */
 
-package br.com.caelum.restfulie;
+package br.com.caelum.restfulie.http;
 
-import br.com.caelum.restfulie.http.HttpMethod;
-import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.Relation;
+import br.com.caelum.restfulie.RelationToAccess;
+import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.mediatype.MediaTypes;
 
 /**
  * Default implementation of a transition.

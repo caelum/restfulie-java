@@ -34,8 +34,8 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
-import br.com.caelum.restfulie.http.JsonMediaType;
-import br.com.caelum.restfulie.http.XmlMediaType;
+import br.com.caelum.restfulie.mediatype.JsonMediaType;
+import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 import com.thoughtworks.xstream.XStream;
 

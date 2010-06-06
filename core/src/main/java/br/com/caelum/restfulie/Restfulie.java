@@ -20,6 +20,7 @@ package br.com.caelum.restfulie;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import br.com.caelum.restfulie.http.DefaultRestClient;
 import br.com.caelum.restfulie.http.Request;
 
 /**

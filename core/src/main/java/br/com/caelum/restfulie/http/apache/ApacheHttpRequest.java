@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie.http;
+package br.com.caelum.restfulie.http.apache;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,6 +14,10 @@ import java.util.Map;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.RestfulieException;
+import br.com.caelum.restfulie.http.ContentProcessor;
+import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
+import br.com.caelum.restfulie.http.IdentityContentProcessor;
+import br.com.caelum.restfulie.http.Request;
 
 public class ApacheHttpRequest implements Request {
 
@@ -42,7 +46,7 @@ public class ApacheHttpRequest implements Request {
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
 			client.getMediaTypes().forContentType(headers.get("Content-type")).marshal(payload, writer);
-			DefaultResponse response = responseFor(connection,
+			ApacheResponse response = responseFor(connection,
 					new IdentityContentProcessor());
 			if (response.getCode() == 201) {
 				Request request = client.at(response.getHeader("Location").get(0));
@@ -76,7 +80,7 @@ public class ApacheHttpRequest implements Request {
 			HttpURLConnection connection = prepareConnectionWithHeaders();
 			connection.setDoOutput(false);
 			connection.setRequestMethod(verb);
-			DefaultResponse response = responseFor(connection,
+			ApacheResponse response = responseFor(connection,
 					new HttpURLConnectionContentProcessor(connection));
 			return response;
 		} catch (IOException e) {
@@ -85,9 +89,9 @@ public class ApacheHttpRequest implements Request {
 	}
 
 
-	private DefaultResponse responseFor(HttpURLConnection connection,
+	private ApacheResponse responseFor(HttpURLConnection connection,
 			ContentProcessor processor) throws IOException {
-		return new DefaultResponse(connection, client, processor);
+		return new ApacheResponse(connection, client, processor);
 	}
 
 	@Override

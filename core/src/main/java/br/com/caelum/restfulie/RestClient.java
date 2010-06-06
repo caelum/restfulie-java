@@ -18,7 +18,7 @@
 package br.com.caelum.restfulie;
 
 import br.com.caelum.restfulie.http.HttpClientProvider;
-import br.com.caelum.restfulie.http.MediaTypes;
+import br.com.caelum.restfulie.mediatype.MediaTypes;
 
 /**
  * Allows resources configuration and access.
