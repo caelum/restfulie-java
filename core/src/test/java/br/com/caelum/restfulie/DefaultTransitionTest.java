@@ -19,6 +19,7 @@ package br.com.caelum.restfulie;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,8 +31,6 @@ import org.junit.Test;
 
 import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
 import br.com.caelum.restfulie.http.XmlMediaType;
-
-import com.thoughtworks.xstream.XStream;
 
 public class DefaultTransitionTest {
 	
@@ -64,6 +63,7 @@ public class DefaultTransitionTest {
 		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
 		System.out.println(response.getContent());
 		List<Item> items = response.getResource();
+		assertThat(items.get(0).getName(), is(equalTo("Chave")));
 		assertThat(response.getCode(), is(200));
 	}
 	
