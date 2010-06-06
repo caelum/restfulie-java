@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.http;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.com.caelum.restfulie.client.DefaultTransitionConverter;
@@ -18,13 +19,7 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 @SuppressWarnings("unchecked")
 public class JsonMediaType implements MediaType {
 
-	private final List<String> types = new ArrayList<String>();
-
-	{
-		types.add("application/json");
-		types.add("json");
-		types.add("text/json");
-	}
+	private final List<String> types = Arrays.asList("application/json", "text/json", "json");
 
 	private final XStreamHelper helper = new XStreamHelper(
 			new JettisonMappedXmlDriver());

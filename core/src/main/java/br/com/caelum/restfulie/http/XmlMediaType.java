@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.http;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -23,13 +24,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 @SuppressWarnings("unchecked")
 public class XmlMediaType implements MediaType {
 	
-	private final List<String> types = new ArrayList<String>();
-	
-	{
-		types.add("application/xml");
-		types.add("xml");
-		types.add("text/xml");
-	}
+	private final List<String> types = Arrays.asList("application/xml", "text/xml", "xml");
 	
 	private final XStreamHelper helper;
 	
