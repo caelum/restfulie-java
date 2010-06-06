@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -50,11 +51,11 @@ public class DefaultTransitionTest {
 	}
 	
 	class MyXmlMediaType extends XmlMediaType {
-		@Override
-		protected XStream getXStream() {
-			XStream xstream = super.getXStream();
-			xstream.processAnnotations(Item.class);
-			return xstream;
+		@SuppressWarnings("unchecked")
+		protected List<Class> getTypesToEnhance() {
+			List<Class> list = new ArrayList<Class>();
+			list.add(Item.class);
+			return list;
 		}
 	}
 	

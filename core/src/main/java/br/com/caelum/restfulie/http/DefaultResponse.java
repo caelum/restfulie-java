@@ -77,8 +77,7 @@ public class DefaultResponse implements Response {
 	public <T> T getResource() throws IOException {
 		String contentType = getContentType();
 		String content = getContent();
-		Resource deserializedResource = (Resource) types.forContentType(contentType).unmarshal(content, types);
-		return (T) deserializedResource;
+		return (T) types.forContentType(contentType).unmarshal(content, types);
 	}
 
 	private String getContentType() throws IOException {
