@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.client.DefaultTransitionConverter;
+import br.com.caelum.restfulie.client.DefaultLinkConverter;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
@@ -51,7 +51,7 @@ public class JsonMediaType implements MediaType {
 
 	@Override
 	public <T> T unmarshal(String content, RestClient client) {
-		xstream.registerConverter(new DefaultTransitionConverter(client));
+		xstream.registerConverter(new DefaultLinkConverter(client));
 		return (T) xstream.fromXML(content);
 	}
 

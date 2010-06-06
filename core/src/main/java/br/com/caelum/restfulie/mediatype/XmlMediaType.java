@@ -9,7 +9,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.client.DefaultTransitionConverter;
+import br.com.caelum.restfulie.client.DefaultLinkConverter;
 import br.com.caelum.restfulie.http.DefaultRelation;
 
 import com.thoughtworks.xstream.XStream;
@@ -59,7 +59,7 @@ public class XmlMediaType implements MediaType {
 
 	@Override
 	public <T> T unmarshal(String content, RestClient client) {
-		xstream.registerConverter(new DefaultTransitionConverter(client));
+		xstream.registerConverter(new DefaultLinkConverter(client));
 		return (T) xstream.fromXML(content);
 	}
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.restfulie.client.DefaultLinkConverter;
 import br.com.caelum.restfulie.http.DefaultRelation;
 import br.com.caelum.restfulie.relation.Enhancer;
 
@@ -44,20 +45,8 @@ public class XStreamHelper {
 		}
 
 		@Override
-		public Class getItemTypeForItemFieldName(Class definedIn, String field) {
-			Class type = super.getItemTypeForItemFieldName(definedIn, field);
-			if (type == null) {
-				return String.class;
-			}
-			return type;
-		}
-
-		@Override
 		public String getFieldNameForItemTypeAndName(Class definedIn,
 				Class itemType, String itemFieldName) {
-			if (itemFieldName.equals("id")) {
-				return "ha";
-			}
 			if (realTypes.containsKey(definedIn)
 					&& itemFieldName.equals("link")) {
 				return "link";
@@ -102,9 +91,11 @@ public class XStreamHelper {
 		XStream xstream = new XStream(provider, driver) {
 			@Override
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
-				return new LinkSupportWrapper(next);
+				return new MustIgnoreWrapper(new LinkSupportWrapper(next),
+						XStreamHelper.this);
 			}
 		};
+		xstream.registerConverter(new MustIgnoreConverter());
 		xstream.useAttributeFor(DefaultRelation.class, "rel");
 		xstream.useAttributeFor(DefaultRelation.class, "href");
 

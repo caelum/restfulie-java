@@ -34,11 +34,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author guilherme silveira
  * 
  */
-public class DefaultTransitionConverter implements Converter {
+public class DefaultLinkConverter implements Converter {
 
 	private final RestClient client;
 
-	public DefaultTransitionConverter(RestClient client) {
+	public DefaultLinkConverter(RestClient client) {
 		this.client = client;
 	}
 

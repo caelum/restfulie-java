@@ -46,4 +46,9 @@ public interface Resource {
 	 */
 	List<Link> getLinks();
 
+	/**
+	 * Returns a property which was unknown at compile time.
+	 */
+	String getUnknownProperty(String key);
+
 }

@@ -84,6 +84,14 @@ public class EntryTest {
 	}
 	
 	@Test
+	public void shouldBeAbleToIgnoreFields() throws IOException, URISyntaxException {
+		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").get();
+		List<Item> items = response.getResource();
+		assertThat(Restfulie.resource(items.get(0)).getUnknownProperty("price"), is(equalTo("20.0")));
+		assertThat(response.getCode(), is(200));
+	}
+	
+	@Test
 	public void shouldPostCreatingResource() throws IOException, URISyntaxException {
 		Response response = restfulie.at("http://localhost:3000/restfulie/items").accept("application/xml").as("application/xml").post(new Item("rest training", 1500.00));
 		Item item = response.getResource();
