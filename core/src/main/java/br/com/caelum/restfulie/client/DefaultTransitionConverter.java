@@ -18,6 +18,7 @@
 package br.com.caelum.restfulie.client;
 
 import br.com.caelum.restfulie.DefaultRelation;
+import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.MediaTypes;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -35,10 +36,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class DefaultTransitionConverter implements Converter {
 
-	private final MediaTypes types;
+	private final RestClient client;
 
-	public DefaultTransitionConverter(MediaTypes types) {
-		this.types = types;
+	public DefaultTransitionConverter(RestClient client) {
+		this.client = client;
 	}
 
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -50,7 +51,7 @@ public class DefaultTransitionConverter implements Converter {
 			UnmarshallingContext context) {
 		String rel = reader.getAttribute("rel");
 		String href = reader.getAttribute("href");
-		return new DefaultRelation(rel, href, types);
+		return new DefaultRelation(rel, href, client);
 	}
 
 	@SuppressWarnings("unchecked")

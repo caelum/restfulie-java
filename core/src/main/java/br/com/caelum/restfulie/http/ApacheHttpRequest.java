@@ -87,7 +87,7 @@ public class ApacheHttpRequest implements Request {
 
 	private DefaultResponse responseFor(HttpURLConnection connection,
 			ContentProcessor processor) throws IOException {
-		return new DefaultResponse(connection, client.getMediaTypes(), processor);
+		return new DefaultResponse(connection, client, processor);
 	}
 
 	@Override

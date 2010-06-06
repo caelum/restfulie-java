@@ -3,6 +3,8 @@ package br.com.caelum.restfulie.http;
 import java.io.IOException;
 import java.io.Writer;
 
+import br.com.caelum.restfulie.RestClient;
+
 /**
  * A media type handler, capable of marshalling into representations related to
  * this media type and unmarshalling objects from those representations.
@@ -20,6 +22,6 @@ public interface MediaType {
 	 * Remember *not* to expect too much from unmarshalling, your server might
 	 * have provided you something you did not expect. This is REST's idea.
 	 */
-	<T> T unmarshal(String content, MediaTypes types);
+	<T> T unmarshal(String content, RestClient client);
 
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.client.DefaultTransitionConverter;
 
 import com.thoughtworks.xstream.XStream;
@@ -44,15 +45,13 @@ public class JsonMediaType implements MediaType {
 
 	@Override
 	public <T> void marshal(T payload, Writer writer) throws IOException {
-		XStream xstream = helper.getXStream(getTypesToEnhance());
 		xstream.toXML(payload, writer);
 		writer.flush();
 	}
 
 	@Override
-	public <T> T unmarshal(String content, MediaTypes types) {
-		XStream xstream = helper.getXStream(getTypesToEnhance());
-		xstream.registerConverter(new DefaultTransitionConverter(types));
+	public <T> T unmarshal(String content, RestClient client) {
+		xstream.registerConverter(new DefaultTransitionConverter(client));
 		return (T) xstream.fromXML(content);
 	}
 

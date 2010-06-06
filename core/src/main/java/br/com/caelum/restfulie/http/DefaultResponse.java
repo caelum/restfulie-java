@@ -22,8 +22,8 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
-import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.RestClient;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -36,21 +36,21 @@ public class DefaultResponse implements Response {
 	private Map<String, List<String>> headers;
 	private HttpURLConnection connection;
 	private ContentProcessor processor;
-	private MediaTypes types;
+	private final RestClient client;
 
 	/**
 	 * Will use this connection to retrieve the response data. The deserializer
 	 * will be used if the user wants to retrieve the resource.
 	 */
 	public DefaultResponse(HttpURLConnection connection,
-			MediaTypes types) throws IOException {
-		this(connection, types, new HttpURLConnectionContentProcessor(connection));
+			RestClient client) throws IOException {
+		this(connection, client, new HttpURLConnectionContentProcessor(connection));
 	}
 
 	public DefaultResponse(HttpURLConnection connection,
-			MediaTypes types, ContentProcessor processor)
+			RestClient client, ContentProcessor processor)
 			throws IOException {
-		this.types = types;
+		this.client = client;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
 		this.headers = connection.getHeaderFields();
@@ -77,7 +77,7 @@ public class DefaultResponse implements Response {
 	public <T> T getResource() throws IOException {
 		String contentType = getContentType();
 		String content = getContent();
-		return (T) types.forContentType(contentType).unmarshal(content, types);
+		return (T) client.getMediaTypes().forContentType(contentType).unmarshal(content, client);
 	}
 
 	private String getContentType() throws IOException {

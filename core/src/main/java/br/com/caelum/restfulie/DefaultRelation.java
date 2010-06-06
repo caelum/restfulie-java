@@ -31,13 +31,12 @@ public class DefaultRelation implements Relation {
 	private String rel;
 	private String href;
 	private HttpMethod methodToUse;
+	private final RestClient client;
 	
-	private final MediaTypes types;
-
-	public DefaultRelation(String rel, String href, MediaTypes types) {
+	public DefaultRelation(String rel, String href, RestClient client) {
 		this.rel = rel;
 		this.href = href;
-		this.types = types;
+		this.client = client;
 	}
 
 	public String getHref() {
@@ -62,6 +61,7 @@ public class DefaultRelation implements Relation {
 	}
 
 	private <T> Object execute(T parameter, boolean shouldFollowAndDeserialize) {
+		return null;
 //        try {
 //			URL url = new URL(href);
 //			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
