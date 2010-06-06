@@ -37,6 +37,8 @@ import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
 import br.com.caelum.restfulie.http.JsonMediaType;
 import br.com.caelum.restfulie.http.XmlMediaType;
 
+import com.thoughtworks.xstream.XStream;
+
 @SuppressWarnings("unchecked")
 public class EntryTest {
 	
@@ -55,6 +57,10 @@ public class EntryTest {
 			list.add(Item.class);
 			return list;
 		}
+		@Override
+		protected void configure(XStream xstream) {
+			xstream.alias("items", ArrayList.class);
+		}
 	}
 	
 	class MyJsonMediaType extends JsonMediaType {
@@ -62,6 +68,10 @@ public class EntryTest {
 			List<Class> list = new ArrayList<Class>();
 			list.add(Item.class);
 			return list;
+		}
+		@Override
+		protected void configure(XStream xstream) {
+			xstream.alias("items", ArrayList.class);
 		}
 	}
 	

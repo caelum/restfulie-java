@@ -27,31 +27,37 @@ public class XmlMediaType implements MediaType {
 	private final List<String> types = Arrays.asList("application/xml", "text/xml", "xml");
 	
 	private final XStreamHelper helper;
+
+	private final XStream xstream;
 	
 	public XmlMediaType() {
 		QNameMap qnameMap = new QNameMap();
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
 		qnameMap.registerMapping(qname, DefaultRelation.class);
 		helper = new XStreamHelper(new StaxDriver(qnameMap));
+		this.xstream = helper.getXStream(getTypesToEnhance());
+		configure(xstream);
 	}
-	
+
+	/**
+	 * Allows xstream further configuration.
+	 */
+	protected void configure(XStream xstream) {
+	}
+
 	@Override
 	public boolean answersTo(String type) {
 		return types.contains(type);
 	}
 
-
 	@Override
 	public <T> void marshal(T payload, Writer writer) throws IOException {
-		XStream xstream = helper.getXStream(getTypesToEnhance());
 		xstream.toXML(payload, writer);
 		writer.flush();
 	}
 
-
 	@Override
 	public <T> T unmarshal(String content, MediaTypes types) {
-		XStream xstream = helper.getXStream(getTypesToEnhance());
 		xstream.registerConverter(new DefaultTransitionConverter(types));
 		return (T) xstream.fromXML(content);
 	}

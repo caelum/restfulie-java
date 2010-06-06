@@ -24,6 +24,19 @@ public class JsonMediaType implements MediaType {
 	private final XStreamHelper helper = new XStreamHelper(
 			new JettisonMappedXmlDriver());
 
+	private final XStream xstream;
+	
+	public JsonMediaType() {
+		this.xstream = helper.getXStream(getTypesToEnhance());
+		configure(xstream);
+	}
+
+	/**
+	 * Allows xstream further configuration.
+	 */
+	protected void configure(XStream xstream) {
+	}
+
 	@Override
 	public boolean answersTo(String type) {
 		return types.contains(type);

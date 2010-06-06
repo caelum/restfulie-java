@@ -45,7 +45,13 @@ public class ApacheHttpRequest implements Request {
 			DefaultResponse response = responseFor(connection,
 					new IdentityContentProcessor());
 			if (response.getCode() == 201) {
-				return client.at(response.getHeader("Location").get(0)).get();
+				Request request = client.at(response.getHeader("Location").get(0));
+				for(String h : headers.keySet()) {
+					if(!h.equals("Content-type")) {
+						request.with(h, headers.get(h));
+					}
+				}
+				return request.get();
 			}
 			return response;
 		} catch (IOException e) {

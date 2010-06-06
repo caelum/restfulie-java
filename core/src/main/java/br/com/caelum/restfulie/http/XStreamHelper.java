@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
+@SuppressWarnings("unchecked")
 public class XStreamHelper {
 
 	private final HierarchicalStreamDriver driver;
@@ -35,7 +36,6 @@ public class XStreamHelper {
 	 * @param typesToEnhance 
 	 * @return an xstream instance with support for link enhancement.
 	 */
-	@SuppressWarnings("unchecked")
 	public XStream getXStream(List<Class> typesToEnhance) {
 		ReflectionProvider provider = getProvider();
 
@@ -62,7 +62,6 @@ public class XStreamHelper {
 	 * Extension point to define your own provider.
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private ReflectionProvider getProvider() {
 		return new ReflectionProviderWrapper(new Sun14ReflectionProvider()) {
 			public Object newInstance(Class originalType) {
@@ -83,6 +82,11 @@ public class XStreamHelper {
 
 		public LinkSupportWrapper(Mapper wrapped) {
 			super(wrapped);
+		}
+		
+		@Override
+		public Class realClass(String elementName) {
+			return super.realClass(elementName);
 		}
 		
 		@Override
