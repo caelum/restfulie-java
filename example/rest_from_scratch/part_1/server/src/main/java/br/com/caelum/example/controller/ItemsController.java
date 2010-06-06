@@ -28,7 +28,7 @@ public class ItemsController {
 	@Path("/items")
 	public void list() {
 		List<Item> list = database.lista();
-		result.use(representation()).from(list).serialize();
+		result.use(representation()).from(list, "items").serialize();
 	}
 
 	@Get
