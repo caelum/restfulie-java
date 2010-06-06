@@ -31,7 +31,7 @@ public class IndexController {
 
 	@Path("/")
 	public void index() {
-		result.include("variable", "VRaptor!");
+		result.include("variable", "Welcome to Restfulie basic example!");
 	}
 
 }
