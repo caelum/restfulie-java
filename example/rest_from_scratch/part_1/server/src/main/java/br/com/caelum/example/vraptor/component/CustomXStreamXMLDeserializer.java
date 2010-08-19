@@ -11,7 +11,6 @@ import br.com.caelum.vraptor.resource.ResourceMethod;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-//TODO - Eu copiei essa classe porcamente do VRaptor e adicionei o DomDriver... melhorar isso
 @ApplicationScoped
 @Component
 public class CustomXStreamXMLDeserializer implements XMLDeserializer {
