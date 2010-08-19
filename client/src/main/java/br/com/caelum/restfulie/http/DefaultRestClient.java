@@ -28,27 +28,25 @@ import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 /**
  * Configured service entry point.
- * 
+ *
  * @author guilherme silveira
  */
 public class DefaultRestClient implements RestClient {
 
 	private final MediaTypes types = new MediaTypes();
-	
+
 	private final HttpClientProvider provider;
-	
+
 	public DefaultRestClient() {
 		provider = new ApacheHttpClientProvider();
 		types.register(new XmlMediaType());
 		types.register(new JsonMediaType());
 	}
-	
-	@Override
+
 	public HttpClientProvider getProvider() {
 		return provider;
 	}
 
-	@Override
 	public MediaTypes getMediaTypes() {
 		return types;
 	}
@@ -62,7 +60,7 @@ public class DefaultRestClient implements RestClient {
 
 	/**
 	 * Entry point to direct access an uri.
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	public Request at(String uri) throws URISyntaxException {
 		return at(new URI(uri));

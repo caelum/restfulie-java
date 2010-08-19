@@ -94,13 +94,11 @@ public class ApacheHttpRequest implements Request {
 		return new ApacheResponse(connection, client, processor);
 	}
 
-	@Override
 	public Request with(String key, String value) {
 		headers.put(key, value);
 		return this;
 	}
 
-	@Override
 	public Request using(String verb) {
 		this.verb = verb;
 		return this;
@@ -118,37 +116,30 @@ public class ApacheHttpRequest implements Request {
 		return using(verb).access();
 	}
 
-	@Override
 	public Request as(String contentType) {
 		return with("Content-type", contentType);
 	}
 
-	@Override
 	public Response delete() {
 		return retrieve("DELETE");
 	}
 
-	@Override
 	public Response head() {
 		return retrieve("HEAD");
 	}
 
-	@Override
 	public Response options() {
 		return retrieve("OPTIONS");
 	}
 
-	@Override
 	public <T> Response patch(T object) {
 		return sendPayload(object, "PATCH");
 	}
-	
-	@Override
+
 	public <T> Response post(T object) {
 		return sendPayload(object, "POST");
 	}
 
-	@Override
 	public <T> Response put(T object) {
 		return sendPayload(object, "PUT");
 	}

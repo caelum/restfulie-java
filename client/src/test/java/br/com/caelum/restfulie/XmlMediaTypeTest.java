@@ -18,58 +18,62 @@
 package br.com.caelum.restfulie;
 
 import static br.com.caelum.restfulie.Restfulie.resource;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.caelum.restfulie.config.SerializationConfig;
-import br.com.caelum.restfulie.config.XStreamConfig;
+import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
-public class XStreamDeserializerTest {
-	
+public class XmlMediaTypeTest {
+
 	@XStreamAlias("order")
 	public static class Order {
+		@Override
 		public boolean equals(Object obj) {
 			return Order.class.isAssignableFrom(obj.getClass());
 		}
 	}
 
-	private XStreamDeserializer deserializer;
-	
+	private XmlMediaType mediaType;
+
 	@Before
 	public void setup() {
-		XStreamConfig config = new XStreamConfig(new SerializationConfig()) {
-			protected XStream getXStream() {
-				XStream stream = super.getXStream();
-				stream.processAnnotations(Order.class);
-				return stream;
+		mediaType = new XmlMediaType() {
+			@Override
+			protected void configure(XStream xstream) {
+				xstream.processAnnotations(Order.class);
+			}
+
+			@Override
+			protected List<Class> getTypesToEnhance() {
+				return Arrays.<Class>asList(Order.class);
 			}
 		};
-		config.enhanceResource(Order.class);
-		this.deserializer = new XStreamDeserializer(config);
 	}
-	
+
 	@Test
 	public void shouldDeserializeWithoutLinks() {
 
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\"></order>";
 		Order expected = new Order();
-		Order order = (Order) deserializer.fromXml(xml);
+		Order order = mediaType.unmarshal(xml, null);
 		assertThat(order, is(equalTo(expected)));
 	}
 
 	@Test
 	public void shouldDeserializeWithASimpleLink() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" + linkFor("payment", "http://localhost/pay") + "</order>";
-		Resource resource = Restfulie.resource(deserializer.fromXml(xml));
+		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, null));
 		assertThat(resource.getLinks().size(), is(equalTo(1)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
@@ -79,7 +83,7 @@ public class XStreamDeserializerTest {
 	@Test
 	public void shouldSupportTheLinkWithoutTheXmlns() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\" xmlns:atom=\"http://www.w3.org/2005/Atom\">" + simpleLinkFor("payment", "http://localhost/pay") + "</order>";
-		Resource resource = resource(deserializer.fromXml(xml));
+		Resource resource = resource(mediaType.unmarshal(xml, null));
 		assertThat(resource.getLinks().size(), is(equalTo(1)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
@@ -88,11 +92,11 @@ public class XStreamDeserializerTest {
 
 	@Test
 	public void shouldDeserializeWithTwoLinks() {
-		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" 
-			+ linkFor("payment", "http://localhost/pay") 
-			+ linkFor("cancel", "http://localhost/cancel") 
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">"
+			+ linkFor("payment", "http://localhost/pay")
+			+ linkFor("cancel", "http://localhost/cancel")
 			+ "</order>";
-		Resource resource = resource(deserializer.fromXml(xml));
+		Resource resource = resource(mediaType.unmarshal(xml, null));
 		assertThat(resource.getLinks().size(), is(equalTo(2)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));

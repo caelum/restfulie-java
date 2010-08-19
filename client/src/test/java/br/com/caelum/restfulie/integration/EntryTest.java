@@ -34,7 +34,6 @@ import org.junit.Test;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.Restfulie;
-import br.com.caelum.restfulie.config.XStreamConfigTest.Item;
 import br.com.caelum.restfulie.mediatype.JsonMediaType;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
@@ -55,7 +54,23 @@ public class EntryTest {
 		this.restfulie.getMediaTypes().register(new MyJsonMediaType());
 	}
 
+	static class Item {
+
+		private String name;
+		private double price;
+
+		public Item(String name, double price) {
+			this.name = name;
+			this.price = price;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+	}
 	class MyXmlMediaType extends XmlMediaType {
+		@Override
 		protected List<Class> getTypesToEnhance() {
 			List<Class> list = new ArrayList<Class>();
 			list.add(Item.class);
@@ -67,8 +82,9 @@ public class EntryTest {
 			xstream.alias("items", ArrayList.class);
 		}
 	}
-	
+
 	class MyJsonMediaType extends JsonMediaType {
+		@Override
 		protected List<Class> getTypesToEnhance() {
 			List<Class> list = new ArrayList<Class>();
 			list.add(Item.class);
@@ -92,7 +108,7 @@ public class EntryTest {
 //						System.out.println(reader.getNodeName());
 //						System.out.println(reader.getAttributeCount());
 						Object item = readItem(reader, context, collection, name);
-						ISSO AQUI NAO TA FUNCIONANDO, ELE NAO TA PEGANDO
+//						ISSO AQUI NAO TA FUNCIONANDO, ELE NAO TA PEGANDO
 						collection.add(item);
 						reader.moveUp();
 					}
@@ -128,7 +144,7 @@ public class EntryTest {
 		assertThat(response.getCode(), is(200));
 	}
 
-	//	
+	//
 	// @Test
 	// public void shouldBeAbleToIgnoreFields() throws IOException,
 	// URISyntaxException {
@@ -139,7 +155,7 @@ public class EntryTest {
 	// is(equalTo("20.0")));
 	// assertThat(response.getCode(), is(200));
 	// }
-	//	
+	//
 	@Test
 	public void shouldPostCreatingResource() throws IOException,
 			URISyntaxException {

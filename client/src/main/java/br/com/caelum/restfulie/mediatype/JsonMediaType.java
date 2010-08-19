@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 /**
  * A xstream + jettison based media type implementation.
- * 
+ *
  * @author guilherme silveira
  */
 @SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class JsonMediaType implements MediaType {
 			new JettisonMappedXmlDriver());
 
 	private final XStream xstream;
-	
+
 	public JsonMediaType() {
 		this.xstream = helper.getXStream(getTypesToEnhance());
 		configure(xstream);
@@ -38,18 +38,15 @@ public class JsonMediaType implements MediaType {
 	protected void configure(XStream xstream) {
 	}
 
-	@Override
 	public boolean answersTo(String type) {
 		return types.contains(type);
 	}
 
-	@Override
 	public <T> void marshal(T payload, Writer writer) throws IOException {
 		xstream.toXML(payload, writer);
 		writer.flush();
 	}
 
-	@Override
 	public <T> T unmarshal(String content, RestClient client) {
 		xstream.registerConverter(new DefaultLinkConverter(client));
 		return (T) xstream.fromXML(content);
