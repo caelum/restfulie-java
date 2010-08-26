@@ -2,8 +2,8 @@ package br.com.caelum.restfulie.mediatype;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.caelum.restfulie.RestClient;
@@ -28,7 +28,7 @@ public class JsonMediaType implements MediaType {
 	private final XStream xstream;
 
 	public JsonMediaType() {
-		this.xstream = helper.getXStream(getTypesToEnhance());
+		this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
 		configure(xstream);
 	}
 
@@ -53,7 +53,10 @@ public class JsonMediaType implements MediaType {
 	}
 
 	protected List<Class> getTypesToEnhance() {
-		return new ArrayList<Class>();
+		return Collections.emptyList();
+	}
+	protected List<String> getCollectionNames() {
+		return Collections.emptyList();
 	}
 
 }

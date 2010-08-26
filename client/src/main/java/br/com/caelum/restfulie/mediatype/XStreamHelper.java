@@ -25,6 +25,7 @@ public class XStreamHelper {
 			super(wrapper);
 		}
 
+		@Override
 		public Object newInstance(Class originalType) {
 			if (realTypes.containsKey(originalType)) {
 				return super.newInstance(realTypes.get(originalType));
@@ -67,7 +68,7 @@ public class XStreamHelper {
 
 	/**
 	 * Extension point to define your own provider.
-	 * 
+	 *
 	 * @return
 	 */
 	private ReflectionProvider getProvider() {
@@ -76,11 +77,12 @@ public class XStreamHelper {
 
 	/**
 	 * Extension point for configuring your xstream instance.
-	 * 
+	 *
 	 * @param typesToEnhance
+	 * @param list
 	 * @return an xstream instance with support for link enhancement.
 	 */
-	public XStream getXStream(List<Class> typesToEnhance) {
+	public XStream getXStream(List<Class> typesToEnhance, List<String> collectionNames) {
 		ReflectionProvider provider = getProvider();
 
 		XStream xstream = new XStream(provider, driver) {
@@ -88,6 +90,7 @@ public class XStreamHelper {
 			protected MapperWrapper wrapMapper(MapperWrapper next) {
 				return new LinkSupportWrapper(next);
 			}
+
 		};
 		xstream.useAttributeFor(DefaultRelation.class, "rel");
 		xstream.useAttributeFor(DefaultRelation.class, "href");
@@ -96,9 +99,20 @@ public class XStreamHelper {
 			realTypes.put(type, new Enhancer().enhanceResource(type));
 			xstream.processAnnotations(type);
 		}
+
+		Class enhancedType = new Enhancer().enhanceResource(EnhancedList.class);
+		realTypes.put(EnhancedList.class, enhancedType);
+
+		for (String name : collectionNames) {
+			xstream.alias(name, enhancedType);
+		}
+
+		for (Class type : typesToEnhance) {
+			xstream.addImplicitCollection(enhancedType, "elements", xstream.getMapper().serializedClass(type), type);
+		}
+
 		for (Class customType : realTypes.values()) {
-			xstream.addImplicitCollection(customType, "link", "link",
-					DefaultRelation.class);
+			xstream.addImplicitCollection(customType, "link", "link", DefaultRelation.class);
 		}
 		return xstream;
 	}

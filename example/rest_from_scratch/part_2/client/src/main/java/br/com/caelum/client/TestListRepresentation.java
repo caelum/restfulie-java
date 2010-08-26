@@ -12,20 +12,26 @@ import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
-public class TestGetRepresentation {
+public class TestListRepresentation {
 	public static void main(String[] args) throws URISyntaxException, IOException {
+
 		RestClient restfulie = Restfulie.custom();
 		restfulie.getMediaTypes().register(new XmlMediaType() {
 			@Override
 			protected List<Class> getTypesToEnhance() {
 				return Arrays.<Class>asList(Item.class);
 			}
+
+			@Override
+			protected List<String> getCollectionNames() {
+				return Arrays.asList("items");
+			}
 		});
 
-		Response response = restfulie.at("http://localhost:8080/restfulie/items/2").accept("application/xml").get();
-		Item item = response.getResource();
-		System.out.println(item.getName());
-		System.out.println(((Resource) item).getLink("self").getHref());
+		Response response = restfulie.at("http://localhost:8080/restfulie/items").accept("application/xml").get();
+		List<Item> items = response.getResource();
+		System.out.println(items);
+		System.out.println(((Resource)items).getLink("basket").getHref());
 
 	}
 }

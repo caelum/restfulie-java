@@ -1,11 +1,8 @@
 package br.com.caelum.example.model;
 
-import java.util.List;
-
 import br.com.caelum.example.controller.ItemsController;
-import br.com.caelum.vraptor.restfulie.Restfulie;
 import br.com.caelum.vraptor.restfulie.hypermedia.HypermediaResource;
-import br.com.caelum.vraptor.restfulie.relation.Relation;
+import br.com.caelum.vraptor.restfulie.relation.RelationBuilder;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -45,9 +42,8 @@ public class Item implements HypermediaResource {
 	}
 
 	@Override
-	public List<Relation> getRelations(Restfulie restfulie) {
-		restfulie.relation(ItemsController.class).show(id);
-		return restfulie.getRelations();
+	public void configureRelations(RelationBuilder builder) {
+		builder.relation("self").uses(ItemsController.class).show(id);
 	}
 
 }

@@ -36,7 +36,7 @@ public class XmlMediaType implements MediaType {
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
 		qnameMap.registerMapping(qname, DefaultRelation.class);
 		helper = new XStreamHelper(new StaxDriver(qnameMap));
-		this.xstream = helper.getXStream(getTypesToEnhance());
+		this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
 		configure(xstream);
 	}
 
@@ -63,5 +63,10 @@ public class XmlMediaType implements MediaType {
 	protected List<Class> getTypesToEnhance() {
 		return Collections.emptyList();
 	}
+
+	protected List<String> getCollectionNames() {
+		return Collections.emptyList();
+	}
+
 
 }
