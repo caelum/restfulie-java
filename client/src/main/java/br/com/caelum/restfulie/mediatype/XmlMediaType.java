@@ -2,7 +2,9 @@ package br.com.caelum.restfulie.mediatype;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +53,11 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> void marshal(T payload, Writer writer) throws IOException {
-		xstream.toXML(payload, writer);
+		if (payload instanceof Collection) {
+			xstream.toXML(new ArrayList((Collection)payload), writer);
+		} else {
+			xstream.toXML(payload, writer);
+		}
 		writer.flush();
 	}
 

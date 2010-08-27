@@ -30,7 +30,7 @@ public class ItemsController {
 	@Path("/items")
 	public void list() {
 		ConfigurableHypermediaResource resource = restfulie.enhance(database.lista());
-		resource.relation("basket").uses(BasketsController.class).create();
+		resource.relation("basket").uses(BasketsController.class).create(null);
 
 		result.use(representation()).from(resource, "items").serialize();
 	}

@@ -9,10 +9,12 @@ import br.com.caelum.restfulie.RestfulieException;
  * Invoke register to add new media types. Whenever two media type handlers can
  * handle the same media type, the latest added will be used to resolve the
  * conflict.
- * 
+ *
  * @author guilherme silveira
  */
 public class MediaTypes {
+
+	public static final String XML = "application/xml";
 
 	private final LinkedList<MediaType> types = new LinkedList<MediaType>();
 
