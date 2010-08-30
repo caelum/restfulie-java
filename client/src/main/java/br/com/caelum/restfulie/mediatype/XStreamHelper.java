@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.http.DefaultRelation;
 import br.com.caelum.restfulie.relation.Enhancer;
 
@@ -54,6 +55,22 @@ public class XStreamHelper {
 			}
 			return super.getFieldNameForItemTypeAndName(definedIn, itemType,
 					itemFieldName);
+		}
+
+		@Override
+		public String serializedClass(Class type) {
+			if (Resource.class.isAssignableFrom(type)) {
+				return super.serializedClass(type.getSuperclass());
+			}
+			return super.serializedClass(type);
+		}
+
+		@Override
+		public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+			if (Resource.class.isAssignableFrom(definedIn) && fieldName.equals("link")) {
+				return false;
+			}
+			return super.shouldSerializeMember(definedIn, fieldName);
 		}
 
 	}
@@ -114,6 +131,7 @@ public class XStreamHelper {
 		for (Class customType : realTypes.values()) {
 			xstream.addImplicitCollection(customType, "link", "link", DefaultRelation.class);
 		}
+
 		return xstream;
 	}
 

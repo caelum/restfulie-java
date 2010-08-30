@@ -8,7 +8,7 @@ import br.com.caelum.restfulie.RestClient;
 /**
  * A media type handler, capable of marshalling into representations related to
  * this media type and unmarshalling objects from those representations.
- * 
+ *
  * @author guilherme silveira
  */
 public interface MediaType {

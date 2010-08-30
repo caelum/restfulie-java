@@ -36,7 +36,7 @@ public class TestListRepresentation {
 		Response response = restfulie.at("http://localhost:8080/restfulie/items").accept(XML).get();
 		List<Item> items = response.getResource();
 
-		response = resource(items).getLink("basket").follow().as(XML).accept(XML).post(items.subList(0, 2));
+		response = resource(items).getLink("basket").follow().as(XML).accept(XML).post(new Basket(items.subList(0, 2)));
 
 		Basket basket = response.getResource();
 		response = resource(basket).getLink("payment").follow().as(XML).accept(XML).post(new Payment(basket.getCost()));

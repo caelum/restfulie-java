@@ -10,14 +10,9 @@ import br.com.caelum.vraptor.restfulie.relation.RelationBuilder;
 
 public class Basket implements HypermediaResource {
 
-	private final long id;
-	private final List<Item> items;
+	private long id;
+	private List<Item> items;
 	private Payment payment;
-
-	public Basket(long id, List<Item> items) {
-		this.id = id;
-		this.items = items;
-	}
 
 	public long getId() {
 		return id;
@@ -40,6 +35,10 @@ public class Basket implements HypermediaResource {
 	public void pay(Payment payment) {
 		this.payment = payment;
 		payment.setStatus(Status.ACCEPTED);
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

@@ -21,7 +21,10 @@ public class CustomXStreamXMLDeserializer extends XStreamXMLDeserializer {
 	 */
 	@Override
 	protected XStream getXStream() {
-		return new XStream(new DomDriver());
+		XStream xStream = new XStream(new DomDriver());
+		xStream.alias("item", br.com.caelum.example.model.Item.class);
+		return xStream;
 	}
+
 
 }

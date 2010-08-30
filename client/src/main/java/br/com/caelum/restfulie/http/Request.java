@@ -4,7 +4,7 @@ import br.com.caelum.restfulie.Response;
 
 /**
  * An http request. Defaults verb to GET.
- * 
+ *
  * @author guilherme silveira
  */
 public interface Request {
@@ -25,9 +25,9 @@ public interface Request {
 	 */
 	Request using(String verb);
 
-	
+
 	Request as(String contentType);
-	
+
 	/**
 	 * Accepts one specific content type.
 	 */

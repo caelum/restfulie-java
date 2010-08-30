@@ -53,12 +53,16 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> void marshal(T payload, Writer writer) throws IOException {
-		if (payload instanceof Collection) {
-			xstream.toXML(new ArrayList((Collection)payload), writer);
-		} else {
-			xstream.toXML(payload, writer);
-		}
+		xstream.toXML(getPayload(payload), writer);
 		writer.flush();
+	}
+
+	private Object getPayload(Object payload) {
+		if (payload instanceof Collection) {
+			return new ArrayList((Collection)payload);
+		} else {
+			return payload;
+		}
 	}
 
 	public <T> T unmarshal(String content, RestClient client) {
