@@ -22,7 +22,7 @@ public class BasketsController {
 
 	@Get @Path("/basket/{id}")
 	public void show(Long id) {
-		result.use(representation()).from(baskets.get(id)).serialize();
+		result.use(representation()).from(baskets.get(id)).recursive().serialize();
 	}
 
 	@Post @Path("/basket")
