@@ -37,6 +37,8 @@ public class DefaultRestClient implements RestClient {
 
 	private final HttpClientProvider provider;
 
+	private URI lastURI = null;
+
 	public DefaultRestClient() {
 		provider = new ApacheHttpClientProvider();
 		types.register(new XmlMediaType());
@@ -55,6 +57,7 @@ public class DefaultRestClient implements RestClient {
 	 * Entry point to direct access an uri.
 	 */
 	public Request at(URI uri) {
+		lastURI = uri;
 		return getProvider().request(uri, this).accept("application/xml");
 	}
 
@@ -64,5 +67,9 @@ public class DefaultRestClient implements RestClient {
 	 */
 	public Request at(String uri) throws URISyntaxException {
 		return at(new URI(uri));
+	}
+
+	public URI lastURI() {
+		return lastURI;
 	}
 }

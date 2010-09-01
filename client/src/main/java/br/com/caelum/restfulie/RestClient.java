@@ -17,12 +17,14 @@
 
 package br.com.caelum.restfulie;
 
+import java.net.URI;
+
 import br.com.caelum.restfulie.http.HttpClientProvider;
 import br.com.caelum.restfulie.mediatype.MediaTypes;
 
 /**
  * Allows resources configuration and access.
- * 
+ *
  * @author guilherme silveira
  */
 public interface RestClient extends RequestEntry {
@@ -31,6 +33,11 @@ public interface RestClient extends RequestEntry {
 	 * Returns the http client provider in use.
 	 */
 	HttpClientProvider getProvider();
+
+	/**
+	 * Returns the last accessed URI
+	 */
+	URI lastURI();
 
 	/**
 	 * Returns the media type registry.

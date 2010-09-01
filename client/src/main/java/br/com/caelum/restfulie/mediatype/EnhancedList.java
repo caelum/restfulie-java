@@ -116,4 +116,12 @@ public class EnhancedList<T> implements List<T> {
 	public String toString() {
 		return elements.toString();
 	}
+
+	private Object readResolve() {
+		if (elements == null) {
+			elements = new ArrayList<T>();
+		}
+		return this;
+
+	}
 }
