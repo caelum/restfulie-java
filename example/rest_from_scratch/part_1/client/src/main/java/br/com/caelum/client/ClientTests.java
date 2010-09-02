@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,13 +20,7 @@ public class ClientTests {
 	@Before
 	public void setUp() throws Exception {
 		restfulie = Restfulie.custom();
-		restfulie.getMediaTypes().register(new XmlMediaType() {
-			@SuppressWarnings("unchecked")
-			@Override
-			protected List<Class> getTypesToEnhance() {
-				return Arrays.<Class>asList(Item.class);
-			}
-		});
+		restfulie.getMediaTypes().register(new XmlMediaType().withTypes(Item.class));
 	}
 
 	@Test

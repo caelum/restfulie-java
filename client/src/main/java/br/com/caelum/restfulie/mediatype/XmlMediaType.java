@@ -5,10 +5,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+
+import org.jvnet.inflector.Noun;
 
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.client.DefaultLinkConverter;
@@ -31,16 +32,18 @@ public class XmlMediaType implements MediaType {
 
 	private final XStreamHelper helper;
 
-	private final XStream xstream;
+	private XStream xstream;
+
+	private List<Class> typesToEnhance = new ArrayList<Class>();
 
 	public XmlMediaType() {
 		QNameMap qnameMap = new QNameMap();
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
 		qnameMap.registerMapping(qname, DefaultRelation.class);
 		helper = new XStreamHelper(new StaxDriver(qnameMap));
-		this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
-		configure(xstream);
 	}
+
+
 
 	/**
 	 * Allows xstream further configuration.
@@ -53,7 +56,7 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> void marshal(T payload, Writer writer) throws IOException {
-		xstream.toXML(getPayload(payload), writer);
+		getXstream().toXML(getPayload(payload), writer);
 		writer.flush();
 	}
 
@@ -66,17 +69,34 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> T unmarshal(String content, RestClient client) {
-		xstream.registerConverter(new DefaultLinkConverter(client));
-		return (T) xstream.fromXML(content);
+		getXstream().registerConverter(new DefaultLinkConverter(client));
+		return (T) getXstream().fromXML(content);
 	}
 
-	protected List<Class> getTypesToEnhance() {
-		return Collections.emptyList();
+	private List<Class> getTypesToEnhance() {
+		return typesToEnhance;
 	}
 
-	protected List<String> getCollectionNames() {
-		return Collections.emptyList();
+	private List<String> getCollectionNames() {
+		List<String> names = new ArrayList<String>();
+		for (Class type : typesToEnhance) {
+			String plural = Noun.pluralOf(type.getSimpleName());
+			names.add(Character.toLowerCase(plural.charAt(0)) + plural.substring(1));
+		}
+		return names;
 	}
 
+	public XmlMediaType withTypes(Class...classes) {
+		this.typesToEnhance.addAll(Arrays.asList(classes));
+		return this;
+	}
+
+	private XStream getXstream() {
+		if (xstream == null) {
+			this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
+			configure(xstream);
+		}
+		return xstream;
+	}
 
 }

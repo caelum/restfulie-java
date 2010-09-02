@@ -8,7 +8,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -30,17 +29,9 @@ public class ClientTests {
 	@Before
 	public void setUp() throws Exception {
 		restfulie = Restfulie.custom();
-		restfulie.getMediaTypes().register(new XmlMediaType() {
-			@Override
-			protected List<Class> getTypesToEnhance() {
-				return Arrays.<Class>asList(Item.class, Basket.class, Payment.class);
-			}
-
-			@Override
-			protected List<String> getCollectionNames() {
-				return Arrays.asList("items");
-			}
-		});
+		restfulie.getMediaTypes().register(
+				new XmlMediaType().withTypes(Item.class, Basket.class, Payment.class)
+		);
 	}
 
 	@Test

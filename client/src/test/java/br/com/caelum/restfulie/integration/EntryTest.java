@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -46,7 +45,7 @@ public class EntryTest {
 	@Before
 	public void setup() {
 		this.restfulie = Restfulie.custom();
-		this.restfulie.getMediaTypes().register(new MyXmlMediaType());
+		this.restfulie.getMediaTypes().register(new XmlMediaType().withTypes(Item.class));
 //		this.restfulie.getMediaTypes().register(new MyJsonMediaType());
 	}
 
@@ -66,18 +65,6 @@ public class EntryTest {
 			return name;
 		}
 
-	}
-
-	class MyXmlMediaType extends XmlMediaType {
-		@Override
-		protected List<Class> getTypesToEnhance() {
-			return Arrays.<Class> asList(Item.class);
-		}
-
-		@Override
-		protected List<String> getCollectionNames() {
-			return Arrays.asList("items");
-		}
 	}
 
 	@Test

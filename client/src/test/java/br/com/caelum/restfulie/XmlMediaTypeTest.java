@@ -19,10 +19,10 @@ package br.com.caelum.restfulie;
 
 import static br.com.caelum.restfulie.Restfulie.resource;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -30,7 +30,6 @@ import org.junit.Test;
 
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
-import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 
@@ -48,17 +47,7 @@ public class XmlMediaTypeTest {
 
 	@Before
 	public void setup() {
-		mediaType = new XmlMediaType() {
-			@Override
-			protected void configure(XStream xstream) {
-				xstream.processAnnotations(Order.class);
-			}
-
-			@Override
-			protected List<Class> getTypesToEnhance() {
-				return Arrays.<Class>asList(Order.class);
-			}
-		};
+		mediaType = new XmlMediaType().withTypes(Order.class);
 	}
 
 	@Test
@@ -68,6 +57,14 @@ public class XmlMediaTypeTest {
 		Order expected = new Order();
 		Order order = mediaType.unmarshal(xml, null);
 		assertThat(order, is(equalTo(expected)));
+	}
+	@Test
+	public void shouldDeserializeCollections() {
+
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders><order xmlns=\"http://www.caelum.com.br/restfulie\"></order></orders>";
+		Order expected = new Order();
+		List<Order> orders = mediaType.unmarshal(xml, null);
+		assertThat(orders, hasItem(equalTo(expected)));
 	}
 
 	@Test
