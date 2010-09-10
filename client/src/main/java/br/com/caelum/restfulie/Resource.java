@@ -18,13 +18,12 @@
 package br.com.caelum.restfulie;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * A single resource.<br>
  * Deserialized objects will implement this interface and support transition
  * methods.
- * 
+ *
  * @author guilherme silveira
  * @author lucas souza
  */
@@ -42,16 +41,14 @@ public interface Resource {
 
 	/**
 	 * Returns a list of possible relations given this resource's state.
-	 * 
+	 *
 	 * @return the collection of relation
 	 */
 	List<Link> getLinks();
 
 	/**
-	 * Returns a property which was unknown at compile time.
+	 * Returns a list of links for given relation.
 	 */
-	String getUnknownProperty(String key);
-
-	Map<String,String> getUnknownProperties();
+	List<Link> getLinks(String rel);
 
 }

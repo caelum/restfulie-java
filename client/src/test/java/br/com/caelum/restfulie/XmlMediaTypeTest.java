@@ -76,6 +76,22 @@ public class XmlMediaTypeTest {
 		assertThat(first.getRel(), is(equalTo("payment")));
 		assertThat(first.getHref(), is(equalTo("http://localhost/pay")));
 	}
+	@Test
+	public void shouldDeserializeWithMultipleLinks() {
+		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+				"<order xmlns=\"http://www.caelum.com.br/restfulie\">" +
+					linkFor("payment", "http://localhost/pay/01") +
+					linkFor("payment", "http://localhost/pay/02") +
+					linkFor("anything", "http://localhost/anything") +
+				"</order>";
+		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, null));
+		assertThat(resource.getLinks().size(), is(equalTo(3)));
+
+		List<Link> links = resource.getLinks("payment");
+		assertThat(links.size(), is(equalTo(2)));
+		assertThat(links.get(0).getHref(), is(equalTo("http://localhost/pay/01")));
+		assertThat(links.get(1).getHref(), is(equalTo("http://localhost/pay/02")));
+	}
 
 	@Test
 	public void shouldSupportTheLinkWithoutTheXmlns() {
