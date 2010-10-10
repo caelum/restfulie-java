@@ -17,13 +17,8 @@
 
 package br.com.caelum.restfulie;
 
-import static br.com.caelum.restfulie.Restfulie.resource;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +26,14 @@ import org.junit.Test;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+import static br.com.caelum.restfulie.Restfulie.resource;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+
+import static org.junit.Assert.assertThat;
 
 
 public class XmlMediaTypeTest {
@@ -47,6 +50,7 @@ public class XmlMediaTypeTest {
 
 	@Before
 	public void setup() {
+		Locale.setDefault(Locale.ENGLISH);
 		mediaType = new XmlMediaType().withTypes(Order.class);
 	}
 
