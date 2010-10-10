@@ -19,7 +19,6 @@ package br.com.caelum.restfulie.client;
 
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.DefaultRelation;
-import br.com.caelum.restfulie.mediatype.MediaTypes;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -30,9 +29,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 /**
  * Default transition converter.<br>
  * Injects the current deserializer to all transitions.
- * 
+ *
  * @author guilherme silveira
- * 
+ *
  */
 public class DefaultLinkConverter implements Converter {
 
@@ -54,7 +53,6 @@ public class DefaultLinkConverter implements Converter {
 		return new DefaultRelation(rel, href, client);
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean canConvert(Class type) {
 		return type.equals(DefaultRelation.class);
 	}
