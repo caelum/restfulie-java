@@ -4,4 +4,5 @@ javadoc
 .project
 .classpath
 .settings/
+bin/
 *~
