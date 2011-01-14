@@ -60,8 +60,6 @@ public class ApacheHttpRequest implements Request {
 			return response;
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
-		} catch (URISyntaxException e) {
-			throw new RestfulieException("Unable to execute " + uri, e);
 		}
 	}
 

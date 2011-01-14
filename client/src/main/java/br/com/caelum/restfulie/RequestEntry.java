@@ -19,8 +19,7 @@ public interface RequestEntry {
 
 	/**
 	 * Entry point to direct access an uri.
-	 * @throws URISyntaxException
 	 */
-	Request at(String uri) throws URISyntaxException;
+	Request at(String uri) throws RestfulieException ;
 
 }

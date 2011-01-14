@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.apache.ApacheHttpClientProvider;
 import br.com.caelum.restfulie.mediatype.JsonMediaType;
 import br.com.caelum.restfulie.mediatype.MediaTypes;
@@ -65,8 +66,12 @@ public class DefaultRestClient implements RestClient {
 	 * Entry point to direct access an uri.
 	 * @throws URISyntaxException
 	 */
-	public Request at(String uri) throws URISyntaxException {
-		return at(new URI(uri));
+	public Request at(String uri) {
+		try {
+			return at(new URI(uri));
+		} catch (URISyntaxException e) {
+			throw new RestfulieException("Unable to build an URI for this request.", e);
+		}
 	}
 
 	public URI lastURI() {

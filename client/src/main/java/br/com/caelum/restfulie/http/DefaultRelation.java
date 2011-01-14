@@ -18,7 +18,6 @@
 package br.com.caelum.restfulie.http;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.RestClient;
@@ -50,15 +49,11 @@ public class DefaultRelation implements Link {
 	}
 
 	public Request follow() {
-		try {
-			if (href.startsWith("/")) {
-				URI uri = client.lastURI();
-				return client.at(extractHost(uri) + href);
-			}
-			return client.at(href);
-		} catch (URISyntaxException e) {
-			throw new IllegalStateException("The returned link was invalid", e);
+		if (href.startsWith("/")) {
+			URI uri = client.lastURI();
+			return client.at(extractHost(uri) + href);
 		}
+		return client.at(href);
 	}
 
 	private String extractHost(URI uri) {
