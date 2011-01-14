@@ -6,7 +6,7 @@ import br.com.caelum.restfulie.RestfulieException;
 
 /**
  * A media type registry.<br/>
- * Invoke register to add new media types. Whenever two media type handlers can
+ * Invoke register to add a new media types. Whenever two media type handlers can
  * handle the same media type, the latest added will be used to resolve the
  * conflict.
  *
