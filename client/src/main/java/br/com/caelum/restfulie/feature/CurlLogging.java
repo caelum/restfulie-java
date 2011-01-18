@@ -11,7 +11,7 @@ public class CurlLogging implements RequestFeature {
 	public Response process(RequestChain chain, Request request, String verb,
 			URI uri, Object payload) {
 		if(verb.equals("POST")) {
-			System.out.println(String.format("curl -v %s -d", uri));
+			System.out.println(String.format("curl -v %s -H 'Content-type: %s' -d '%s'", uri, request.getHeaders().get("Content-type"), payload));
 		} else {
 			System.out.println(String.format("curl -v %s", uri));
 		}

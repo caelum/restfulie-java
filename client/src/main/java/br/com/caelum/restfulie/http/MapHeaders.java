@@ -15,11 +15,11 @@ public class MapHeaders implements Headers{
 		return fields.get(key);
 	}
 
-	public String getMain(String string) {
-		if(!fields.containsKey("Content-Type")) {
-			throw new IllegalArgumentException("Unable to unmarshall as there is no content type set. Check your server.");
+	public String getMain(String key) {
+		if(!fields.containsKey(key)) {
+			throw new IllegalArgumentException("Unable to parse as field does not exist.");
 		}
-		return getRaw("Content-Type").get(0).split(";")[0];
+		return getRaw(key).get(0).split(";")[0];
 	}
 
 }

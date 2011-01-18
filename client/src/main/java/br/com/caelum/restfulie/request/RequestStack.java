@@ -13,11 +13,9 @@ public class RequestStack implements RequestFeature {
 	
 	private final List<ResponseFeature> responses = new ArrayList<ResponseFeature>();
 	private final List<RequestFeature> requests = new ArrayList<RequestFeature>();
-	private final RequestExecutor executor;
 	private final RestClient client;
 	
-	public RequestStack(RequestExecutor executor, RestClient client) {
-		this.executor = executor;
+	public RequestStack(RestClient client) {
 		this.client = client;
 	}
 	
@@ -36,7 +34,7 @@ public class RequestStack implements RequestFeature {
 
 	public Response process(RequestChain chain, Request request, String verb,
 			URI uri, Object payload) {
-		Response response = executor.process(request, verb, uri, payload);
+		Response response = client.getProvider().process(request, verb, uri, payload);
 		return new ResponseChain(responses, client).next(response);
 	}
 

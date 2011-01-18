@@ -22,11 +22,12 @@ import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.RestfulieException;
-import br.com.caelum.restfulie.http.apache.ApacheHttpClientProvider;
+import br.com.caelum.restfulie.http.apache.ApacheDispatcher;
 import br.com.caelum.restfulie.mediatype.FormEncoded;
 import br.com.caelum.restfulie.mediatype.JsonMediaType;
 import br.com.caelum.restfulie.mediatype.MediaTypes;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
+import br.com.caelum.restfulie.request.RequestDispatcher;
 
 /**
  * Configured service entry point.
@@ -37,19 +38,23 @@ public class DefaultRestClient implements RestClient {
 
 	private final MediaTypes types = new MediaTypes();
 
-	private final HttpClientProvider provider;
+	private RequestDispatcher dispatcher;
 
 	private URI lastURI = null;
 
 	public DefaultRestClient() {
-		provider = new ApacheHttpClientProvider();
+		this.dispatcher = new ApacheDispatcher(this);
 		types.register(new XmlMediaType());
 		types.register(new JsonMediaType());
 		types.register(new FormEncoded());
 	}
+	
+	protected void use(RequestDispatcher executor) {
+		this.dispatcher = executor;
+	}
 
-	public HttpClientProvider getProvider() {
-		return provider;
+	public RequestDispatcher getProvider() {
+		return dispatcher;
 	}
 
 	public MediaTypes getMediaTypes() {
@@ -61,7 +66,7 @@ public class DefaultRestClient implements RestClient {
 	 */
 	public Request at(URI uri) {
 		lastURI = uri;
-		return getProvider().request(uri, this).accept("application/xml");
+		return new DefaultHttpRequest(uri, this).accept("application/xml");
 	}
 
 	/**
@@ -79,4 +84,5 @@ public class DefaultRestClient implements RestClient {
 	public URI lastURI() {
 		return lastURI;
 	}
+
 }

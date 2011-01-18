@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.restfulie.http.Headers;
+
 /**
  * A transition execution response.<br>
  * Through this interface, one can either access the original response
@@ -43,6 +45,6 @@ public interface Response {
 	 */
 	public <T> T getResource() throws IOException;
 
-	public Map<String, List<String>> getHeaders();
+	public Headers getHeaders();
 	
 }

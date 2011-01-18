@@ -20,6 +20,11 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+		<dependency>
 		    <groupId>stax</groupId>
 		    <artifactId>stax</artifactId>
 		    <version>1.2.0</version>

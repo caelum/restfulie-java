@@ -1,4 +1,4 @@
-package br.com.caelum.restfulie.http.apache;
+package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -8,7 +8,6 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.feature.CurlLogging;
 import br.com.caelum.restfulie.feature.RedirectAfterCreate;
-import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.request.RequestStack;
 
 public class DefaultHttpRequest implements Request {
@@ -92,7 +91,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
 	private RequestStack createStack() {
-		RequestStack stack = new RequestStack(new ApacheRequestExecutor(client), client);
+		RequestStack stack = new RequestStack(client);
 		stack.with(new CurlLogging());
 		stack.with(new RedirectAfterCreate());
 		return stack;
