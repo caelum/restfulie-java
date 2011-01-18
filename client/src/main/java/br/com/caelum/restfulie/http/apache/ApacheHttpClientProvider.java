@@ -18,7 +18,7 @@ public class ApacheHttpClientProvider implements HttpClientProvider {
 	 * @param types
 	 */
 	public Request request(URI uri, RestClient client) {
-		return new ApacheHttpRequest(uri, client);
+		return new DefaultHttpRequest(uri, client);
 	}
 
 }

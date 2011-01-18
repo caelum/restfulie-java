@@ -90,4 +90,8 @@ public class ApacheResponse implements Response {
 		return contentType;
 	}
 
+	public Map<String, List<String>> getHeaders() {
+		return headers;
+	}
+
 }

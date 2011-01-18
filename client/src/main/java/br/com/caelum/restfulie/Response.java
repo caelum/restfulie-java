@@ -19,6 +19,7 @@ package br.com.caelum.restfulie;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A transition execution response.<br>
@@ -41,5 +42,7 @@ public interface Response {
 	 * @throws IOException 
 	 */
 	public <T> T getResource() throws IOException;
+
+	public Map<String, List<String>> getHeaders();
 	
 }

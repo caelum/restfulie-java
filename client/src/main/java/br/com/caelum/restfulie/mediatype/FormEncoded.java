@@ -2,7 +2,10 @@ package br.com.caelum.restfulie.mediatype;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URLEncoder;
 import java.util.Map;
+
+import com.sun.jndi.toolkit.url.UrlUtil;
 
 import br.com.caelum.restfulie.RestClient;
 
@@ -22,9 +25,9 @@ public class FormEncoded implements MediaType {
 		Map<String, String> params = (Map<String, String>) payload;
 		int at = 0;
 		for (String key : params.keySet()) {
-			writer.append(key);
+			writer.append(URLEncoder.encode(key));
 			writer.append("=");
-			writer.append(params.get(key));
+			writer.append(URLEncoder.encode(params.get(key)));
 			if (++at != params.size()) {
 				writer.append("&");
 			}

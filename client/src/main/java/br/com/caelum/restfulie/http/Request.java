@@ -1,5 +1,7 @@
 package br.com.caelum.restfulie.http;
 
+import java.util.Map;
+
 import br.com.caelum.restfulie.Response;
 
 /**
@@ -46,5 +48,7 @@ public interface Request {
 	Response options();
 
 	Response head();
+
+	public Map<String, String> getHeaders();
 
 }
