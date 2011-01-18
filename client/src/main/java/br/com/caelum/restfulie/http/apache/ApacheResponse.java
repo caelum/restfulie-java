@@ -20,12 +20,13 @@ package br.com.caelum.restfulie.http.apache;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
-import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.ContentProcessor;
+import br.com.caelum.restfulie.http.Headers;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
+import br.com.caelum.restfulie.http.MapHeaders;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -35,7 +36,7 @@ import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
 public class ApacheResponse implements Response {
 
 	private int code;
-	private Map<String, List<String>> headers;
+	private Headers headers;
 	private HttpURLConnection connection;
 	private ContentProcessor processor;
 	private final RestClient client;
@@ -55,7 +56,7 @@ public class ApacheResponse implements Response {
 		this.client = client;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
-		this.headers = connection.getHeaderFields();
+		this.headers = new MapHeaders(connection.getHeaderFields());
 		this.processor = processor;
 	}
 
@@ -68,7 +69,7 @@ public class ApacheResponse implements Response {
 	}
 
 	public List<String> getHeader(String key) {
-		return headers.get(key);
+		return headers.getRaw(key);
 	}
 
 	public HttpURLConnection getConnection() {
@@ -83,11 +84,7 @@ public class ApacheResponse implements Response {
 	}
 
 	private String getContentType() throws IOException {
-		if(!headers.containsKey("Content-Type")) {
-			throw new IOException("Unable to unmarshall as there is no content type set. Check your server.");
-		}
-		String contentType = headers.get("Content-Type").get(0);
-		return contentType;
+		return headers.getMain("Content-Type");
 	}
 
 	public Map<String, List<String>> getHeaders() {
