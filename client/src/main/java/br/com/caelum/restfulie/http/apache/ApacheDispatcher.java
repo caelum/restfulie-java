@@ -35,6 +35,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 	private final HttpClient http = new DefaultHttpClient();
 	private final RestClient client;
 	private final HttpContext context;
+	private ApacheResponse lastExecuted;
 
 	public ApacheDispatcher(RestClient client) {
 		this.client = client;
@@ -67,7 +68,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 		HttpPost post = new HttpPost(uri);
 		add(post, headers);
 		post.setEntity(new EntityTemplate(cp));
-		
+
 		return execute(details, post);
 	}
 
@@ -94,17 +95,24 @@ public class ApacheDispatcher implements RequestDispatcher {
 
 	private ApacheResponse execute(Request details, HttpUriRequest method) {
 		try {
+			if (lastExecuted != null) {
+				lastExecuted.discard();
+			}
 			HttpResponse response = http.execute(method, getContext());
 			return responseFor(response);
 		} catch (ClientProtocolException e) {
-			throw new RestfulieException("Unable to execute " + method.getURI(), e);
+			throw new RestfulieException(
+					"Unable to execute " + method.getURI(), e);
 		} catch (IOException e) {
-			throw new RestfulieException("Unable to execute " + method.getURI(), e);
+			throw new RestfulieException(
+					"Unable to execute " + method.getURI(), e);
 		}
 	}
 
-	private ApacheResponse responseFor(HttpResponse response) throws IOException {
-		return new ApacheResponse(response, client);
+	private ApacheResponse responseFor(HttpResponse response)
+			throws IOException {
+		this.lastExecuted = new ApacheResponse(response, client);
+		return lastExecuted;
 	}
 
 }

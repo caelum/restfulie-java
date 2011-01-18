@@ -1,11 +1,11 @@
 package br.com.caelum.restfulie.http.apache;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
 
 import br.com.caelum.restfulie.Response;
@@ -33,11 +33,11 @@ public class ApacheResponse implements Response {
 			return "";
 		}
 	    long len = entity.getContentLength();
-	    if (len != -1 && len < 10 * 1024 * 1024) {
-	        return EntityUtils.toString(entity);
-	    } else {
-	        return "";
-	    }
+			if (len != -1 && len < 10 * 1024 * 1024) {
+			    return EntityUtils.toString(entity);
+			} else {
+			    return "";
+			}
 	}
 
 	public List<String> getHeader(String key) {
@@ -56,6 +56,10 @@ public class ApacheResponse implements Response {
 
 	public Headers getHeaders() {
 		return new ApacheHeaders(response);
+	}
+
+	public void discard() throws IOException {
+		response.getEntity().consumeContent();
 	}
 
 }
