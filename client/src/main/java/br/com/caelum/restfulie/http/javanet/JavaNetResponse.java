@@ -19,14 +19,16 @@ package br.com.caelum.restfulie.http.javanet;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.ContentProcessor;
 import br.com.caelum.restfulie.http.Headers;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
-import br.com.caelum.restfulie.http.MapHeaders;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -64,12 +66,16 @@ public class JavaNetResponse implements Response {
 		return code;
 	}
 
-	public String getContent() throws IOException {
-		return processor.read();
+	public String getContent() {
+		try {
+			return processor.read();
+		} catch (IOException e) {
+			throw new RestfulieException("Unable to parse response content", e);
+		}
 	}
 
 	public List<String> getHeader(String key) {
-		return headers.getRaw(key);
+		return headers.get(key);
 	}
 
 	public HttpURLConnection getConnection() {
@@ -83,12 +89,24 @@ public class JavaNetResponse implements Response {
 		return (T) client.getMediaTypes().forContentType(contentType).unmarshal(content, client);
 	}
 
-	private String getContentType() throws IOException {
+	private String getContentType() {
 		return headers.getMain("Content-Type");
 	}
 
 	public Headers getHeaders() {
 		return headers;
+	}
+
+	public URI getLocation() {
+		try {
+			return new URI(headers.getMain("Location"));
+		} catch (URISyntaxException e) {
+			throw new RestfulieException("Invalid URI received as a response", e);
+		}
+	}
+
+	public String getType() {
+		return getContentType();
 	}
 
 }

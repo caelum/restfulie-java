@@ -18,8 +18,8 @@
 package br.com.caelum.restfulie;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import br.com.caelum.restfulie.http.Headers;
 
@@ -35,7 +35,7 @@ public interface Response {
 
 	public int getCode();
 
-	public String getContent() throws IOException;
+	public String getContent();
 
 	public List<String> getHeader(String key);
 
@@ -46,5 +46,9 @@ public interface Response {
 	public <T> T getResource() throws IOException;
 
 	public Headers getHeaders();
+
+	URI getLocation();
+
+	public String getType();
 	
 }

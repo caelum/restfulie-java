@@ -1,6 +1,8 @@
 package br.com.caelum.restfulie.http.apache;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -10,6 +12,7 @@ import org.apache.http.util.EntityUtils;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.Headers;
 
 public class ApacheResponse implements Response {
@@ -28,26 +31,31 @@ public class ApacheResponse implements Response {
 		return response.getStatusLine().getStatusCode();
 	}
 
-	public String getContent() throws IOException {
+	public String getContent() {
 		if (entity == null) {
 			return "";
 		}
-	    long len = entity.getContentLength();
+		try {
+			long len = entity.getContentLength();
 			if (len != -1 && len < 10 * 1024 * 1024) {
-			    return EntityUtils.toString(entity);
+				return EntityUtils.toString(entity);
 			} else {
-			    return "";
+				return "";
 			}
+		} catch (IOException ex) {
+			throw new RestfulieException("Unable to parse response content", ex);
+		}
 	}
 
 	public List<String> getHeader(String key) {
-		return getHeaders().getRaw(key);
+		return getHeaders().get(key);
 	}
 
 	public <T> T getResource() throws IOException {
 		String contentType = getContentType();
 		String content = getContent();
-		return (T) client.getMediaTypes().forContentType(contentType).unmarshal(content, client);
+		return (T) client.getMediaTypes().forContentType(contentType)
+				.unmarshal(content, client);
 	}
 
 	private String getContentType() throws IOException {
@@ -60,6 +68,18 @@ public class ApacheResponse implements Response {
 
 	public void discard() throws IOException {
 		response.getEntity().consumeContent();
+	}
+
+	public URI getLocation() {
+		try {
+			return new URI(response.getHeaders("Location")[0].getValue());
+		} catch (URISyntaxException e) {
+			throw new RestfulieException("Invalid URI received as a response", e);
+		}
+	}
+
+	public String getType() {
+		return response.getHeaders("Content-Type")[0].getValue();
 	}
 
 }
