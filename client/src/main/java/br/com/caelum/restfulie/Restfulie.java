@@ -57,8 +57,12 @@ public class Restfulie {
 	 * Entry point to direct access an uri.
 	 * @throws URISyntaxException 
 	 */
-	public static Request at(String uri) throws URISyntaxException {
-		return at(new URI(uri));
+	public static Request at(String uri) {
+		try {
+			return at(new URI(uri));
+		} catch (URISyntaxException e) {
+			throw new RestfulieException("Invalid URI Syntax for " + uri, e);
+		}
 	}
 
 }
