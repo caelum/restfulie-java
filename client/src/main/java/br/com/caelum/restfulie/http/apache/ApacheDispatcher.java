@@ -11,8 +11,12 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.ContentProducer;
@@ -25,7 +29,6 @@ import org.apache.http.protocol.HttpContext;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.RestfulieException;
-import br.com.caelum.restfulie.http.HttpMethod;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.mediatype.MediaType;
 import br.com.caelum.restfulie.request.RequestDispatcher;
@@ -86,11 +89,26 @@ public class ApacheDispatcher implements RequestDispatcher {
 		}
 	}
 
-	private Response access(Request request, String verb, URI uri) {
-		HttpGet get = new HttpGet(uri);
-		add(get, request.getHeaders());
-		return execute(request, get);
+	private Response access(Request request, String method, URI uri) {
+		HttpUriRequest verb = verbFor(method, uri);
+		add(verb, request.getHeaders());
+		return execute(request, verb);
+	}
 
+	private HttpUriRequest verbFor(String method, URI uri) {
+		method = method.toUpperCase();
+		if(method.equals("GET")) {
+			return new HttpGet(uri);
+		} else if(method.equals("DELETE")) {
+			return new HttpDelete(uri);
+		} else if(method.equals("TRACE")) {
+			return new HttpTrace(uri);
+		} else if(method.equals("OPTIONS")) {
+			return new HttpOptions(uri);
+		} else if(method.equals("HEAD")) {
+			return new HttpHead(uri);
+		}
+		throw new RestfulieException("You can not " + method + " to " + uri + " without a payload.");
 	}
 
 	private ApacheResponse execute(Request details, HttpUriRequest method) {
