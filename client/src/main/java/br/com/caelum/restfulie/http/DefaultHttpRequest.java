@@ -93,7 +93,7 @@ public class DefaultHttpRequest implements Request {
 
 	private RequestStack createStack() {
 		RequestStack stack = new RequestStack(client);
-		stack.with(new CurlLogging());
+//		stack.with(new CurlLogging());
 		stack.with(new FollowRedirects());
 		stack.with(new RedirectAfterCreate());
 		return stack;

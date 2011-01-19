@@ -12,10 +12,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
@@ -46,11 +48,11 @@ public class ApacheDispatcher implements RequestDispatcher {
 		context.setAttribute(ClientContext.COOKIE_STORE, new BasicCookieStore());
 	}
 
-	public Response process(Request details, String verb, URI uri,
+	public Response process(Request details, String method, URI uri,
 			final Object payload) {
 
 		if (payload == null) {
-			return access(details, verb, uri);
+			return access(details, method, uri);
 		}
 
 		final Map<String, String> headers = details.getHeaders();
@@ -68,11 +70,11 @@ public class ApacheDispatcher implements RequestDispatcher {
 				writer.flush();
 			}
 		};
-		HttpPost post = new HttpPost(uri);
-		add(post, headers);
-		post.setEntity(new EntityTemplate(cp));
+		HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
+		add(verb, headers);
+		verb.setEntity(new EntityTemplate(cp));
 
-		return execute(details, post);
+		return execute(details, verb);
 	}
 
 	private HttpContext getContext() {
@@ -99,6 +101,10 @@ public class ApacheDispatcher implements RequestDispatcher {
 		method = method.toUpperCase();
 		if(method.equals("GET")) {
 			return new HttpGet(uri);
+		} else if(method.equals("PUT")) {
+			return new HttpPut(uri);
+		} else if(method.equals("POST")) {
+			return new HttpPost(uri);
 		} else if(method.equals("DELETE")) {
 			return new HttpDelete(uri);
 		} else if(method.equals("TRACE")) {
@@ -108,7 +114,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 		} else if(method.equals("HEAD")) {
 			return new HttpHead(uri);
 		}
-		throw new RestfulieException("You can not " + method + " to " + uri + " without a payload.");
+		throw new RestfulieException("You can not " + method + " to " + uri + ", there is no such verb in the apache http API.");
 	}
 
 	private ApacheResponse execute(Request details, HttpUriRequest method) {
