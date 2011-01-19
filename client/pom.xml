@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.caelum</groupId>
-	<artifactId>restfulie-java-client</artifactId>
+	<artifactId>restfulie</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0-beta-2</version>
+	<version>1.0.0.beta4</version>
 	<name>restfulie-java-client</name>
 	<url>http://restfulie.caelum.com.br</url>
 

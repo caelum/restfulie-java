@@ -27,7 +27,7 @@ public class MapHeadersTest {
 	@Test
 	public void shouldReturnRaw() {
 		fields.put("Content-Type", Arrays.asList("application/xml;charset=ISO-8859-1"));
-		assertThat(headers.getRaw("Content-Type").get(0), is(equalTo("application/xml;charset=ISO-8859-1")));
+		assertThat(headers.get("Content-Type").get(0), is(equalTo("application/xml;charset=ISO-8859-1")));
 	}
 	
 	@Test
