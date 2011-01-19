@@ -99,4 +99,8 @@ public class DefaultHttpRequest implements Request {
 		return stack;
 	}
 
+	public Request handling(String type) {
+		return as(type).accept(type);
+	}
+
 }
