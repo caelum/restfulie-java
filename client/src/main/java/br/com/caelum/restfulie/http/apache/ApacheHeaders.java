@@ -19,13 +19,17 @@ public class ApacheHeaders implements Headers {
 		return response.getHeaders(key)[0].getValue().split(";")[0];
 	}
 
-	public List<String> getRaw(String key) {
+	public List<String> get(String key) {
 		Header[] values = response.getHeaders(key);
 		List<String> list = new ArrayList<String>();
 		for(Header h : values) {
 			list.add(h.getValue());
 		}
 		return list;
+	}
+
+	public String getFirst(String key) {
+		return get(key).get(0);
 	}
 
 }

@@ -7,8 +7,13 @@ public interface Headers {
 	public abstract String getMain(String string);
 
 	/**
-	 * returns a list with all values for this header
+	 * Returns a list with all values for this header
 	 */
-	public abstract List<String> getRaw(String key);
+	List<String> get(String key);
+
+	/**
+	 * Returns the first appearance of this header
+	 */
+	String getFirst(String key);
 
 }

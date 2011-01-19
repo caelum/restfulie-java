@@ -1,7 +1,9 @@
-package br.com.caelum.restfulie.http;
+package br.com.caelum.restfulie.http.javanet;
 
 import java.util.List;
 import java.util.Map;
+
+import br.com.caelum.restfulie.http.Headers;
 
 public class MapHeaders implements Headers{
 
@@ -11,7 +13,7 @@ public class MapHeaders implements Headers{
 		this.fields = fields;
 	}
 
-	public List<String> getRaw(String key) {
+	public List<String> get(String key) {
 		return fields.get(key);
 	}
 
@@ -19,7 +21,11 @@ public class MapHeaders implements Headers{
 		if(!fields.containsKey(key)) {
 			throw new IllegalArgumentException("Unable to parse as field does not exist.");
 		}
-		return getRaw(key).get(0).split(";")[0];
+		return get(key).get(0).split(";")[0];
+	}
+
+	public String getFirst(String key) {
+		return get(key).get(0);
 	}
 
 }
