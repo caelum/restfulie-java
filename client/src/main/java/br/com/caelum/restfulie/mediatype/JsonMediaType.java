@@ -19,6 +19,8 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
  */
 @SuppressWarnings("unchecked")
 public class JsonMediaType implements MediaType {
+	
+	public static final String TYPE = "application/json"; 
 
 	private final List<String> types = Arrays.asList("application/json", "text/json", "json");
 
@@ -43,6 +45,10 @@ public class JsonMediaType implements MediaType {
 	}
 
 	public <T> void marshal(T payload, Writer writer) throws IOException {
+		if(payload.getClass().equals(String.class)) {
+			writer.append(String.class.cast(payload));
+			return;
+		}
 		xstream.toXML(payload, writer);
 		writer.flush();
 	}

@@ -20,6 +20,10 @@ public class FormEncoded implements MediaType {
 
 	@SuppressWarnings("unchecked")
 	public <T> void marshal(T payload, Writer writer) throws IOException {
+		if(payload.getClass().equals(String.class)) {
+			writer.append(String.class.cast(payload));
+			return;
+		}
 		Map<String, String> params = (Map<String, String>) payload;
 		int at = 0;
 		for (String key : params.keySet()) {
