@@ -51,4 +51,10 @@ public interface Request {
 
 	public Map<String, String> getHeaders();
 
+	/**
+	 * Shortcut for accepting and sending some media type. It has the same effect
+	 * as invoking as(type).accepts(type)
+	 */
+	Request handling(String type);
+
 }
