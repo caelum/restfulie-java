@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 import br.com.caelum.restfulie.http.Headers;
+import br.com.caelum.restfulie.http.Request;
 
 /**
  * A transition execution response.<br>
@@ -50,5 +51,7 @@ public interface Response {
 	URI getLocation();
 
 	public String getType();
+
+	public Request getRequest();
 	
 }

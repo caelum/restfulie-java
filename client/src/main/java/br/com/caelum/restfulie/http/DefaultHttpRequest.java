@@ -6,11 +6,13 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.feature.CurlLogging;
 import br.com.caelum.restfulie.feature.FollowRedirects;
-import br.com.caelum.restfulie.feature.RedirectAfterCreate;
 import br.com.caelum.restfulie.request.RequestStack;
 
+/**
+ * A default request builder implementation
+ * @author guilherme silveira
+ */
 public class DefaultHttpRequest implements Request {
 	
 	private String verb = "GET";
@@ -94,13 +96,16 @@ public class DefaultHttpRequest implements Request {
 	private RequestStack createStack() {
 		RequestStack stack = new RequestStack(client);
 //		stack.with(new CurlLogging());
-		stack.with(new FollowRedirects());
-		stack.with(new RedirectAfterCreate());
+		stack.with(new FollowRedirects(client));
 		return stack;
 	}
 
 	public Request handling(String type) {
 		return as(type).accept(type);
+	}
+
+	public String getHost() {
+		return this.uri.getHost();
 	}
 
 }

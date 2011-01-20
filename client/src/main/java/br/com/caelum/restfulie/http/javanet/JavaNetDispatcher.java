@@ -47,7 +47,7 @@ public class JavaNetDispatcher implements RequestDispatcher {
 			Writer writer = new OutputStreamWriter(output);
 			String type = headers.get("Content-type");
 			handlerFor(type).marshal(payload, writer);
-			return responseFor(connection, new IdentityContentProcessor());
+			return responseFor(connection, new IdentityContentProcessor(), details);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
 		}
@@ -78,7 +78,7 @@ public class JavaNetDispatcher implements RequestDispatcher {
 			connection.setDoOutput(false);
 			connection.setRequestMethod(verb);
 			JavaNetResponse response = responseFor(connection,
-					new HttpURLConnectionContentProcessor(connection));
+					new HttpURLConnectionContentProcessor(connection), request);
 			return response;
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
@@ -86,9 +86,9 @@ public class JavaNetDispatcher implements RequestDispatcher {
 	}
 
 	private JavaNetResponse responseFor(HttpURLConnection connection,
-			ContentProcessor processor) throws IOException {
+			ContentProcessor processor, Request request) throws IOException {
 		JavaNetResponse response = new JavaNetResponse(connection, client,
-				processor);
+				processor, request);
 		extractCookie(response);
 		return response;
 	}

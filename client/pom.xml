@@ -8,6 +8,13 @@
 	<name>restfulie-java-client</name>
 	<url>http://restfulie.caelum.com.br</url>
 
+    <distributionManagement>
+        <repository>
+            <id>mvn-repository</id>
+            <url>scp://caelum.com.br/home/mavensync/repo</url>
+        </repository>
+    </distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>javassist</groupId>

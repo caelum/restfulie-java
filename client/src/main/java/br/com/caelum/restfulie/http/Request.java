@@ -57,4 +57,6 @@ public interface Request {
 	 */
 	Request handling(String type);
 
+	String getHost();
+
 }

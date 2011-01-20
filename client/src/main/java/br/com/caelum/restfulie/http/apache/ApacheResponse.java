@@ -7,23 +7,25 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.Headers;
+import br.com.caelum.restfulie.http.Request;
 
 public class ApacheResponse implements Response {
 
 	private final HttpResponse response;
 	private final RestClient client;
 	private HttpEntity entity;
+	private final Request details;
 
-	public ApacheResponse(HttpResponse response, RestClient client) {
+	public ApacheResponse(HttpResponse response, RestClient client, Request details) {
 		this.response = response;
 		this.client = client;
+		this.details = details;
 		this.entity = response.getEntity();
 	}
 
@@ -80,6 +82,10 @@ public class ApacheResponse implements Response {
 
 	public String getType() {
 		return response.getHeaders("Content-Type")[0].getValue();
+	}
+
+	public Request getRequest() {
+		return details;
 	}
 
 }

@@ -29,6 +29,7 @@ import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.ContentProcessor;
 import br.com.caelum.restfulie.http.Headers;
 import br.com.caelum.restfulie.http.HttpURLConnectionContentProcessor;
+import br.com.caelum.restfulie.http.Request;
 
 /**
  * Default response implementation based on HttpURLConnection.
@@ -42,20 +43,22 @@ public class JavaNetResponse implements Response {
 	private HttpURLConnection connection;
 	private ContentProcessor processor;
 	private final RestClient client;
+	private final Request request;
 
 	/**
 	 * Will use this connection to retrieve the response data. The deserializer
 	 * will be used if the user wants to retrieve the resource.
 	 */
 	public JavaNetResponse(HttpURLConnection connection,
-			RestClient client) throws IOException {
-		this(connection, client, new HttpURLConnectionContentProcessor(connection));
+			RestClient client, Request request) throws IOException {
+		this(connection, client, new HttpURLConnectionContentProcessor(connection), request);
 	}
 
 	public JavaNetResponse(HttpURLConnection connection,
-			RestClient client, ContentProcessor processor)
+			RestClient client, ContentProcessor processor, Request request)
 			throws IOException {
 		this.client = client;
+		this.request = request;
 		this.code = connection.getResponseCode();
 		this.connection = connection;
 		this.headers = new MapHeaders(connection.getHeaderFields());
@@ -107,6 +110,10 @@ public class JavaNetResponse implements Response {
 
 	public String getType() {
 		return getContentType();
+	}
+
+	public Request getRequest() {
+		return this.request;
 	}
 
 }

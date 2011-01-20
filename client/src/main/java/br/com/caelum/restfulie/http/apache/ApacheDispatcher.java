@@ -1,9 +1,7 @@
 package br.com.caelum.restfulie.http.apache;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Map;
 
@@ -21,8 +19,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.entity.ContentProducer;
-import org.apache.http.entity.EntityTemplate;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
@@ -62,19 +59,28 @@ public class ApacheDispatcher implements RequestDispatcher {
 					"You should set a content type prior to sending some payload.");
 		}
 
-		ContentProducer cp = new ContentProducer() {
-			public void writeTo(OutputStream outstream) throws IOException {
-				Writer writer = new OutputStreamWriter(outstream, "UTF-8");
-				String type = headers.get("Content-type");
-				handlerFor(type).marshal(payload, writer);
-				writer.flush();
-			}
-		};
-		HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
-		add(verb, headers);
-		verb.setEntity(new EntityTemplate(cp));
+//		ContentProducer cp = new ContentProducer() {
+//			public void writeTo(OutputStream outstream) throws IOException {
+//				Writer writer = new OutputStreamWriter(outstream, "UTF-8");
+//				String type = headers.get("Content-type");
+//				handlerFor(type).marshal(payload, writer);
+//				writer.flush();
+//			}
+//		};
+		StringWriter writer = new StringWriter();
+		String type = headers.get("Content-type");
+		try {
+			handlerFor(type).marshal(payload, writer);
+			writer.flush();
+			
+			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
+			add(verb, headers);
+			verb.setEntity(new StringEntity(writer.getBuffer().toString()));
+			return execute(details, verb);
+		} catch (IOException e) {
+			throw new RestfulieException("Unable to marshal entity.", e);
+		}
 
-		return execute(details, verb);
 	}
 
 	private HttpContext getContext() {
@@ -123,7 +129,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 				lastExecuted.discard();
 			}
 			HttpResponse response = http.execute(method, getContext());
-			return responseFor(response);
+			return responseFor(response, details);
 		} catch (ClientProtocolException e) {
 			throw new RestfulieException(
 					"Unable to execute " + method.getURI(), e);
@@ -133,9 +139,9 @@ public class ApacheDispatcher implements RequestDispatcher {
 		}
 	}
 
-	private ApacheResponse responseFor(HttpResponse response)
+	private ApacheResponse responseFor(HttpResponse response, Request details)
 			throws IOException {
-		this.lastExecuted = new ApacheResponse(response, client);
+		this.lastExecuted = new ApacheResponse(response, client, details);
 		return lastExecuted;
 	}
 

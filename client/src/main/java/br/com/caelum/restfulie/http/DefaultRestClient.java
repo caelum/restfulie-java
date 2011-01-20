@@ -66,7 +66,7 @@ public class DefaultRestClient implements RestClient {
 	 */
 	public Request at(URI uri) {
 		lastURI = uri;
-		return new DefaultHttpRequest(uri, this).accept("application/xml");
+		return new DefaultHttpRequest(uri, this);
 	}
 
 	/**
