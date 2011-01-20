@@ -104,8 +104,8 @@ public class DefaultHttpRequest implements Request {
 		return as(type).accept(type);
 	}
 
-	public String getHost() {
-		return this.uri.getHost();
+	public URI getURI() {
+		return this.uri;
 	}
 
 }

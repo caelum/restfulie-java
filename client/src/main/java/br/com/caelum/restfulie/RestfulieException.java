@@ -25,17 +25,14 @@ package br.com.caelum.restfulie;
  */
 public class RestfulieException extends RuntimeException {
 
-	public RestfulieException(String msg, Throwable e) {
-		super(msg, e);
-	}
+	private static final long serialVersionUID = 3766001815829700069L;
 
 	public RestfulieException(String string) {
 		super(string);
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3766001815829700069L;
+	public RestfulieException(String msg, Throwable e) {
+		super(msg, e);
+	}
 
 }

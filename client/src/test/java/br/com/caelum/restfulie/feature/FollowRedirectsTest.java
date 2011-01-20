@@ -5,6 +5,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -45,14 +47,14 @@ public class FollowRedirectsTest {
 	}
 
 	@Test
-	public void shouldFollowRelativeLocations() {
+	public void shouldFollowRelativeLocations() throws URISyntaxException {
 		
 		String uri = "/client";
 		when(response.getCode()).thenReturn(302);
 		when(response.getHeader("Location")).thenReturn(Arrays.asList(uri));
 		when(response.getRequest()).thenReturn(oldRequest);
-		when(oldRequest.getHost()).thenReturn("http://caelum.com.br");
-		when(client.at("http://caelum.com.br/client")).thenReturn(request);
+		when(oldRequest.getURI()).thenReturn(new URI("http://caelum.com.br/everything_else"));
+		when(client.at(new URI("http://caelum.com.br/client"))).thenReturn(request);
 		when(request.get()).thenReturn(redirectResponse);
 		
 		assertThat(new FollowRedirects(client).process(null, response), is(equalTo(redirectResponse)));

@@ -1,7 +1,10 @@
 package br.com.caelum.restfulie.feature;
 
+import java.net.URI;
+
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.request.ResponseChain;
 import br.com.caelum.restfulie.request.ResponseFeature;
 
@@ -23,7 +26,9 @@ public class FollowRedirects implements ResponseFeature {
 		if (shouldRedirect(response)) {
 			String uri = response.getHeader("Location").get(0);
 			if (uri.charAt(0) == '/') {
-				return client.at(response.getRequest().getHost() + uri).get();
+				Request request = response.getRequest();
+				URI target = request.getURI().resolve(uri);
+				return client.at(target).get();
 			}
 			return client.at(uri).get();
 		}

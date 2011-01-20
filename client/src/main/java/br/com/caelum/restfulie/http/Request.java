@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie.http;
 
+import java.net.URI;
 import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
@@ -57,6 +58,6 @@ public interface Request {
 	 */
 	Request handling(String type);
 
-	String getHost();
+	URI getURI();
 
 }
