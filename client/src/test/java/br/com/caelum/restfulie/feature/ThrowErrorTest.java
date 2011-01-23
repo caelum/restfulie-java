@@ -22,10 +22,30 @@ public class ThrowErrorTest {
 	private Response response;
 	
 	@Test(expected=RedicetionException.class)
-	public void shouldThrowRedirectionExceptionWhenCodeBetween300And399() {
+	public void shouldThrowRedirectionExceptionWhenCodeBetween300() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(300);
+		
+		//When
+		new ThrowError(null).process(null, response);
+	}
+	
+	@Test(expected=RedicetionException.class)
+	public void shouldThrowRedirectionExceptionWhenCode350() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(350);
+		
+		//When
+		new ThrowError(null).process(null, response);
+	}
+	
+	@Test(expected=RedicetionException.class)
+	public void shouldThrowRedirectionExceptionWhenCode399() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(399);
 		
 		//When
 		new ThrowError(null).process(null, response);
