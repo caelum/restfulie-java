@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.request.RequestChain;
 
@@ -52,6 +53,10 @@ public class RetryWhenUnavailableTest {
 		new  RetryWhenUnavailable().process(chain, request, verb, uri, null);
 		
 		verify(chain, times(1)).next(request, verb, uri, null);
+	}
+	
+	public void dslText() {
+		Restfulie.at("aqui").retryWhenUnavailable().get();
 	}
 	
 }

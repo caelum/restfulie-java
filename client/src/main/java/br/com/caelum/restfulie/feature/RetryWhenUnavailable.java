@@ -6,6 +6,11 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.request.RequestChain;
 
+/**
+ * Retry when unavailable feature. Default code 503.
+ *
+ * @author jose donizetti
+ */
 public class RetryWhenUnavailable implements RequestFeature {
 
 	private Response response;

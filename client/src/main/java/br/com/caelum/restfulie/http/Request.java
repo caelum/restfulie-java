@@ -65,4 +65,10 @@ public interface Request {
 	 */
 	Request throwError();
 
+	
+	/**
+	 * Add feature RetryWhenUnavailable on the RequestStack
+	 */
+	Request retryWhenUnavailable();
+
 }
