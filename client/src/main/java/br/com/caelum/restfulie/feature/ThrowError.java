@@ -29,7 +29,7 @@ public class ThrowError implements ResponseFeature {
 
 		
 		//300 range
-		if(code >= 300 || code <= 399) {
+		if(code >= 300 && code <= 399) {
 			throw new RedicetionException("Http erro when invoking blah");
 		}
 
