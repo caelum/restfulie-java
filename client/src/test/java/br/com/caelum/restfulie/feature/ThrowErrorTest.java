@@ -38,7 +38,7 @@ public class ThrowErrorTest {
 	private Response response;
 	
 	@Test(expected=RedicetionException.class)
-	public void shouldThrowRedirectionExceptionWhenCodeBetween300() {
+	public void shouldThrowRedirectionExceptionWhenCode300() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(300);
@@ -78,7 +78,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=UnauthorizedException.class)
-	public void shouldThrowBadRequestWhenCode401() {
+	public void shouldThrowUnauthorizedExceptionWhenCode401() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(401);
@@ -88,7 +88,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=ForbiddenException.class)
-	public void shouldThrowBadRequestWhenCode403() {
+	public void shouldThrowForbiddenExceptionWhenCode403() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(403);
@@ -98,7 +98,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=NotFoundException.class)
-	public void shouldThrowBadRequestWhenCode404() {
+	public void shouldThrowNotFoundExceptionWhenCode404() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(404);
@@ -108,7 +108,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=MethodNotAllowedException.class)
-	public void shouldThrowBadRequestWhenCode405() {
+	public void shouldThrowMethodNotAllowedExceptionWhenCode405() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(405);
@@ -118,7 +118,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=ProxyAuthenticationRequiredException.class)
-	public void shouldThrowBadRequestWhenCode407() {
+	public void shouldThrowProxyAuthenticationRequiredExceptionWhenCode407() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(407);
@@ -128,7 +128,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=ConflictException.class)
-	public void shouldThrowBadRequestWhenCode409() {
+	public void shouldThrowConflictExceptionWhenCode409() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(409);
@@ -138,7 +138,7 @@ public class ThrowErrorTest {
 	}
 	
 	@Test(expected=GoneException.class)
-	public void shouldThrowBadRequestWhenCode410() {
+	public void shouldThrowGoneExceptionWhenCode410() {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(410);
