@@ -4,6 +4,7 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
+import br.com.caelum.restfulie.http.error.UnauthorizedException;
 import br.com.caelum.restfulie.request.ResponseChain;
 import br.com.caelum.restfulie.request.ResponseFeature;
 
@@ -23,6 +24,10 @@ public class ThrowError implements ResponseFeature {
 		
 		if(code == 400) {
 			throw new BadRequestException("Http erro when invoking blah");
+		}
+		
+		if(code == 401) {
+			throw new UnauthorizedException("Http erro when invoking blah");
 		}
 
 		return null;

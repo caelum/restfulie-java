@@ -10,7 +10,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
+import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
+import br.com.caelum.restfulie.http.error.UnauthorizedException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ThrowErrorTest {
@@ -61,5 +63,17 @@ public class ThrowErrorTest {
 		//When
 		new ThrowError(null).process(null, response);
 	}
+	
+	@Test(expected=UnauthorizedException.class)
+	public void shouldThrowBadRequestWhenCode401() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(401);
+		
+		//When
+		new ThrowError(null).process(null, response);
+	}
+	
+	
 	
 }
