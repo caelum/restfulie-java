@@ -13,7 +13,7 @@ import br.com.caelum.restfulie.http.Headers;
 public class MazeTest {
 
 	public static void main(String[] args) {
-		
+		//stealing guilherme silveira algorithm
 		Headers headers = Restfulie.at("http://amundsen.com/examples/mazes/2d/five-by-five/").accept("application/xml").get().getHeaders();
 		
 		Map<String,String> visited = new HashMap<String,String>();
