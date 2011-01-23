@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.feature;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.error.BadRequestException;
+import br.com.caelum.restfulie.http.error.ClientException;
 import br.com.caelum.restfulie.http.error.ConflictException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.GoneException;
@@ -63,6 +64,10 @@ public class ThrowError implements ResponseFeature {
 		
 		if(code == 412) {
 			throw new PreconditionFailedException("Http erro when invoking blah");
+		}
+		
+		if(code == 402 || code == 406 || code == 408 || code == 411 || (code >= 413 && code <= 499)) {
+			throw new ClientException("Http erro when invoking blah");
 		}
 		
 		return null;

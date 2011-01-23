@@ -11,6 +11,7 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
+import br.com.caelum.restfulie.http.error.ClientException;
 import br.com.caelum.restfulie.http.error.ConflictException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.GoneException;
@@ -157,7 +158,77 @@ public class ThrowErrorTest {
 		//When
 		new ThrowError(client).process(chain, response);
 	}
+
 	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode402() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(402);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode406() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(406);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode408() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(408);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode411() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(411);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode413() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(413);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode450() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(450);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ClientException.class)
+	public void shouldThrowClientExceptionWhenCode499() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(499);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
 	
 	
 }
