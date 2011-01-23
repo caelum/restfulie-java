@@ -8,18 +8,27 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
+import br.com.caelum.restfulie.http.error.NotFoundException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
 import br.com.caelum.restfulie.http.error.UnauthorizedException;
+import br.com.caelum.restfulie.request.ResponseChain;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ThrowErrorTest {
 
 	
 	@Mock
+	private RestClient client;
+	
+	@Mock
 	private Request request;
+	
+	@Mock
+	private ResponseChain chain;
 	
 	@Mock
 	private Response response;
@@ -31,7 +40,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(300);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
 	}
 	
 	@Test(expected=RedicetionException.class)
@@ -41,7 +50,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(350);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
 	}
 	
 	@Test(expected=RedicetionException.class)
@@ -51,7 +60,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(399);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
 	}
 	
 	@Test(expected=BadRequestException.class)
@@ -61,7 +70,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(400);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
 	}
 	
 	@Test(expected=UnauthorizedException.class)
@@ -71,7 +80,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(401);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
 	}
 	
 	@Test(expected=ForbiddenException.class)
@@ -81,7 +90,17 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(403);
 		
 		//When
-		new ThrowError(null).process(null, response);
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=NotFoundException.class)
+	public void shouldThrowBadRequestWhenCode404() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(404);
+		
+		//When
+		new ThrowError(client).process(chain, response);
 	}
 	
 	
