@@ -17,6 +17,7 @@ import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.GoneException;
 import br.com.caelum.restfulie.http.error.MethodNotAllowedException;
 import br.com.caelum.restfulie.http.error.NotFoundException;
+import br.com.caelum.restfulie.http.error.NotImplementedException;
 import br.com.caelum.restfulie.http.error.PreconditionFailedException;
 import br.com.caelum.restfulie.http.error.ProxyAuthenticationRequiredException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
@@ -225,6 +226,16 @@ public class ThrowErrorTest {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(499);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=NotImplementedException.class)
+	public void shouldThrowNotImplementedExceptionWhenCode501() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(501);
 		
 		//When
 		new ThrowError(client).process(chain, response);
