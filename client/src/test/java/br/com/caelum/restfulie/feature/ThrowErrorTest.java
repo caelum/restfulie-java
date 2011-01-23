@@ -21,7 +21,9 @@ import br.com.caelum.restfulie.http.error.NotImplementedException;
 import br.com.caelum.restfulie.http.error.PreconditionFailedException;
 import br.com.caelum.restfulie.http.error.ProxyAuthenticationRequiredException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
+import br.com.caelum.restfulie.http.error.ServerException;
 import br.com.caelum.restfulie.http.error.UnauthorizedException;
+import br.com.caelum.restfulie.http.error.UnknowCodeException;
 import br.com.caelum.restfulie.request.ResponseChain;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -240,6 +242,48 @@ public class ThrowErrorTest {
 		//When
 		new ThrowError(client).process(chain, response);
 	}
+	
+	@Test(expected=ServerException.class)
+	public void shouldThrowServerExceptionWhenCode500() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(500);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ServerException.class)
+	public void shouldThrowServerExceptionWhenCode502() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(502);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ServerException.class)
+	public void shouldThrowServerExceptionWhenCode550() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(550);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ServerException.class)
+	public void shouldThrowServerExceptionWhenCode599() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(599);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	
 	
 	
 }

@@ -13,6 +13,7 @@ import br.com.caelum.restfulie.http.error.NotImplementedException;
 import br.com.caelum.restfulie.http.error.PreconditionFailedException;
 import br.com.caelum.restfulie.http.error.ProxyAuthenticationRequiredException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
+import br.com.caelum.restfulie.http.error.ServerException;
 import br.com.caelum.restfulie.http.error.UnauthorizedException;
 import br.com.caelum.restfulie.request.ResponseChain;
 import br.com.caelum.restfulie.request.ResponseFeature;
@@ -73,6 +74,10 @@ public class ThrowError implements ResponseFeature {
 		
 		if(code == 501) {
 			throw new NotImplementedException("Http erro when invoking blah");
+		}
+		
+		if (code == 500 || (code >= 502 && code <= 599)) {
+			throw new ServerException("Http erro when invoking blah");
 		}
 		
 		return null;
