@@ -11,6 +11,7 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
+import br.com.caelum.restfulie.http.error.ConflictException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.MethodNotAllowedException;
 import br.com.caelum.restfulie.http.error.NotFoundException;
@@ -120,6 +121,16 @@ public class ThrowErrorTest {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(407);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=ConflictException.class)
+	public void shouldThrowBadRequestWhenCode409() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(409);
 		
 		//When
 		new ThrowError(client).process(chain, response);
