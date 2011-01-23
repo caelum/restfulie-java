@@ -2,6 +2,8 @@ package br.com.caelum.restfulie.http;
 
 import java.util.List;
 
+import br.com.caelum.restfulie.Link;
+
 public interface Headers {
 
 	public abstract String getMain(String string);
@@ -15,5 +17,10 @@ public interface Headers {
 	 * Returns the first appearance of this header
 	 */
 	String getFirst(String key);
+
+	/**
+	 * Returns all links on of this header
+	 */
+	public abstract List<Link> links();
 
 }

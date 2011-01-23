@@ -65,7 +65,7 @@ public class ApacheResponse implements Response {
 	}
 
 	public Headers getHeaders() {
-		return new ApacheHeaders(response);
+		return new ApacheHeaders(response,client);
 	}
 
 	public void discard() throws IOException {
