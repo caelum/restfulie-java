@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.feature;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.error.BadRequestException;
+import br.com.caelum.restfulie.http.error.ForbiddenException;
 import br.com.caelum.restfulie.http.error.RedicetionException;
 import br.com.caelum.restfulie.http.error.UnauthorizedException;
 import br.com.caelum.restfulie.request.ResponseChain;
@@ -30,6 +31,10 @@ public class ThrowError implements ResponseFeature {
 			throw new UnauthorizedException("Http erro when invoking blah");
 		}
 
+		if(code == 403) {
+			throw new ForbiddenException("Http erro when invoking blah");
+		}
+		
 		return null;
 	}
 

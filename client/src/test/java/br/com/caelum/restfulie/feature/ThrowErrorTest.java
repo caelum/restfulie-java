@@ -74,6 +74,16 @@ public class ThrowErrorTest {
 		new ThrowError(null).process(null, response);
 	}
 	
+	@Test(expected=ForbiddenException.class)
+	public void shouldThrowBadRequestWhenCode403() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(403);
+		
+		//When
+		new ThrowError(null).process(null, response);
+	}
+	
 	
 	
 }
