@@ -60,4 +60,9 @@ public interface Request {
 
 	URI getURI();
 
+	/**
+	 * Add feature ThrowError on the ResponseStack
+	 */
+	Request throwError();
+
 }
