@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie.feature;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
@@ -8,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.restfulie.Response;
-import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.ClientException;
@@ -31,9 +31,6 @@ public class ThrowErrorTest {
 
 	
 	@Mock
-	private RestClient client;
-	
-	@Mock
 	private Request request;
 	
 	@Mock
@@ -41,6 +38,45 @@ public class ThrowErrorTest {
 	
 	@Mock
 	private Response response;
+
+	@Test
+	public void shouldNotThrowExceptionWhenCode100() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(100);
+		
+		//When
+		new ThrowError().process(chain, response);
+		
+		//Then
+		verify(chain).next(response);
+	}
+	
+	@Test
+	public void shouldNotThrowExceptionWhenCode200() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(200);
+		
+		//When
+		new ThrowError().process(chain, response);
+		
+		//Then
+		verify(chain).next(response);
+	}
+	
+	@Test
+	public void shouldNotThrowExceptionWhenCode299() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(299);
+		
+		//When
+		new ThrowError().process(chain, response);
+		
+		//Then
+		verify(chain).next(response);
+	}
 	
 	@Test(expected=RedicetionException.class)
 	public void shouldThrowRedirectionExceptionWhenCode300() {
@@ -49,7 +85,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(300);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=RedicetionException.class)
@@ -59,7 +95,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(350);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=RedicetionException.class)
@@ -69,7 +105,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(399);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=BadRequestException.class)
@@ -79,7 +115,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(400);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=UnauthorizedException.class)
@@ -89,7 +125,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(401);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ForbiddenException.class)
@@ -99,7 +135,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(403);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=NotFoundException.class)
@@ -109,7 +145,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(404);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=MethodNotAllowedException.class)
@@ -119,7 +155,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(405);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ProxyAuthenticationRequiredException.class)
@@ -129,7 +165,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(407);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ConflictException.class)
@@ -139,7 +175,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(409);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=GoneException.class)
@@ -149,7 +185,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(410);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=PreconditionFailedException.class)
@@ -159,7 +195,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(412);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 
 	
@@ -170,7 +206,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(402);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -180,7 +216,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(406);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -190,7 +226,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(408);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -200,7 +236,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(411);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -210,7 +246,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(413);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -220,7 +256,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(450);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ClientException.class)
@@ -230,7 +266,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(499);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=NotImplementedException.class)
@@ -240,7 +276,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(501);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ServerException.class)
@@ -250,7 +286,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(500);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ServerException.class)
@@ -260,7 +296,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(502);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ServerException.class)
@@ -270,7 +306,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(550);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=ServerException.class)
@@ -280,7 +316,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(599);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
 	
 	@Test(expected=UnknowCodeException.class)
@@ -290,10 +326,7 @@ public class ThrowErrorTest {
 		when(response.getCode()).thenReturn(600);
 		
 		//When
-		new ThrowError(client).process(chain, response);
+		new ThrowError().process(chain, response);
 	}
-	
-	
-	
 	
 }

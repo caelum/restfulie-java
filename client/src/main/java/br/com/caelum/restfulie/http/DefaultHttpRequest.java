@@ -112,7 +112,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
 	public Request throwError() {
-		this.stack.with(new ThrowError(client));
+		this.stack.with(new ThrowError());
 		return this;
 	}
 
