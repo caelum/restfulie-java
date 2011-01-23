@@ -13,6 +13,7 @@ import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.ConflictException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
+import br.com.caelum.restfulie.http.error.GoneException;
 import br.com.caelum.restfulie.http.error.MethodNotAllowedException;
 import br.com.caelum.restfulie.http.error.NotFoundException;
 import br.com.caelum.restfulie.http.error.ProxyAuthenticationRequiredException;
@@ -131,6 +132,16 @@ public class ThrowErrorTest {
 		//Given
 		when(request.get()).thenReturn(response);
 		when(response.getCode()).thenReturn(409);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
+	@Test(expected=GoneException.class)
+	public void shouldThrowBadRequestWhenCode410() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(410);
 		
 		//When
 		new ThrowError(client).process(chain, response);

@@ -5,6 +5,7 @@ import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.ConflictException;
 import br.com.caelum.restfulie.http.error.ForbiddenException;
+import br.com.caelum.restfulie.http.error.GoneException;
 import br.com.caelum.restfulie.http.error.MethodNotAllowedException;
 import br.com.caelum.restfulie.http.error.NotFoundException;
 import br.com.caelum.restfulie.http.error.ProxyAuthenticationRequiredException;
@@ -53,6 +54,10 @@ public class ThrowError implements ResponseFeature {
 		
 		if(code == 409) {
 			throw new ConflictException("Http erro when invoking blah");
+		}
+		
+		if(code == 410) {
+			throw new GoneException("Http erro when invoking blah");
 		}
 		
 		return null;
