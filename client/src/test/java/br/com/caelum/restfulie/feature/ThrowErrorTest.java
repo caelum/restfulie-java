@@ -283,6 +283,16 @@ public class ThrowErrorTest {
 		new ThrowError(client).process(chain, response);
 	}
 	
+	@Test(expected=UnknowCodeException.class)
+	public void shouldThrowUnkownCodeExceptionWhenUnknonwCode() {
+		//Given
+		when(request.get()).thenReturn(response);
+		when(response.getCode()).thenReturn(600);
+		
+		//When
+		new ThrowError(client).process(chain, response);
+	}
+	
 	
 	
 	
