@@ -33,4 +33,9 @@ public class MapHeaders implements Headers{
 		return null;
 	}
 
+	public Link link(String rel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

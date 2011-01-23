@@ -53,10 +53,10 @@ public class ApacheHeaders implements Headers {
 		return links;
 	}
 
-	public Link link(String string) {
+	public Link link(String rel) {
 		links();
 		for(Link link : links) {
-			if(link.getRel().equals(string)) {
+			if(link.getRel().equals(rel)) {
 				return link;
 			}
 		}

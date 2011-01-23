@@ -22,5 +22,10 @@ public interface Headers {
 	 * Returns all links on of this header
 	 */
 	public abstract List<Link> links();
+	
+	/**
+	 * Returns a link given its rel
+	 */
+	public abstract Link link(String rel);
 
 }
