@@ -1,10 +1,8 @@
 package br.com.caelum.restfulie.maze;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
-
-import org.junit.Test;
 
 import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.Restfulie;
@@ -16,7 +14,7 @@ public class MazeTest {
 		//stealing guilherme silveira algorithm
 		Headers headers = Restfulie.at("http://amundsen.com/examples/mazes/2d/five-by-five/").accept("application/xml").get().getHeaders();
 		
-		Map<String,String> visited = new HashMap<String,String>();
+		Set<String> visited = new HashSet<String>();
 		Stack<Link> path = new Stack<Link>();
 		Link link = null;
 		int steps = 0;
@@ -31,7 +29,7 @@ public class MazeTest {
 			} 
 			
 			path.add(link);
-			visited.put(link.getHref(), link.getRel());
+			visited.add(link.getHref());
 			System.out.println(link);
 			headers = link.follow().get().getHeaders();
 		
@@ -42,12 +40,12 @@ public class MazeTest {
 		
 	}
 
-	private static Link find(Map<String, String> visited, String string, Headers headers) {
+	private static Link find(Set<String> visited, String string, Headers headers) {
 		String[] directions = string.split("\\s++");
 		
 		for(String direction : directions) {
 			Link link = headers.link(direction);
-			if((link != null) && (!visited.containsKey(link.getHref()))){
+			if((link != null) && (!visited.contains(link.getHref()))){
 				return link;
 			}
 		}
