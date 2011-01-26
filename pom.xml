@@ -8,7 +8,12 @@
     <name>restfulie-java</name>
     <url>http://restfulie.caelum.com.br</url>
 
-    <organization>
+        <parent>
+                <groupId>org.sonatype.oss</groupId>
+                <artifactId>oss-parent</artifactId>
+                <version>3</version>
+        </parent>
+	<organization>
 		<name>Caelum</name>
 		<url>http://www.caelum.com.br</url>
 	</organization>
@@ -21,7 +26,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>scm:git:git://github.com/caelum/restfulie-java</url>
+		<url>http://github.com/caelum/restfulie-java</url>
+                <connection>scm:git:git://github.com/caelum/restfulie-java</connection>
+                <developerConnection>scm:git:git@github.com:caelum/restfulie-java.git</developerConnection>
 	</scm>
 
     <modules>
