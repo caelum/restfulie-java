@@ -18,6 +18,9 @@
 package br.com.caelum.restfulie;
 
 import java.net.URI;
+import java.util.Locale;
+
+import org.jvnet.inflector.Pluralizer;
 
 import br.com.caelum.restfulie.mediatype.MediaTypes;
 import br.com.caelum.restfulie.request.RequestDispatcher;
@@ -43,5 +46,15 @@ public interface RestClient extends RequestEntry {
 	 * Returns the media type registry.
 	 */
 	MediaTypes getMediaTypes();
+
+	/**
+	 * Returns the inflection rules
+	 */
+	Pluralizer inflectionRules();
+	
+	/**
+	 * Set custom inflector rules
+	 */
+	RestClient withInflector(Pluralizer inflector);
 	
 }

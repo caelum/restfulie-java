@@ -19,7 +19,7 @@ public class FormEncoded implements MediaType {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> void marshal(T payload, Writer writer) throws IOException {
+	public <T> void marshal(T payload, Writer writer, RestClient client) throws IOException {
 		if(payload.getClass().equals(String.class)) {
 			writer.append(String.class.cast(payload));
 			return;

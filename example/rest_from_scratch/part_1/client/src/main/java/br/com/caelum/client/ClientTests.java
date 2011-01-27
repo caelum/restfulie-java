@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotSame;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.inflector.Noun;
 
 import br.com.caelum.example.model.Item;
 import br.com.caelum.restfulie.Response;
@@ -18,14 +19,21 @@ public class ClientTests {
 	private RestClient restfulie;
 
 	@Before
-	public void setUp() throws Exception {
-		restfulie = Restfulie.custom();
+	public void setUp() throws Exception 
+	{
+		restfulie = Restfulie.custom().withInflector( new MyInflector() );
 		restfulie.getMediaTypes().register(new XmlMediaType().withTypes(Item.class));
+	}
+	
+	@Test
+	public void shouldBeAbleToInflectItem()
+	{
+		assertEquals( "itens", Noun.pluralOf("item", restfulie.inflectionRules()) );
 	}
 
 	@Test
-	public void shouldBeAbleToGetAnItem() throws Exception {
-
+	public void shouldBeAbleToGetAnItem() throws Exception 
+	{
 		Response response = restfulie.at("http://localhost:8080/restfulie/items/2").accept("application/xml").get();
 		Item item = response.getResource();
 
@@ -34,11 +42,11 @@ public class ClientTests {
 		assertNotNull(item.getName());
 
 		System.out.println(item.getName());
-
 	}
 
 	@Test
-	public void shouldBeAbleToPostAnItem() throws Exception {
+	public void shouldBeAbleToPostAnItem() throws Exception 
+	{
 		Item item = new Item("pipa", 299.0);
 		Response response = restfulie.at("http://localhost:8080/restfulie/items").as("application/xml").post(item);
 
