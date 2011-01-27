@@ -46,7 +46,7 @@ public class JavaNetDispatcher implements RequestDispatcher {
 			OutputStream output = connection.getOutputStream();
 			Writer writer = new OutputStreamWriter(output);
 			String type = headers.get("Content-type");
-			handlerFor(type).marshal(payload, writer);
+			handlerFor(type).marshal(payload, writer, client);
 			return responseFor(connection, new IdentityContentProcessor(), details);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);

@@ -43,8 +43,6 @@ public class XmlMediaType implements MediaType {
 		helper = new XStreamHelper(new StaxDriver(qnameMap));
 	}
 
-
-
 	/**
 	 * Allows xstream further configuration.
 	 */
@@ -55,8 +53,8 @@ public class XmlMediaType implements MediaType {
 		return types.contains(type);
 	}
 
-	public <T> void marshal(T payload, Writer writer) throws IOException {
-		getXstream().toXML(getPayload(payload), writer);
+	public <T> void marshal(T payload, Writer writer, RestClient client) throws IOException {
+		getXstream(client).toXML(getPayload(payload), writer);
 		writer.flush();
 	}
 
@@ -69,18 +67,18 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> T unmarshal(String content, RestClient client) {
-		getXstream().registerConverter(new DefaultLinkConverter(client));
-		return (T) getXstream().fromXML(content);
+		getXstream(client).registerConverter(new DefaultLinkConverter(client));
+		return (T) getXstream(client).fromXML(content);
 	}
 
 	private List<Class> getTypesToEnhance() {
 		return typesToEnhance;
 	}
 
-	private List<String> getCollectionNames() {
+	private List<String> getCollectionNames(RestClient client) {
 		List<String> names = new ArrayList<String>();
 		for (Class type : typesToEnhance) {
-			String plural = Noun.pluralOf(type.getSimpleName());
+			String plural = Noun.pluralOf(type.getSimpleName(), client.inflectionRules());
 			names.add(Character.toLowerCase(plural.charAt(0)) + plural.substring(1));
 		}
 		return names;
@@ -91,9 +89,9 @@ public class XmlMediaType implements MediaType {
 		return this;
 	}
 
-	private XStream getXstream() {
+	private XStream getXstream(RestClient client) {
 		if (xstream == null) {
-			this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
+			this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames(client));
 			configure(xstream);
 		}
 		return xstream;
