@@ -12,6 +12,8 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import br.com.caelum.restfulie.http.DefaultRestClient;
+
 public class FormEncodedTest {
 	
 	@Test
@@ -21,7 +23,7 @@ public class FormEncodedTest {
 		Map<String, String > params = new HashMap<String, String>();
 		params.put("name", "Guilherme");
 		params.put("age", "29");
-		encoded.marshal(params, writer);
+		encoded.marshal(params, writer, new DefaultRestClient());
 		
 		assertThat(writer.toString(), Matchers.anyOf(is(CoreMatchers.equalTo("name=Guilherme&age=29")),
 				is(CoreMatchers.equalTo("age=29&name=Guilherme"))));

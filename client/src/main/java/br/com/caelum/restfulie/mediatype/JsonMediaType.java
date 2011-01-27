@@ -44,7 +44,7 @@ public class JsonMediaType implements MediaType {
 		return types.contains(type);
 	}
 
-	public <T> void marshal(T payload, Writer writer) throws IOException {
+	public <T> void marshal(T payload, Writer writer, RestClient client) throws IOException {
 		if(payload.getClass().equals(String.class)) {
 			writer.append(String.class.cast(payload));
 			return;
