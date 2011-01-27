@@ -51,4 +51,9 @@ public interface RestClient extends RequestEntry {
 	 */
 	Pluralizer inflectionRules();
 	
+	/**
+	 * Set custom inflection rules
+	 */
+	RestClient withInflector(Pluralizer inflector);
+	
 }
