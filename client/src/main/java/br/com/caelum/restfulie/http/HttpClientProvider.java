@@ -3,8 +3,6 @@ package br.com.caelum.restfulie.http;
 import java.net.URI;
 
 import br.com.caelum.restfulie.Response;
-import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.request.RequestDispatcher;
 
 /**
  * An http client request provider.<br/>

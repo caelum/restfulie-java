@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.jvnet.inflector.Pluralizer;
-import org.jvnet.inflector.RuleBasedPluralizer;
 import org.jvnet.inflector.lang.en.NounPluralizer;
 
 import br.com.caelum.restfulie.RestClient;
