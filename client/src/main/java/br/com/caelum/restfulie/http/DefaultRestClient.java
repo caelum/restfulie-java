@@ -57,12 +57,6 @@ public class DefaultRestClient implements RestClient {
 		types.register(new FormEncoded());
 	}
 	
-	public DefaultRestClient( Pluralizer inflector )
-	{
-		this();
-		this.inflector = inflector;
-	}
-	
 	protected void use(RequestDispatcher executor) {
 		this.dispatcher = executor;
 	}
