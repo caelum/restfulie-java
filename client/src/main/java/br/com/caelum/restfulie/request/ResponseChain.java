@@ -18,7 +18,7 @@ public class ResponseChain {
 
 	public Response next(Response response) {
 		if(current.hasNext()) {
-			return current.next().process(this, response); 
+			return current.next().process(this, response);
 		}
 		return response;
 	}

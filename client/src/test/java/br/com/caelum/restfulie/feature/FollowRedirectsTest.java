@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.feature;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
@@ -35,9 +36,11 @@ public class FollowRedirectsTest {
 		when(response.getHeader("Location")).thenReturn(Arrays.asList(uri));
 		when(client.at(uri)).thenReturn(request);
 		when(request.get()).thenReturn(redirectResponse);
-		
+		when(request.addHeaders(anyMap())).thenReturn(request);
+		when(response.getRequest()).thenReturn(oldRequest);
+
 		assertThat(new FollowRedirects(client).process(null, response), is(equalTo(redirectResponse)));
-		
+
 	}
 
 	@Test
@@ -48,7 +51,7 @@ public class FollowRedirectsTest {
 
 	@Test
 	public void shouldFollowRelativeLocations() throws URISyntaxException {
-		
+
 		String uri = "/client";
 		when(response.getCode()).thenReturn(302);
 		when(response.getHeader("Location")).thenReturn(Arrays.asList(uri));
@@ -56,8 +59,10 @@ public class FollowRedirectsTest {
 		when(oldRequest.getURI()).thenReturn(new URI("http://caelum.com.br/everything_else"));
 		when(client.at(new URI("http://caelum.com.br/client"))).thenReturn(request);
 		when(request.get()).thenReturn(redirectResponse);
-		
+		when(request.addHeaders(anyMap())).thenReturn(request);
+		when(response.getRequest()).thenReturn(oldRequest);
+
 		assertThat(new FollowRedirects(client).process(null, response), is(equalTo(redirectResponse)));
-		
+
 	}
 }

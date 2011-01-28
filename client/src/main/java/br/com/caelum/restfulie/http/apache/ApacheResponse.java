@@ -39,7 +39,7 @@ public class ApacheResponse implements Response {
 		}
 		try {
 			long len = entity.getContentLength();
-			if (len != -1 && len < 10 * 1024 * 1024) {
+			if (len < 10 * 1024 * 1024) {
 				return EntityUtils.toString(entity);
 			} else {
 				return "";

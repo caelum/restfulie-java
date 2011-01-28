@@ -16,7 +16,7 @@ import br.com.caelum.restfulie.request.RequestStack;
  * @author guilherme silveira
  */
 public class DefaultHttpRequest implements Request {
-	
+
 	private String verb = "GET";
 
 	private final Map<String, String> headers = new HashMap<String, String>();
@@ -26,7 +26,7 @@ public class DefaultHttpRequest implements Request {
 	private final RestClient client;
 
 	private RequestStack stack;
-	
+
 	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
 		this.client = client;
@@ -37,7 +37,7 @@ public class DefaultHttpRequest implements Request {
 		RequestStack stack = createStack();
 		return stack.process(this, verb, uri, payload);
 	}
-	
+
 
 	public Request with(String key, String value) {
 		headers.put(key, value);
@@ -91,6 +91,11 @@ public class DefaultHttpRequest implements Request {
 
 	public Map<String, String> getHeaders() {
 		return headers;
+	}
+
+	public Request addHeaders(Map<String, String> headers) {
+		this.headers.putAll(headers);
+		return this;
 	}
 
 	public Response access() {
