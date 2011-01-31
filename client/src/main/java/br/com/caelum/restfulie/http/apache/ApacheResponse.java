@@ -88,4 +88,8 @@ public class ApacheResponse implements Response {
 		return details;
 	}
 
+	public String getStatusLine() {
+		return response.getStatusLine().getReasonPhrase();
+	}
+
 }

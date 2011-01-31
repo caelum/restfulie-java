@@ -49,7 +49,10 @@ public class DefaultRestClient implements RestClient {
 		types.register(new FormEncoded());
 	}
 	
-	protected void use(RequestDispatcher executor) {
+	/**
+	 * Allows someone to use a different request dispatcher.
+	 */
+	public void use(RequestDispatcher executor) {
 		this.dispatcher = executor;
 	}
 

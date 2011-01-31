@@ -43,5 +43,7 @@ public interface RestClient extends RequestEntry {
 	 * Returns the media type registry.
 	 */
 	MediaTypes getMediaTypes();
+
+	public abstract void use(RequestDispatcher executor);
 	
 }
