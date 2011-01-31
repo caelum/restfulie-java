@@ -60,4 +60,9 @@ public class DefaultRelation implements Link {
 		return uri.toString().replaceFirst(uri.getPath() + "$", "");
 	}
 
+	@Override
+	public String toString() {
+		return rel + " - " + href;
+	}
+	
 }

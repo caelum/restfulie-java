@@ -3,6 +3,7 @@ package br.com.caelum.restfulie.http.javanet;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.http.Headers;
 
 public class MapHeaders implements Headers{
@@ -26,6 +27,15 @@ public class MapHeaders implements Headers{
 
 	public String getFirst(String key) {
 		return get(key).get(0);
+	}
+
+	public List<Link> links() {
+		return null;
+	}
+
+	public Link link(String rel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

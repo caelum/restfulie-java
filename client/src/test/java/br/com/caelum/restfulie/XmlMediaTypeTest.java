@@ -17,23 +17,24 @@
 
 package br.com.caelum.restfulie;
 
+import static br.com.caelum.restfulie.Restfulie.resource;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.jvnet.inflector.lang.en.NounPluralizer;
 
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-
-import static br.com.caelum.restfulie.Restfulie.resource;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-
-import static org.junit.Assert.assertThat;
 
 
 public class XmlMediaTypeTest {
@@ -47,11 +48,13 @@ public class XmlMediaTypeTest {
 	}
 
 	private XmlMediaType mediaType;
+	private RestClient client = mock(RestClient.class);
 
 	@Before
 	public void setup() {
 		Locale.setDefault(Locale.ENGLISH);
 		mediaType = new XmlMediaType().withTypes(Order.class);
+		when(client.inflectionRules()).thenReturn(new NounPluralizer());
 	}
 
 	@Test
@@ -59,7 +62,7 @@ public class XmlMediaTypeTest {
 
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\"></order>";
 		Order expected = new Order();
-		Order order = mediaType.unmarshal(xml, null);
+		Order order = mediaType.unmarshal(xml, client);
 		assertThat(order, is(equalTo(expected)));
 	}
 	@Test
@@ -67,14 +70,14 @@ public class XmlMediaTypeTest {
 
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders><order xmlns=\"http://www.caelum.com.br/restfulie\"></order></orders>";
 		Order expected = new Order();
-		List<Order> orders = mediaType.unmarshal(xml, null);
+		List<Order> orders = mediaType.unmarshal(xml, client);
 		assertThat(orders, hasItem(equalTo(expected)));
 	}
 
 	@Test
 	public void shouldDeserializeWithASimpleLink() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\">" + linkFor("payment", "http://localhost/pay") + "</order>";
-		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, null));
+		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, client));
 		assertThat(resource.getLinks().size(), is(equalTo(1)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
@@ -88,7 +91,7 @@ public class XmlMediaTypeTest {
 					linkFor("payment", "http://localhost/pay/02") +
 					linkFor("anything", "http://localhost/anything") +
 				"</order>";
-		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, null));
+		Resource resource = Restfulie.resource(mediaType.unmarshal(xml, client));
 		assertThat(resource.getLinks().size(), is(equalTo(3)));
 
 		List<Link> links = resource.getLinks("payment");
@@ -100,7 +103,7 @@ public class XmlMediaTypeTest {
 	@Test
 	public void shouldSupportTheLinkWithoutTheXmlns() {
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order xmlns=\"http://www.caelum.com.br/restfulie\" xmlns:atom=\"http://www.w3.org/2005/Atom\">" + simpleLinkFor("payment", "http://localhost/pay") + "</order>";
-		Resource resource = resource(mediaType.unmarshal(xml, null));
+		Resource resource = resource(mediaType.unmarshal(xml, client));
 		assertThat(resource.getLinks().size(), is(equalTo(1)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));
@@ -113,7 +116,7 @@ public class XmlMediaTypeTest {
 			+ linkFor("payment", "http://localhost/pay")
 			+ linkFor("cancel", "http://localhost/cancel")
 			+ "</order>";
-		Resource resource = resource(mediaType.unmarshal(xml, null));
+		Resource resource = resource(mediaType.unmarshal(xml, client));
 		assertThat(resource.getLinks().size(), is(equalTo(2)));
 		Link first = resource.getLinks().get(0);
 		assertThat(first.getRel(), is(equalTo("payment")));

@@ -50,7 +50,8 @@ public interface Request {
 
 	Response head();
 
-	public Map<String, String> getHeaders();
+	Map<String, String> getHeaders();
+	Request addHeaders(Map<String, String> headers);
 
 	/**
 	 * Shortcut for accepting and sending some media type. It has the same effect
@@ -59,5 +60,16 @@ public interface Request {
 	Request handling(String type);
 
 	URI getURI();
+
+	/**
+	 * Add feature ThrowError on the ResponseStack
+	 */
+	Request throwError();
+
+
+	/**
+	 * Add feature RetryWhenUnavailable on the RequestStack
+	 */
+	Request retryWhenUnavailable();
 
 }

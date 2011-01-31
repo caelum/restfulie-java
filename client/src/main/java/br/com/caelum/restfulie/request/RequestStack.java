@@ -10,15 +10,15 @@ import br.com.caelum.restfulie.feature.RequestFeature;
 import br.com.caelum.restfulie.http.Request;
 
 public class RequestStack implements RequestFeature {
-	
+
 	private final List<ResponseFeature> responses = new ArrayList<ResponseFeature>();
 	private final List<RequestFeature> requests = new ArrayList<RequestFeature>();
 	private final RestClient client;
-	
+
 	public RequestStack(RestClient client) {
 		this.client = client;
 	}
-	
+
 	public void with(ResponseFeature feature) {
 		this.responses.add(feature);
 	}

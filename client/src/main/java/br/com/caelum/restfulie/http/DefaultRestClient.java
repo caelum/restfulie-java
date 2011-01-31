@@ -20,6 +20,9 @@ package br.com.caelum.restfulie.http;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jvnet.inflector.Pluralizer;
+import org.jvnet.inflector.lang.en.NounPluralizer;
+
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.apache.ApacheDispatcher;
@@ -40,20 +43,22 @@ public class DefaultRestClient implements RestClient {
 
 	private RequestDispatcher dispatcher;
 
+	private Pluralizer inflector;
+	
 	private URI lastURI = null;
 
-	public DefaultRestClient() {
+	public DefaultRestClient() 
+	{
 		this.dispatcher = new ApacheDispatcher(this);
+		this.inflector = new NounPluralizer();
 		types.register(new XmlMediaType());
 		types.register(new JsonMediaType());
 		types.register(new FormEncoded());
 	}
 	
-	/**
-	 * Allows someone to use a different request dispatcher.
-	 */
-	public void use(RequestDispatcher executor) {
+	public DefaultRestClient use(RequestDispatcher executor) {
 		this.dispatcher = executor;
+		return this;
 	}
 
 	public RequestDispatcher getProvider() {
@@ -86,6 +91,16 @@ public class DefaultRestClient implements RestClient {
 
 	public URI lastURI() {
 		return lastURI;
+	}
+	
+	public Pluralizer inflectionRules() {
+		return inflector;
+	}
+
+	public RestClient withInflector(Pluralizer inflector) 
+	{
+		this.inflector = inflector;
+		return this;
 	}
 
 }

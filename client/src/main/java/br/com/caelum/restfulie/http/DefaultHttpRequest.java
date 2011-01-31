@@ -7,6 +7,8 @@ import java.util.Map;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.feature.FollowRedirects;
+import br.com.caelum.restfulie.feature.RetryWhenUnavailable;
+import br.com.caelum.restfulie.feature.ThrowError;
 import br.com.caelum.restfulie.request.RequestStack;
 
 /**
@@ -14,7 +16,7 @@ import br.com.caelum.restfulie.request.RequestStack;
  * @author guilherme silveira
  */
 public class DefaultHttpRequest implements Request {
-	
+
 	private String verb = "GET";
 
 	private final Map<String, String> headers = new HashMap<String, String>();
@@ -23,16 +25,19 @@ public class DefaultHttpRequest implements Request {
 
 	private final RestClient client;
 
+	private RequestStack stack;
+
 	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
 		this.client = client;
+		this.stack = new RequestStack(client);
 	}
 
 	private Response sendPayload(Object payload, String verb) {
 		RequestStack stack = createStack();
 		return stack.process(this, verb, uri, payload);
 	}
-	
+
 
 	public Request with(String key, String value) {
 		headers.put(key, value);
@@ -88,13 +93,17 @@ public class DefaultHttpRequest implements Request {
 		return headers;
 	}
 
+	public Request addHeaders(Map<String, String> headers) {
+		this.headers.putAll(headers);
+		return this;
+	}
+
 	public Response access() {
 		RequestStack stack = createStack();
 		return stack.process(this, verb, uri, null);
 	}
 
 	private RequestStack createStack() {
-		RequestStack stack = new RequestStack(client);
 //		stack.with(new CurlLogging());
 		stack.with(new FollowRedirects(client));
 		return stack;
@@ -106,6 +115,16 @@ public class DefaultHttpRequest implements Request {
 
 	public URI getURI() {
 		return this.uri;
+	}
+
+	public Request throwError() {
+		this.stack.with(new ThrowError());
+		return this;
+	}
+
+	public Request retryWhenUnavailable() {
+		this.stack.with(new RetryWhenUnavailable());
+		return this;
 	}
 
 }

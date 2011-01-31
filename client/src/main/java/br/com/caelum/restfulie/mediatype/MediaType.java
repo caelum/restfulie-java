@@ -15,7 +15,7 @@ public interface MediaType {
 
 	boolean answersTo(String type);
 
-	<T> void marshal(T payload, Writer writer) throws IOException;
+	<T> void marshal(T payload, Writer writer, RestClient client) throws IOException;
 
 	/**
 	 * Unmarshalling should always be to something to be analyzed.<br/>

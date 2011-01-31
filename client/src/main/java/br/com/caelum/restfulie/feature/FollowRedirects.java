@@ -11,7 +11,7 @@ import br.com.caelum.restfulie.request.ResponseFeature;
 /**
  * A feature that automatically follows 300~399 and 201 codes by using the
  * Location header.
- * 
+ *
  * @author guilherme silveira
  */
 public class FollowRedirects implements ResponseFeature {
@@ -25,12 +25,12 @@ public class FollowRedirects implements ResponseFeature {
 	public Response process(ResponseChain chain, Response response) {
 		if (shouldRedirect(response)) {
 			String uri = response.getHeader("Location").get(0);
+			Request request = response.getRequest();
 			if (uri.charAt(0) == '/') {
-				Request request = response.getRequest();
 				URI target = request.getURI().resolve(uri);
-				return client.at(target).get();
+				return client.at(target).addHeaders(request.getHeaders()).get();
 			}
-			return client.at(uri).get();
+			return client.at(uri).addHeaders(request.getHeaders()).get();
 		}
 		return response;
 	}
