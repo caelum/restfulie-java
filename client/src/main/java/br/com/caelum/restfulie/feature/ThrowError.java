@@ -16,7 +16,6 @@ import br.com.caelum.restfulie.http.error.ServerException;
 import br.com.caelum.restfulie.http.error.UnauthorizedException;
 import br.com.caelum.restfulie.http.error.UnknowCodeException;
 import br.com.caelum.restfulie.request.ResponseChain;
-import br.com.caelum.restfulie.request.ResponseFeature;
 
 public class ThrowError implements ResponseFeature {
 

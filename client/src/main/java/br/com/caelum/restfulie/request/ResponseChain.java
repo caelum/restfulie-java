@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.feature.ResponseFeature;
 
 public class ResponseChain {
 

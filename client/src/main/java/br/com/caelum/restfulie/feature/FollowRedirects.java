@@ -6,7 +6,6 @@ import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.request.ResponseChain;
-import br.com.caelum.restfulie.request.ResponseFeature;
 
 /**
  * A feature that automatically follows 300~399 and 201 codes by using the

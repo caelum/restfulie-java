@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.feature.RequestFeature;
+import br.com.caelum.restfulie.feature.ResponseFeature;
 import br.com.caelum.restfulie.http.Request;
 
 public class RequestStack implements RequestFeature {
