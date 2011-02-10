@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -61,7 +62,11 @@ public class ApacheResponse implements Response {
 	}
 
 	private String getContentType() throws IOException {
-		return getHeader("Content-Type").get(0).split(";")[0];
+		List<String> contentTypes = getHeader("Content-Type");
+		if(contentTypes != null && !contentTypes.isEmpty())
+			return getHeader("Content-Type").get(0).split(";")[0];
+		else
+			return "";
 	}
 
 	public Headers getHeaders() {
@@ -74,14 +79,22 @@ public class ApacheResponse implements Response {
 
 	public URI getLocation() {
 		try {
-			return new URI(response.getHeaders("Location")[0].getValue());
+			Header[] headers = response.getHeaders("Location");
+			if( headers != null && headers.length > 0 )
+				return new URI(headers[0].getValue());
+			else
+				return null;
 		} catch (URISyntaxException e) {
 			throw new RestfulieException("Invalid URI received as a response", e);
 		}
 	}
 
 	public String getType() {
-		return response.getHeaders("Content-Type")[0].getValue();
+		Header[] headers = response.getHeaders("Content-Type");
+		if( headers != null && headers.length > 0 )
+			return response.getHeaders("Content-Type")[0].getValue();
+		else
+			return "";
 	}
 
 	public Request getRequest() {
