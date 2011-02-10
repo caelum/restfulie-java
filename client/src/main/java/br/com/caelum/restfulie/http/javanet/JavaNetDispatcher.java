@@ -47,6 +47,7 @@ public class JavaNetDispatcher implements RequestDispatcher {
 			Writer writer = new OutputStreamWriter(output);
 			String type = headers.get("Content-type");
 			handlerFor(type).marshal(payload, writer, client);
+			writer.flush();
 			return responseFor(connection, new IdentityContentProcessor(), details);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to execute " + uri, e);
@@ -62,7 +63,6 @@ public class JavaNetDispatcher implements RequestDispatcher {
 		HttpURLConnection connection = (HttpURLConnection) uri.toURL()
 				.openConnection();
 		if (this.cookie != null) {
-			System.out.println("Adding cookie '" + this.cookie + "'");
 			connection.addRequestProperty("Cookie", this.cookie);
 		}
 		for (String header : headers.keySet()) {
@@ -95,6 +95,7 @@ public class JavaNetDispatcher implements RequestDispatcher {
 
 	private void extractCookie(JavaNetResponse response) {
 		List<String> cookie = response.getHeader("Set-Cookie");
+		
 		if (cookie != null && cookie.size() > 0) {
 			this.cookie = cookie.get(0);
 			if (this.cookie.contains(";")) {

@@ -116,4 +116,12 @@ public class JavaNetResponse implements Response {
 		return this.request;
 	}
 
+	public String getStatusLine() {
+		try {
+			return connection.getResponseMessage();
+		} catch (IOException e) {
+			throw new RestfulieException("Invalid Status line", e);
+		}
+	}
+
 }

@@ -53,5 +53,7 @@ public interface Response {
 	public String getType();
 
 	public Request getRequest();
+
+	String getStatusLine();
 	
 }

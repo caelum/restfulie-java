@@ -56,8 +56,13 @@ public class DefaultRestClient implements RestClient {
 		types.register(new FormEncoded());
 	}
 	
+<<<<<<< HEAD
 	protected void use(RequestDispatcher executor) {
+=======
+	public DefaultRestClient use(RequestDispatcher executor) {
+>>>>>>> ebbd54bc2045c421374d1cadd27e16b29d2b09a4
 		this.dispatcher = executor;
+		return this;
 	}
 
 	public RequestDispatcher getProvider() {

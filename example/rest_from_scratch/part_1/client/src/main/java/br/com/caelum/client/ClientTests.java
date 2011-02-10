@@ -40,7 +40,10 @@ public class ClientTests {
 	@Test
 	public void shouldBeAbleToPostAnItem() throws Exception {
 		Item item = new Item("pipa", 299.0);
-		Response response = restfulie.at("http://localhost:8080/restfulie/items").as("application/xml").post(item);
+		Response response = restfulie.at("http://localhost:8080/restfulie/items")
+			.accept("application/xml")
+			.as("application/xml")
+			.post(item);
 
 		Item savedItem = response.getResource();
 		assertNotSame(item, savedItem);

@@ -8,38 +8,36 @@ import org.jvnet.inflector.Pluralizer;
 
 import br.com.caelum.restfulie.RestClient;
 
-public class DefaultRestClientTest 
+public class DefaultRestClientTest
 {
 
 	private RestClient client;
-	
+
 	@Test
 	public void shouldInflectUsingDefaultInflector()
 	{
 		client = new DefaultRestClient();
 		assertEquals( Noun.pluralOf("loaf", client.inflectionRules()), "loaves" );
 	}
-	
+
 	@Test
 	public void shouldInflectUsingCustomInflector()
 	{
-		Pluralizer inflector = new Pluralizer() 
-		{	
-			@Override
-			public String pluralize(String word, int number) 
+		Pluralizer inflector = new Pluralizer()
+		{
+			public String pluralize(String word, int number)
 			{
 				return "custom works!";
 			}
-			
-			@Override
-			public String pluralize(String word) 
+
+			public String pluralize(String word)
 			{
 				return "custom works!";
 			}
 		};
-		
+
 		client = new DefaultRestClient().withInflector(inflector);
 		assertEquals( Noun.pluralOf("loaf", client.inflectionRules()), "custom works!");
 	}
-	
+
 }

@@ -47,6 +47,11 @@ public interface RestClient extends RequestEntry {
 	MediaTypes getMediaTypes();
 
 	/**
+	 * Allows someone to use a different request dispatcher.
+	 */
+	RestClient use(RequestDispatcher executor);
+	
+	/**
 	 * Returns the inflection rules
 	 */
 	Pluralizer inflectionRules();
