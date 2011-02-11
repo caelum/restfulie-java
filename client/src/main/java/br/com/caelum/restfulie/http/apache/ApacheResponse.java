@@ -54,14 +54,14 @@ public class ApacheResponse implements Response {
 	}
 
 	public <T> T getResource() throws IOException {
-		String contentType = getContentType();
+		String contentType = getType();
 		String content = getContent();
 		return (T) client.getMediaTypes().forContentType(contentType)
 				.unmarshal(content, client);
 	}
 
-	private String getContentType() throws IOException {
-		return getHeader("Content-Type").get(0).split(";")[0];
+	public String getType() {
+		return getHeaders().getMain("Content-Type");
 	}
 
 	public Headers getHeaders() {
@@ -74,14 +74,14 @@ public class ApacheResponse implements Response {
 
 	public URI getLocation() {
 		try {
-			return new URI(response.getHeaders("Location")[0].getValue());
+			String location = getHeaders().getFirst("Location");
+			if(location == null || location.equals(""))
+				return getRequest().getURI();
+			else
+				return new URI(location);
 		} catch (URISyntaxException e) {
 			throw new RestfulieException("Invalid URI received as a response", e);
 		}
-	}
-
-	public String getType() {
-		return response.getHeaders("Content-Type")[0].getValue();
 	}
 
 	public Request getRequest() {
