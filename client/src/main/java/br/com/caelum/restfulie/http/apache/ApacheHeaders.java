@@ -23,7 +23,7 @@ public class ApacheHeaders implements Headers {
 	}
 
 	public String getMain(String key) {
-		return response.getHeaders(key)[0].getValue().split(";")[0];
+		return getFirst(key).split(";")[0];
 	}
 
 	public List<String> get(String key) {
@@ -36,7 +36,8 @@ public class ApacheHeaders implements Headers {
 	}
 
 	public String getFirst(String key) {
-		return get(key).get(0);
+		Header[] headers = response.getHeaders(key);
+		return headers != null && headers.length > 0 ? get(key).get(0) : "";
 	}
 
 	public List<Link> links() {
