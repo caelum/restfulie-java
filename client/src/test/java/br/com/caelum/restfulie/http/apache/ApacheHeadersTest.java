@@ -3,12 +3,15 @@ package br.com.caelum.restfulie.http.apache;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.RestClient;
+import br.com.caelum.restfulie.http.Headers;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApacheHeadersTest {
@@ -28,7 +32,51 @@ public class ApacheHeadersTest {
 	
 	@Mock
 	private RestClient client;
-
+	
+	@Test
+	public void shouldGetJustTheFirstInformation()
+	{
+		Headers headers = new ApacheHeaders(response, client);
+		
+		when(response.getHeaders("Content-Type")).thenReturn(headers());
+		assertEquals("text/html", headers.getMain("Content-Type"));
+	}
+	
+	@Test
+	public void shouldReturnEmptyWhenNoneContentTypeIsDeclared()
+	{
+		Headers headers = new ApacheHeaders(response, client);
+		assertEquals("", headers.getFirst("Content-Type"));
+	}
+	
+	private Header[] headers()
+	{
+		return new Header[]{
+			new Header() {
+			
+				@Override
+				public String getValue() { return "text/html"; }
+					
+				@Override
+				public String getName() { return "Content-Type"; }
+					
+				@Override
+				public HeaderElement[] getElements() throws ParseException { return null; }
+			},
+			new Header() {
+					
+				@Override
+				public String getValue() { return "text/xml"; }
+					
+				@Override
+				public String getName() { return "Content-Type"; }
+					
+				@Override
+				public HeaderElement[] getElements() throws ParseException { return null; }
+				}
+		};
+	}
+	
 	@Test
 	public void shouldReturnsAllTheLinksOfTheHeader() {
 		//Given
