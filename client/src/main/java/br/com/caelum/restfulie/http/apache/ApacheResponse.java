@@ -53,7 +53,7 @@ public class ApacheResponse implements Response {
 		return getHeaders().get(key);
 	}
 
-	public <T> T getResource() throws IOException {
+	public <T> T getResource() {
 		String contentType = getType();
 		String content = getContent();
 		return (T) client.getMediaTypes().forContentType(contentType)

@@ -42,9 +42,8 @@ public interface Response {
 
 	/**
 	 * Returns the resource if any resource can be parsed from this response's content.
-	 * @throws IOException 
 	 */
-	public <T> T getResource() throws IOException;
+	public <T> T getResource();
 
 	public Headers getHeaders();
 
