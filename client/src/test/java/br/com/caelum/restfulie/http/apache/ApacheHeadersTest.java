@@ -52,22 +52,7 @@ public class ApacheHeadersTest {
 	private Header[] headers()
 	{
 		return new Header[]{
-			new Header() {
-			
-				public String getValue() { return "text/html"; }
-					
-				public String getName() { return "Content-Type"; }
-					
-				public HeaderElement[] getElements() throws ParseException { return null; }
-			},
-			new Header() {
-					
-				public String getValue() { return "text/xml"; }
-					
-				public String getName() { return "Content-Type"; }
-					
-				public HeaderElement[] getElements() throws ParseException { return null; }
-				}
+			new ContentTypeHeader("text/html"), new ContentTypeHeader("text/xml")
 		};
 	}
 	
@@ -108,4 +93,19 @@ public class ApacheHeadersTest {
 		assertThat(link.getHref(), is(equalTo("http://amundsen.com/examples/mazes/2d/five-by-five/0:west")));
 		assertThat(link.getRel(), is(equalTo("west")));
 	}
+
+	class ContentTypeHeader implements Header {
+		
+		private final String value;
+
+		public ContentTypeHeader(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() { return value; }
+			
+		public String getName() { return "Content-Type"; }
+			
+		public HeaderElement[] getElements() throws ParseException { return null; }
+	};
 }
