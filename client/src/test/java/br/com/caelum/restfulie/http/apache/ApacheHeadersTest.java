@@ -54,24 +54,18 @@ public class ApacheHeadersTest {
 		return new Header[]{
 			new Header() {
 			
-				@Override
 				public String getValue() { return "text/html"; }
 					
-				@Override
 				public String getName() { return "Content-Type"; }
 					
-				@Override
 				public HeaderElement[] getElements() throws ParseException { return null; }
 			},
 			new Header() {
 					
-				@Override
 				public String getValue() { return "text/xml"; }
 					
-				@Override
 				public String getName() { return "Content-Type"; }
 					
-				@Override
 				public HeaderElement[] getElements() throws ParseException { return null; }
 				}
 		};
