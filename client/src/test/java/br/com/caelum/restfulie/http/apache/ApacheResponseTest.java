@@ -44,15 +44,7 @@ public class ApacheResponseTest
 	@Test
 	public void shouldGetResponseType()
 	{
-		when(mockHttpResponse.getHeaders("Content-Type")).thenReturn(new Header[]{new Header() {
-			
-			public String getValue() { return "text/html"; }
-			
-			public String getName() { return "Content-Type"; }
-			
-			public HeaderElement[] getElements() throws ParseException { return null; }
-			}
-		});
+		when(mockHttpResponse.getHeaders("Content-Type")).thenReturn(new Header[]{new ContentTypeHeader("text/html")});
 		assertEquals("text/html", response.getType());
 	}
 	
