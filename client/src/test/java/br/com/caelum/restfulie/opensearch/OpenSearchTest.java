@@ -38,10 +38,10 @@ public class OpenSearchTest {
 	      assertThat(desc.getContact(), is(equalTo("admin@restbuy.com")));
 	      
 	      assertThat(desc.getUrls().get(0).getType(), is(equalTo("application/atom+xml")));
-	      assertThat(desc.getUrls().get(0).getTemplate(), is(equalTo("http://localhost:3000/products?q={searchTerms}&amp;pw={startPage?}&amp;format=json")));
+	      assertThat(desc.getUrls().get(0).getTemplate(), is(equalTo("http://localhost:3000/products?q={searchTerms}&pw={startPage?}&format=atom")));
 	      
 	      assertThat(desc.getUrls().get(1).getType(), is(equalTo("application/json")));
-	      assertThat(desc.getUrls().get(1).getTemplate(), is(equalTo("http://localhost:3000/products?q={searchTerms}&amp;pw={startPage?}&amp;format=json")));
+	      assertThat(desc.getUrls().get(1).getTemplate(), is(equalTo("http://localhost:3000/products?q={searchTerms}&pw={startPage?}&format=json")));
 	}
 	
 }
