@@ -4,16 +4,21 @@
 	<groupId>br.com.caelum</groupId>
 	<artifactId>restfulie</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0.beta4</version>
+	<version>1.0.0.beta5-SNAPSHOT</version>
 	<name>restfulie-java-client</name>
 	<url>http://restfulie.caelum.com.br</url>
 
-    <distributionManagement>
-        <repository>
-            <id>mvn-repository</id>
-            <url>scp://caelum.com.br/home/mavensync/repo</url>
-        </repository>
-    </distributionManagement>
+    <parent>
+            <groupId>org.sonatype.oss</groupId>
+            <artifactId>oss-parent</artifactId>
+            <version>3</version>
+    </parent>
+
+	<scm>
+		<url>http://github.com/caelum/restfulie-java</url>
+                <connection>scm:git:git://github.com/caelum/restfulie-java</connection>
+    <developerConnection>scm:git:git@github.com:caelum/restfulie-java.git</developerConnection>
+	</scm>
 
 	<dependencies>
 		<dependency>
