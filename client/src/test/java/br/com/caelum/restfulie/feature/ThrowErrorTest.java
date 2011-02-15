@@ -1,6 +1,5 @@
 package br.com.caelum.restfulie.feature;
 
-import static br.com.caelum.restfulie.feature.Features.retryWhenUnavaiable;
 import static br.com.caelum.restfulie.feature.Features.throwError;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
