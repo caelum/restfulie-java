@@ -7,6 +7,8 @@ import java.util.Map;
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.feature.FollowRedirects;
+import br.com.caelum.restfulie.feature.RequestFeature;
+import br.com.caelum.restfulie.feature.ResponseFeature;
 import br.com.caelum.restfulie.feature.RetryWhenUnavailable;
 import br.com.caelum.restfulie.feature.ThrowError;
 import br.com.caelum.restfulie.request.RequestStack;
@@ -117,13 +119,12 @@ public class DefaultHttpRequest implements Request {
 		return this.uri;
 	}
 
-	public Request throwError() {
-		this.stack.with(new ThrowError());
+	public Request with(RequestFeature feature) {
+		this.stack.with(feature);
 		return this;
 	}
 
-	public Request retryWhenUnavailable() {
-		this.stack.with(new RetryWhenUnavailable());
+	public Request with(ResponseFeature feature) {
 		return this;
 	}
 

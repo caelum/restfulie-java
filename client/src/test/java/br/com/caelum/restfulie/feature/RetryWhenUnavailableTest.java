@@ -1,5 +1,7 @@
 package br.com.caelum.restfulie.feature;
 
+
+import static br.com.caelum.restfulie.feature.Features.retryWhenUnavaiable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -7,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -55,8 +58,9 @@ public class RetryWhenUnavailableTest {
 		verify(chain, times(1)).next(request, verb, uri, null);
 	}
 	
+	@Ignore
 	public void dslText() {
-		Restfulie.at("aqui").retryWhenUnavailable().get();
+		Restfulie.at("here").with(retryWhenUnavaiable()).get();
 	}
 	
 }

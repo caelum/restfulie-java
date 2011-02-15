@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.feature.RequestFeature;
+import br.com.caelum.restfulie.feature.ResponseFeature;
 
 /**
  * An http request. Defaults verb to GET.
@@ -62,14 +64,12 @@ public interface Request {
 	URI getURI();
 
 	/**
-	 * Add feature ThrowError on the ResponseStack
+	 * Add feature to  RequestStack
 	 */
-	Request throwError();
-
-
+	Request with(RequestFeature feature);
 	/**
-	 * Add feature RetryWhenUnavailable on the RequestStack
+	 * Add feature to the ResponseStack
 	 */
-	Request retryWhenUnavailable();
-
+	Request with(ResponseFeature feature);
+	
 }

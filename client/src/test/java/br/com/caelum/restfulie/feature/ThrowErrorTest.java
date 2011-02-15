@@ -1,14 +1,18 @@
 package br.com.caelum.restfulie.feature;
 
+import static br.com.caelum.restfulie.feature.Features.retryWhenUnavaiable;
+import static br.com.caelum.restfulie.feature.Features.throwError;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.restfulie.Response;
+import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.http.Request;
 import br.com.caelum.restfulie.http.error.BadRequestException;
 import br.com.caelum.restfulie.http.error.ClientException;
@@ -327,6 +331,11 @@ public class ThrowErrorTest {
 
 		//When
 		new ThrowError().process(chain, response);
+	}
+	
+	@Ignore
+	public void dslText() {
+		Restfulie.at("here").with(throwError()).get();
 	}
 
 }
