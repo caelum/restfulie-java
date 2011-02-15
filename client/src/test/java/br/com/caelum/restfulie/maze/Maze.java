@@ -8,6 +8,10 @@ import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.Restfulie;
 import br.com.caelum.restfulie.http.Headers;
 
+/**
+ * 
+ * @author jose donizetti
+ */
 public class Maze {
 
 	public static void main(String[] args) {
