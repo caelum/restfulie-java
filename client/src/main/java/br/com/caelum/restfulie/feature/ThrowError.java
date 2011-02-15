@@ -17,66 +17,85 @@ import br.com.caelum.restfulie.http.error.UnauthorizedException;
 import br.com.caelum.restfulie.http.error.UnknowCodeException;
 import br.com.caelum.restfulie.request.ResponseChain;
 
+/**
+ * Instead of returning the response throwns an exception.
+ * 
+ * @author Jose Donizetti
+ */
 public class ThrowError implements ResponseFeature {
 
 	public Response process(ResponseChain responseChain, Response response) {
 		int code = response.getCode();
-		
+
 		if (code >= 100 && code <= 299) {
 			return responseChain.next(response);
 		}
 
 		// 300 range
 		if (code >= 300 && code <= 399) {
-			throw new RedicetionException("Http erro when invoking blah");
+			throw new RedicetionException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 400) {
-			throw new BadRequestException("Http erro when invoking blah");
+			throw new BadRequestException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 401) {
-			throw new UnauthorizedException("Http erro when invoking blah");
+			throw new UnauthorizedException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 403) {
-			throw new ForbiddenException("Http erro when invoking blah");
+			throw new ForbiddenException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 404) {
-			throw new NotFoundException("Http erro when invoking blah");
+			throw new NotFoundException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 405) {
-			throw new MethodNotAllowedException("Http erro when invoking blah");
+			throw new MethodNotAllowedException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 407) {
-			throw new ProxyAuthenticationRequiredException("Http erro when invoking blah");
+			throw new ProxyAuthenticationRequiredException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 409) {
-			throw new ConflictException("Http erro when invoking blah");
+			throw new ConflictException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 410) {
-			throw new GoneException("Http erro when invoking blah");
+			throw new GoneException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 412) {
-			throw new PreconditionFailedException("Http erro when invoking blah");
+			throw new PreconditionFailedException("Http error " + code
+					+ " when executing request");
 		}
 
-		if (code == 402 || code == 406 || code == 408 || code == 411 || (code >= 413 && code <= 499)) {
-			throw new ClientException("Http erro when invoking blah");
+		if (code == 402 || code == 406 || code == 408 || code == 411
+				|| (code >= 413 && code <= 499)) {
+			throw new ClientException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 501) {
-			throw new NotImplementedException("Http erro when invoking blah");
+			throw new NotImplementedException("Http error " + code
+					+ " when executing request");
 		}
 
 		if (code == 500 || (code >= 502 && code <= 599)) {
-			throw new ServerException("Http erro when invoking blah");
+			throw new ServerException("Http error " + code
+					+ " when executing request");
 		}
 
 		throw new UnknowCodeException("http erro");

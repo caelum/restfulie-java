@@ -86,7 +86,7 @@ public class JavaNetResponse implements Response {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getResource() throws IOException {
+	public <T> T getResource() {
 		String contentType = getContentType();
 		String content = getContent();
 		return (T) client.getMediaTypes().forContentType(contentType).unmarshal(content, client);

@@ -9,9 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -52,28 +50,7 @@ public class ApacheHeadersTest {
 	private Header[] headers()
 	{
 		return new Header[]{
-			new Header() {
-			
-				@Override
-				public String getValue() { return "text/html"; }
-					
-				@Override
-				public String getName() { return "Content-Type"; }
-					
-				@Override
-				public HeaderElement[] getElements() throws ParseException { return null; }
-			},
-			new Header() {
-					
-				@Override
-				public String getValue() { return "text/xml"; }
-					
-				@Override
-				public String getName() { return "Content-Type"; }
-					
-				@Override
-				public HeaderElement[] getElements() throws ParseException { return null; }
-				}
+			new ContentTypeHeader("text/html"), new ContentTypeHeader("text/xml")
 		};
 	}
 	
@@ -113,5 +90,5 @@ public class ApacheHeadersTest {
 		//Then
 		assertThat(link.getHref(), is(equalTo("http://amundsen.com/examples/mazes/2d/five-by-five/0:west")));
 		assertThat(link.getRel(), is(equalTo("west")));
-	}
+	};
 }
