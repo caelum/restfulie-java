@@ -5,6 +5,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtNewMethod;
+import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 import br.com.caelum.restfulie.Resource;
 
@@ -12,6 +13,9 @@ public class Enhancer {
 
 	public <T> Class enhanceResource(Class<T> originalType) {
 		ClassPool pool = ClassPool.getDefault();
+		if (pool.find(Enhancer.class.getName()) == null) {
+			pool.appendClassPath(new LoaderClassPath(getClass().getClassLoader()));
+		}
 		try {
 			// TODO extract this enhancement to an interface and test it appart
 			CtClass newType =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
