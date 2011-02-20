@@ -27,7 +27,7 @@ public class ClientTest {
 	public void setUp() {
 		restfulie = Restfulie.custom();
 		XmlMediaType mediaType = new XmlMediaType().withTypes(SearchDescription.class, Url.class, Tags.class,
-				Products.class, Product.class, Order.class, Item.class, Payment.class);
+				Product.class, Order.class, Item.class, Payment.class);
 		mediaType.withCollectionName("products");
 		restfulie.getMediaTypes().register(mediaType);
 	}
@@ -101,7 +101,7 @@ public class ClientTest {
 		response = resource(order).getLink("payment").follow().handling("application/xml").post(payment);
 		return response;
 	}
-	
+
 	@Ignore
 	public void shouldTryAndPayForIt() {
 		Response response = search("20", 1);
@@ -112,67 +112,66 @@ public class ClientTest {
 
 		response = resource(products).getLink("order").follow().handling("application/xml")
 				.post(newOrder("Av. Princesa Isabel 350, Copacabana, Rio de Janeiro"));
-		
+
 		Order order = response.getResource();
 
 		response = resource(order).getLink("self").follow().handling("application/xml").put(orderParam);
 		response = pay(response);
-		
+
 		order = response.getResource();
-		
-		response = waitPaymentSucesse(1,response);
+
+		response = waitPaymentSucesse(1, response);
 		order = response.getResource();
-		
-		assertThat(order.getState(),is(equalTo("paid")));
+
+		assertThat(order.getState(), is(equalTo("paid")));
 
 	}
 
+	// def wait_payment_success(attempts, result)
+	//
+	// results = search("20")
+	//
+	// results.resource.products.each do |product|
+	//
+	// result.order.state = w"paid"
+	// response =
+	// results.resource.products.links.order.follow.post(result.order)
+	//
+	// puts "Checking order status at #{result.order.links.self.href}"
+	// end
+	//
+	// if result.order.state == "unpaid" && attempts>0
+	// puts
+	// "Ugh! Payment rejected! Get some credits my boy... I am trying it again."
+	// result = pay(result)
+	// wait_payment_success(attempts-1, result)
+	// else
+	// result
+	// end
+	// end
 
-//    def wait_payment_success(attempts, result)
-//      
-//      results = search("20")
-//
-//      results.resource.products.each do |product|
-//
-//        result.order.state = w"paid"
-//        response = results.resource.products.links.order.follow.post(result.order)
-//
-//        puts "Checking order status at #{result.order.links.self.href}"
-//      end
-//
-//      if result.order.state == "unpaid" && attempts>0
-//        puts "Ugh! Payment rejected! Get some credits my boy... I am trying it again."
-//        result = pay(result)
-//        wait_payment_success(attempts-1, result)
-//      else
-//        result
-//      end
-//    end
-	
 	private Response waitPaymentSucesse(int attempts, Response otherResponse) {
-		Response response = search("20",1);
-		
+		Response response = search("20", 1);
+
 		List<Product> products = response.getResource();
-		
-		
+
 		Order order = otherResponse.getResource();
-		for(Product product : products	) {
+		for (Product product : products) {
 			order.setState("paid");
-			
+
 			Order anotherOrder = response.getResource();
 			resource(anotherOrder.getProduct()).getLink("order").follow().post(order);
-			
+
 			System.out.println("Checking order status at " + resource(order).getLink("self").getHref());
-			
+
 		}
-		
-		
+
 		if (order.getState().equals("unpaid") && attempts > 0) {
 			System.out.println("Ugh! Payment reject! Get some credits my boy... I am trying it again.");
 			response = pay(otherResponse);
 			waitPaymentSucesse(attempts - 1, response);
 		}
-		
+
 		return response;
 	}
 
