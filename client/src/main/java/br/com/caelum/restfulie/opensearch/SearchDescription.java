@@ -78,6 +78,15 @@ public class SearchDescription {
 		this.tags = tags;
 	}
 
+	public Url use(String string) {
+		for(Url url : urls) {
+			if(url.getType().equals(string)) {
+				return url;
+			}
+		}
+		throw new RuntimeException("no such url");
+	}
+
 
 
 }

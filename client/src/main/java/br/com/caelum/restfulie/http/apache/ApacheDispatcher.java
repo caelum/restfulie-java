@@ -24,6 +24,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.jruby.RubyProcess.Sys;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -75,7 +76,9 @@ public class ApacheDispatcher implements RequestDispatcher {
 			
 			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
 			add(verb, headers);
-			verb.setEntity(new StringEntity(writer.getBuffer().toString()));
+			String string = writer.getBuffer().toString();
+			System.out.println(string);
+			verb.setEntity(new StringEntity(string));
 			return execute(details, verb);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to marshal entity.", e);

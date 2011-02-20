@@ -18,17 +18,20 @@ import br.com.caelum.restfulie.http.DefaultRelation;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
 
 /**
  * A default implemenation for xml media type based on XStream.<br/>
- * Extend it and override the getXStream method to configure the xstream instance with extra parameters.
- *
+ * Extend it and override the getXStream method to configure the xstream
+ * instance with extra parameters.
+ * 
  * @author guilherme silveira
  */
 @SuppressWarnings("unchecked")
 public class XmlMediaType implements MediaType {
 
-	private final List<String> types = Arrays.asList("application/xml", "text/xml", "xml");
+	private final List<String> types = Arrays.asList("application/xml", "text/xml", "xml",
+			"application/opensearchdescription+xml");
 
 	private final XStreamHelper helper;
 
@@ -36,14 +39,18 @@ public class XmlMediaType implements MediaType {
 
 	private List<Class> typesToEnhance = new ArrayList<Class>();
 
+	private List<String> names = new ArrayList<String>();
+
 	public XmlMediaType() {
 		QNameMap qnameMap = new QNameMap();
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
 		qnameMap.registerMapping(qname, DefaultRelation.class);
-		helper = new XStreamHelper(new StaxDriver(qnameMap));
+		// we need the replacer because
+		// xstream replaces an _ with __ (two underscore) more information at
+		// http://xstream.codehaus.org/faq.html#XML_double_underscores
+		XmlFriendlyReplacer replacer = new XmlFriendlyReplacer("$", "_");
+		helper = new XStreamHelper(new StaxDriver(qnameMap, replacer));
 	}
-
-
 
 	/**
 	 * Allows xstream further configuration.
@@ -62,15 +69,16 @@ public class XmlMediaType implements MediaType {
 
 	private Object getPayload(Object payload) {
 		if (payload instanceof Collection) {
-			return new ArrayList((Collection)payload);
+			return new ArrayList((Collection) payload);
 		} else {
 			return payload;
 		}
 	}
 
 	public <T> T unmarshal(String content, RestClient client) {
-		getXstream(client).registerConverter(new DefaultLinkConverter(client));
-		return (T) getXstream(client).fromXML(content);
+		XStream xstream = getXstream(client);
+		xstream.registerConverter(new DefaultLinkConverter(client));
+		return (T) xstream.fromXML(content);
 	}
 
 	private List<Class> getTypesToEnhance() {
@@ -78,7 +86,6 @@ public class XmlMediaType implements MediaType {
 	}
 
 	private List<String> getCollectionNames(RestClient client) {
-		List<String> names = new ArrayList<String>();
 		for (Class type : typesToEnhance) {
 			String plural = Noun.pluralOf(type.getSimpleName(), client.inflectionRules());
 			names.add(Character.toLowerCase(plural.charAt(0)) + plural.substring(1));
@@ -86,7 +93,7 @@ public class XmlMediaType implements MediaType {
 		return names;
 	}
 
-	public XmlMediaType withTypes(Class...classes) {
+	public XmlMediaType withTypes(Class... classes) {
 		this.typesToEnhance.addAll(Arrays.asList(classes));
 		return this;
 	}
@@ -97,6 +104,12 @@ public class XmlMediaType implements MediaType {
 			configure(xstream);
 		}
 		return xstream;
+	}
+
+	public void withCollectionName(String... names) {
+		for (String name : names) {
+			this.names.add(name);
+		}
 	}
 
 }

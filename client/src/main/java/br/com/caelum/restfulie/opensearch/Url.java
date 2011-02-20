@@ -17,6 +17,8 @@ public class Url {
 	@XStreamAsAttribute
 	@XStreamAlias("template")
 	private String template;
+	private int page;
+	private String term = "";
 
 	public String getType() {
 		return type;
@@ -34,4 +36,21 @@ public class Url {
 		this.template = template;
 	}
 
+	public Url search(String term) {
+		this.term = term;
+		return this;
+	}
+	
+	public Url atPage(int page) {
+		this.page = page;
+		return this;
+	}
+
+	public String getUri() {
+		 String url = template.replace("{searchTerms}", term);  
+		 url = url.replace("{startPage?}", page+"");  
+		return url;
+	}
+
 }
+	
