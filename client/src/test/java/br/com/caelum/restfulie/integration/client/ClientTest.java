@@ -43,8 +43,7 @@ public class ClientTest {
 	public void shouldBeAbleToCreateAnEmptyOrder() {
 		Response response = search("20", 1);
 		List<Product> products = response.getResource();
-		response = resource(products).getLink("order").follow().handling("application/xml")
-				.post(newOrder("Av. Princesa Isabel 350, Copacabana, Rio de Janeiro"));
+		response = resource(products).getLink("order").follow().accept("application/xml").post(newOrder("Av. Princesa Isabel 350, Copacabana, Rio de Janeiro"));
 		Order order = response.getResource();
 		assertThat(order.getAddress(), is(equalTo("Av. Princesa Isabel 350, Copacabana, Rio de Janeiro")));
 	}
@@ -60,6 +59,8 @@ public class ClientTest {
 		Order orderParam = newOrder(product.get(0).getId());
 
 		Order order = response.getResource();
+		
+		System.out.println(resource(order).getLink("self").getType());
 		response = resource(order).getLink("self").follow().handling("application/xml").put(orderParam);
 
 		order = response.getResource();

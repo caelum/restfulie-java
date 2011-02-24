@@ -32,12 +32,14 @@ public class DefaultRelation implements Link {
 
 	private String rel;
 	private String href;
+	private String type;
 	private final RestClient client;
 
-	public DefaultRelation(String rel, String href, RestClient client) {
+	public DefaultRelation(String rel, String href, String type,  RestClient client) {
 		this.rel = rel;
 		this.href = href;
 		this.client = client;
+		this.type = type;
 	}
 
 	public String getHref() {
@@ -48,12 +50,16 @@ public class DefaultRelation implements Link {
 		return rel;
 	}
 
+	public String getType() {
+		return type;
+	}
+	
 	public Request follow() {
 		if (href.startsWith("/")) {
 			URI uri = client.lastURI();
-			return client.at(extractHost(uri) + href);
+			return client.at(extractHost(uri) + href).as(type);
 		}
-		return client.at(href);
+		return client.at(href).as(type);
 	}
 
 	private String extractHost(URI uri) {

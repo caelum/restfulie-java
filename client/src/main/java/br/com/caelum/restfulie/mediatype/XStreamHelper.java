@@ -111,6 +111,7 @@ public class XStreamHelper {
 		};
 		xstream.useAttributeFor(DefaultRelation.class, "rel");
 		xstream.useAttributeFor(DefaultRelation.class, "href");
+		xstream.useAttributeFor(DefaultRelation.class, "type");
 
 		for (Class type : typesToEnhance) {
 			realTypes.put(type, new Enhancer().enhanceResource(type));

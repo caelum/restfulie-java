@@ -12,6 +12,8 @@ public interface Link {
 	String getHref();
 
 	String getRel();
+	
+	String getType();
 
 	Request follow();
 }

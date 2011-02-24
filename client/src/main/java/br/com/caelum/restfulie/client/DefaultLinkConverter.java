@@ -50,7 +50,8 @@ public class DefaultLinkConverter implements Converter {
 			UnmarshallingContext context) {
 		String rel = reader.getAttribute("rel");
 		String href = reader.getAttribute("href");
-		return new DefaultRelation(rel, href, client);
+		String type = reader.getAttribute("type");
+		return new DefaultRelation(rel, href, type, client);
 	}
 
 	public boolean canConvert(Class type) {
