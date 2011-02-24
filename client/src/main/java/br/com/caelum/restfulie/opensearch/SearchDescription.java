@@ -3,10 +3,7 @@ package br.com.caelum.restfulie.opensearch;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.caelum.restfulie.opensearch.conveter.TagsConveter;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 /**
@@ -19,11 +16,11 @@ public class SearchDescription {
 
 	@XStreamAlias("ShortName")
 	private String shortName;
+	
 	@XStreamAlias("Description")
 	private String description;
 	
 	@XStreamAlias("Tags")
-	@XStreamConverter(TagsConveter.class)
 	private Tags tags;
 	
 	@XStreamAlias("Contact")
@@ -31,12 +28,12 @@ public class SearchDescription {
 	
 	@XStreamImplicit(itemFieldName="Url")
 	private List<Url> urls;
-
-	public SearchDescription() {
-		urls = new ArrayList<Url>();
-		tags = new Tags();
-	}
 	
+	public SearchDescription() {
+		tags = new Tags();
+		urls = new ArrayList<Url>();
+	}
+
 	public List<Url> getUrls() {
 		return urls;
 	}
@@ -86,7 +83,6 @@ public class SearchDescription {
 		}
 		throw new RuntimeException("no such url");
 	}
-
 
 
 }

@@ -14,6 +14,7 @@ import org.jvnet.inflector.Noun;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.client.DefaultLinkConverter;
 import br.com.caelum.restfulie.http.DefaultRelation;
+import br.com.caelum.restfulie.opensearch.conveter.DefaultUrlConverter;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.QNameMap;
@@ -78,6 +79,7 @@ public class XmlMediaType implements MediaType {
 	public <T> T unmarshal(String content, RestClient client) {
 		XStream xstream = getXstream(client);
 		xstream.registerConverter(new DefaultLinkConverter(client));
+		xstream.registerConverter(new DefaultUrlConverter(client));
 		return (T) xstream.fromXML(content);
 	}
 

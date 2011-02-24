@@ -1,5 +1,8 @@
 package br.com.caelum.restfulie.opensearch;
 
+
+import static br.com.caelum.restfulie.opensearch.Url.page;
+import static br.com.caelum.restfulie.opensearch.Url.queryFor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -7,6 +10,11 @@ import static org.hamcrest.Matchers.is;
 import java.io.StringReader;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import br.com.caelum.restfulie.RestClient;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -16,7 +24,12 @@ import com.thoughtworks.xstream.XStream;
  * @author jose donizetti
  * 
  */
+
+@RunWith(MockitoJUnitRunner.class)
 public class UrlTest {
+	
+	@Mock
+	private RestClient restfulie;
 
 	@Test
 	public void shouldConvertWithoutAnyUrl() {
@@ -60,19 +73,15 @@ public class UrlTest {
 
 	@Test
 	public void shouldReplaceSearchTerms() {
-		Url url = new Url();
-		url.setTemplate("http://localhost:3000/products?q={searchTerms}");
-		url.setType("application/json");
-		url.search("doni");
-		assertThat(url.getUri(), is(equalTo("http://localhost:3000/products?q=doni")));
+		Url url = new Url("application/json","http://localhost:3000/products?q={searchTerms}",restfulie);
+		url.with(queryFor("doni"));
+		assertThat(url.toUri(), is(equalTo("http://localhost:3000/products?q=doni")));
 	}
 	
 	@Test
 	public void shouldReplaceStartPage() {
-		Url url = new Url();
-		url.setTemplate("http://localhost:3000/products?pw={startPage?}");
-		url.setType("application/json");
-		url.atPage(1);
-		assertThat(url.getUri(), is(equalTo("http://localhost:3000/products?pw=1")));
+		Url url = new Url("application/json","http://localhost:3000/products?pw={startPage?}",restfulie);
+		url.with(queryFor("")).and(page(1));
+		assertThat(url.toUri(), is(equalTo("http://localhost:3000/products?pw=1")));
 	}
 }
