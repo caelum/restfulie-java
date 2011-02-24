@@ -1,9 +1,11 @@
 package br.com.caelum.restfulie.http.javanet;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import br.com.caelum.restfulie.Link;
+import br.com.caelum.restfulie.http.Header;
 import br.com.caelum.restfulie.http.Headers;
 
 public class MapHeaders implements Headers{
@@ -29,11 +31,16 @@ public class MapHeaders implements Headers{
 		return get(key).get(0);
 	}
 
-	public List<Link> links() {
+	public List<Link> getLinks() {
 		return null;
 	}
 
-	public Link link(String rel) {
+	public Link getLink(String rel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Iterator<Header> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
