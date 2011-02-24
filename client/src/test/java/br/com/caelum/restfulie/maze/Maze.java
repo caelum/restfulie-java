@@ -23,7 +23,7 @@ public class Maze {
 		Link link = null;
 		int steps = 0;
 		
-		while(!(headers.link("exit") != null)) {
+		while(!(headers.getLink("exit") != null)) {
 			
 			link = find(visited,"start north south east west",headers);
 			
@@ -48,7 +48,7 @@ public class Maze {
 		String[] directions = string.split("\\s++");
 		
 		for(String direction : directions) {
-			Link link = headers.link(direction);
+			Link link = headers.getLink(direction);
 			if((link != null) && (!visited.contains(link.getHref()))){
 				return link;
 			}
