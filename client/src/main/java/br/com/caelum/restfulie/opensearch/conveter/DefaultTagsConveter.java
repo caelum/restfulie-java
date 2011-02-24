@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class TagsConveter implements Converter {
+public class DefaultTagsConveter implements Converter {
 
 	@SuppressWarnings("rawtypes") 
 	public boolean canConvert(Class clazz) {
@@ -26,7 +26,6 @@ public class TagsConveter implements Converter {
 		if(values.equals("")) {
 			return tags;
 		}
-		
 		
 		for (String value : values.trim().split("\\s+")) {
 			tags.add(value);
