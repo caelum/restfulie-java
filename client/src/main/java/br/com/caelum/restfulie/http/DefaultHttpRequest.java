@@ -9,8 +9,6 @@ import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.feature.FollowRedirects;
 import br.com.caelum.restfulie.feature.RequestFeature;
 import br.com.caelum.restfulie.feature.ResponseFeature;
-import br.com.caelum.restfulie.feature.RetryWhenUnavailable;
-import br.com.caelum.restfulie.feature.ThrowError;
 import br.com.caelum.restfulie.request.RequestStack;
 
 /**
