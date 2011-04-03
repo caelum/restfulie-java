@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.jruby.RubyProcess.Sys;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
