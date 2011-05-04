@@ -76,7 +76,6 @@ public class ApacheDispatcher implements RequestDispatcher {
 			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
 			add(verb, headers);
 			String string = writer.getBuffer().toString();
-			System.out.println(string);
 			verb.setEntity(new StringEntity(string));
 			return execute(details, verb);
 		} catch (IOException e) {
