@@ -4,9 +4,9 @@ import java.util.List;
 
 import br.com.caelum.restfulie.Link;
 
-public interface Headers {
+public interface Headers extends Iterable<Header> {
 
-	public abstract String getMain(String string);
+	String getMain(String string);
 
 	/**
 	 * Returns a list with all values for this header
@@ -21,11 +21,11 @@ public interface Headers {
 	/**
 	 * Returns all links on of this header
 	 */
-	public abstract List<Link> links();
-	
+	List<Link> links();
+
 	/**
 	 * Returns a link given its rel
 	 */
-	public abstract Link link(String rel);
+	Link link(String rel);
 
 }

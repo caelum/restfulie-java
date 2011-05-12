@@ -1,10 +1,15 @@
 package br.com.caelum.restfulie.http.javanet;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import br.com.caelum.restfulie.Link;
+import br.com.caelum.restfulie.http.Header;
 import br.com.caelum.restfulie.http.Headers;
+import br.com.caelum.restfulie.http.SimpleHeader;
 
 public class MapHeaders implements Headers{
 
@@ -38,4 +43,14 @@ public class MapHeaders implements Headers{
 		return null;
 	}
 
+	public Iterator<Header> iterator() {
+		List<Header> headers = new ArrayList<Header>();
+		for (Entry<String, List<String>> header : fields.entrySet()) {
+			List<String> values = header.getValue();
+			for (String value : values) {
+				headers.add(new SimpleHeader(header.getKey(), value));
+			}
+		}
+		return headers.iterator();
+	}
 }

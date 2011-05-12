@@ -1,6 +1,7 @@
 package br.com.caelum.restfulie.http.apache;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -10,6 +11,7 @@ import br.com.caelum.restfulie.Link;
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.http.DefaultRelation;
 import br.com.caelum.restfulie.http.Headers;
+import br.com.caelum.restfulie.http.SimpleHeader;
 
 public class ApacheHeaders implements Headers {
 	private final HttpResponse response;
@@ -64,4 +66,12 @@ public class ApacheHeaders implements Headers {
 		return null;
 	}
 
+	public Iterator<br.com.caelum.restfulie.http.Header> iterator() {
+		Header[] headers = response.getAllHeaders();
+		List<br.com.caelum.restfulie.http.Header> list = new ArrayList<br.com.caelum.restfulie.http.Header>();
+		for (Header header : headers) {
+			list.add(new SimpleHeader(header.getName(), header.getValue()));
+		}
+		return list.iterator();
+	}
 }

@@ -24,7 +24,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.jruby.RubyProcess.Sys;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -73,11 +72,10 @@ public class ApacheDispatcher implements RequestDispatcher {
 		try {
 			handlerFor(type).marshal(payload, writer, client);
 			writer.flush();
-			
+
 			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
 			add(verb, headers);
 			String string = writer.getBuffer().toString();
-			System.out.println(string);
 			verb.setEntity(new StringEntity(string));
 			return execute(details, verb);
 		} catch (IOException e) {

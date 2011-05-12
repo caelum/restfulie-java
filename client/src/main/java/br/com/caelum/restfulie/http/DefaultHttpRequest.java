@@ -6,11 +6,8 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
-import br.com.caelum.restfulie.feature.FollowRedirects;
 import br.com.caelum.restfulie.feature.RequestFeature;
 import br.com.caelum.restfulie.feature.ResponseFeature;
-import br.com.caelum.restfulie.feature.RetryWhenUnavailable;
-import br.com.caelum.restfulie.feature.ThrowError;
 import br.com.caelum.restfulie.request.RequestStack;
 
 /**
@@ -107,7 +104,7 @@ public class DefaultHttpRequest implements Request {
 
 	private RequestStack createStack() {
 //		stack.with(new CurlLogging());
-		stack.with(new FollowRedirects(client));
+//		stack.with(new FollowRedirects(client));
 		return stack;
 	}
 
