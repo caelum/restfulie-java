@@ -74,6 +74,16 @@ public class DefaultRestClient implements RestClient {
 	 */
 	public Request at(URI uri) {
 		lastURI = uri;
+		return createRequestFor(uri);
+	}
+
+	/**
+	 * Override this method to use your own Request object
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	protected Request createRequestFor(URI uri) {
 		return new DefaultHttpRequest(uri, this);
 	}
 

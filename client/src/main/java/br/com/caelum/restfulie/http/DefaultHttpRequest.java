@@ -103,8 +103,12 @@ public class DefaultHttpRequest implements Request {
 		return stack.process(this, verb, uri, null);
 	}
 
-	private RequestStack createStack() {
-//		stack.with(new CurlLogging());
+	/**
+	 * override in order to provide your custom default stack
+	 * 
+	 * @return
+	 */
+	protected RequestStack createStack() {
 		stack.with(new FollowRedirects(client));
 		return stack;
 	}
