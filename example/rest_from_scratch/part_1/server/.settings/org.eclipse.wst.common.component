@@ -5,6 +5,6 @@
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
 <property name="java-output-path" value="/server-restfulie-java-example/build/classes"/>
-<property name="context-root" value="/restfulie"/>
+        <property name="context-root" value="/"/>
 </wb-module>
 </project-modules>
