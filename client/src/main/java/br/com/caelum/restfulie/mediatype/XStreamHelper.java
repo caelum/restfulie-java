@@ -7,6 +7,8 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.http.DefaultRelation;
+import br.com.caelum.restfulie.relation.CachedEnhancer;
+import br.com.caelum.restfulie.relation.DefaultEnhancer;
 import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
@@ -20,32 +22,35 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 @SuppressWarnings("unchecked")
 public class XStreamHelper {
 
+	private Enhancer cachedEnhancer = new CachedEnhancer(new DefaultEnhancer());
+
 	private final class EnhancedLookupProvider extends
 			ReflectionProviderWrapper {
 		private EnhancedLookupProvider(ReflectionProvider wrapper) {
 			super(wrapper);
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public Object newInstance(Class originalType) {
 			if (realTypes.containsKey(originalType)) {
 				return super.newInstance(realTypes.get(originalType));
 			} else if (!Modifier.isFinal(originalType.getModifiers())) {
 				// enhance now!
-				Class enhanced = new Enhancer().enhanceResource(originalType);
+				Class enhanced = cachedEnhancer.enhanceResource(originalType);
 				return super.newInstance(enhanced);
 			}
 			return super.newInstance(originalType);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private class LinkSupportWrapper extends MapperWrapper {
 
 		public LinkSupportWrapper(Mapper wrapped) {
 			super(wrapped);
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public String getFieldNameForItemTypeAndName(Class definedIn,
 				Class itemType, String itemFieldName) {
@@ -57,6 +62,7 @@ public class XStreamHelper {
 					itemFieldName);
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public String serializedClass(Class type) {
 			if (Resource.class.isAssignableFrom(type)) {
@@ -65,6 +71,7 @@ public class XStreamHelper {
 			return super.serializedClass(type);
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public boolean shouldSerializeMember(Class definedIn, String fieldName) {
 			if (Resource.class.isAssignableFrom(definedIn) && fieldName.equals("link")) {
@@ -77,6 +84,7 @@ public class XStreamHelper {
 
 	private final HierarchicalStreamDriver driver;
 
+	@SuppressWarnings("rawtypes")
 	private final Map<Class, Class> realTypes = new HashMap<Class, Class>();
 
 	public XStreamHelper(HierarchicalStreamDriver driver) {
@@ -99,6 +107,7 @@ public class XStreamHelper {
 	 * @param list
 	 * @return an xstream instance with support for link enhancement.
 	 */
+	@SuppressWarnings("rawtypes")
 	public XStream getXStream(List<Class> typesToEnhance, List<String> collectionNames) {
 		ReflectionProvider provider = getProvider();
 
@@ -114,11 +123,11 @@ public class XStreamHelper {
 		xstream.useAttributeFor(DefaultRelation.class, "type");
 
 		for (Class type : typesToEnhance) {
-			realTypes.put(type, new Enhancer().enhanceResource(type));
+			realTypes.put(type, cachedEnhancer.enhanceResource(type));
 			xstream.processAnnotations(type);
 		}
 
-		Class enhancedType = new Enhancer().enhanceResource(EnhancedList.class);
+		Class enhancedType = cachedEnhancer.enhanceResource(EnhancedList.class);
 		realTypes.put(EnhancedList.class, enhancedType);
 
 		for (String name : collectionNames) {
