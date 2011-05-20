@@ -25,7 +25,7 @@ public class DefaultHttpRequest implements Request {
 
 	private final RestClient client;
 
-	private RequestStack stack;
+	protected RequestStack stack;
 
 	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
@@ -105,7 +105,7 @@ public class DefaultHttpRequest implements Request {
 
 	/**
 	 * override in order to provide your custom default stack
-	 * 
+	 *
 	 * @return
 	 */
 	protected RequestStack createStack() {
