@@ -17,8 +17,18 @@
 
 package br.com.caelum.restfulie.http;
 
+import br.com.caelum.restfulie.Response;
+
 public enum HttpMethod {
 	
-	GET, POST, DELETE, PATCH, PUT, OPTIONS, TRACE
+	GET() {
+        public Response execute(Request request) {
+            return request.get();
+        }
+	}, POST, DELETE, PATCH, PUT, OPTIONS, TRACE;
+
+    public Response execute(Request request) {
+        return this.execute(request);
+    }
 
 }

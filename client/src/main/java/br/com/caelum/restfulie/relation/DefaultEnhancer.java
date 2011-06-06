@@ -19,7 +19,7 @@ public class DefaultEnhancer implements Enhancer {
 		}
 		try {
 			// TODO extract this enhancement to an interface and test it appart
-			CtClass newType =   pool.makeClass("br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis());
+			CtClass newType =   pool.makeClass(generateNewUniqueClassName(originalType));
 			newType.setSuperclass(pool.get(originalType.getName()));
 			newType.addInterface(pool.get(Resource.class.getName()));
 			enhanceLinks(newType);
@@ -30,6 +30,10 @@ public class DefaultEnhancer implements Enhancer {
 			throw new IllegalStateException("Unable to extend type " + originalType.getName(), e);
 		}
 	}
+
+    private <T> String generateNewUniqueClassName(Class<T> originalType) {
+        return "br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis() + Math.round(Math.random() * 100000);
+    }
 
 	private void enhanceLinks(CtClass newType) throws CannotCompileException {
 		CtField field = CtField.make("public java.util.List link = new java.util.ArrayList();", newType);

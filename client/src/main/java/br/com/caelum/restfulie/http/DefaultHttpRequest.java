@@ -3,6 +3,9 @@ package br.com.caelum.restfulie.http;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -26,6 +29,8 @@ public class DefaultHttpRequest implements Request {
 	private final RestClient client;
 
 	protected RequestStack stack;
+
+    private static final ExecutorService ES      = Executors.newCachedThreadPool();
 
 	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
@@ -56,6 +61,12 @@ public class DefaultHttpRequest implements Request {
 	public Response get() {
 		return retrieve("GET");
 	}
+
+    public Future<Response> getAsync(AsynchronousRequest asynchronousRequest) {
+        asynchronousRequest.setHttpMethod(HttpMethod.GET);
+        asynchronousRequest.setRequest(this);
+        return ES.submit(asynchronousRequest);
+    }
 
 	private Response retrieve(String verb) {
 		return using(verb).access();

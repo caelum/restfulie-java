@@ -2,6 +2,7 @@ package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.feature.RequestFeature;
@@ -39,6 +40,8 @@ public interface Request {
 	Request accept(String type);
 
 	Response get();
+
+    Future<Response> getAsync(AsynchronousRequest asynchronousRequest);
 
 	<T> Response post(T object);
 
