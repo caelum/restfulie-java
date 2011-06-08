@@ -20,15 +20,35 @@ package br.com.caelum.restfulie.http;
 import br.com.caelum.restfulie.Response;
 
 public enum HttpMethod {
-	
-	GET() {
-        public Response execute(Request request) {
+
+    PATCH, OPTIONS, TRACE,
+
+    GET() {
+        public Response execute(Request request, Object payload) throws Exception {
             return request.get();
         }
-	}, POST, DELETE, PATCH, PUT, OPTIONS, TRACE;
+    },
 
-    public Response execute(Request request) {
-        return this.execute(request);
+    POST() {
+        public Response execute(Request request, Object payload) throws Exception {
+            return request.post(payload);
+        }
+    },
+
+    DELETE() {
+        public Response execute(Request request, Object payload) throws Exception {
+            return request.delete();
+        }
+    },
+
+    PUT() {
+        public Response execute(Request request, Object payload) throws Exception {
+            return request.put(payload);
+        }
+    };
+
+    public Response execute(Request request, Object payload) throws Exception {
+        return this.execute(request, payload);
     }
 
 }

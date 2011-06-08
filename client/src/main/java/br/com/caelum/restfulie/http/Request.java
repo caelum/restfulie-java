@@ -43,13 +43,19 @@ public interface Request {
 
     Future<Response> getAsync(AsynchronousRequest asynchronousRequest);
 
-	<T> Response post(T object);
+    <T> Response post(T object);
+
+    <T> Future<Response> postAsync(T payload, AsynchronousRequest asynchronousRequest);
 
 	<T> Response put(T object);
+
+    <T> Future<Response> putAsync(T payload, AsynchronousRequest asynchronousRequest);
 
 	<T> Response patch(T object);
 
 	Response delete();
+
+    Future<Response> deleteAsync(AsynchronousRequest asynchronousRequest);
 
 	Response options();
 

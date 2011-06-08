@@ -7,6 +7,20 @@ public abstract class AsynchronousRequest implements Callable<Response> {
 
     private Request request;
     private HttpMethod httpMethod;
+    private Object payload;
+    
+    public AsynchronousRequest setUp(Request newRequest, HttpMethod newHttpMethod) {
+        this.request = newRequest;
+        this.httpMethod = newHttpMethod;
+        return this;
+    }
+    
+    public AsynchronousRequest setUp(Request newRequest, HttpMethod newHttpMethod, Object newPayload) {
+        this.request = newRequest;
+        this.httpMethod = newHttpMethod;
+        this.payload = newPayload;
+        return this;
+    }
 
     public Request getRequest() {
         return request;
@@ -24,14 +38,35 @@ public abstract class AsynchronousRequest implements Callable<Response> {
         this.httpMethod = httpMethod;
     }
 
+    public Object getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
+    }
+
     /**
      * Method to be called when the response comes.
      */
     public abstract void callback(Response response);
 
+    /**
+     * Method to be called when something goes wrong with the request.
+     */
+    public void onError(Exception e) {
+        e.printStackTrace();
+    }
+
     public Response call() {
-        final Response response = getHttpMethod().execute(request);
-        callback(response);
+        Response response = null;
+        try {
+            response = getHttpMethod().execute(request, payload);
+            callback(response);
+        }
+        catch (Exception e) {
+            onError(e);
+        }
         return response;
     }
 

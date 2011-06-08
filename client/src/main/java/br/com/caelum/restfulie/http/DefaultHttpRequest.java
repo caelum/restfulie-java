@@ -63,8 +63,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
     public Future<Response> getAsync(AsynchronousRequest asynchronousRequest) {
-        asynchronousRequest.setHttpMethod(HttpMethod.GET);
-        asynchronousRequest.setRequest(this);
+        asynchronousRequest.setUp(this, HttpMethod.GET);
         return ES.submit(asynchronousRequest);
     }
 
@@ -79,6 +78,11 @@ public class DefaultHttpRequest implements Request {
 	public Response delete() {
 		return retrieve("DELETE");
 	}
+
+    public Future<Response> deleteAsync(AsynchronousRequest asynchronousRequest) {
+        asynchronousRequest.setUp(this, HttpMethod.DELETE);
+        return ES.submit(asynchronousRequest);
+    }
 
 	public Response head() {
 		return retrieve("HEAD");
@@ -96,9 +100,19 @@ public class DefaultHttpRequest implements Request {
 		return sendPayload(object, "POST");
 	}
 
+    public <T> Future<Response> postAsync(T payload, AsynchronousRequest asynchronousRequest) {
+        asynchronousRequest.setUp(this, HttpMethod.POST, payload);
+        return ES.submit(asynchronousRequest);
+    }
+
 	public <T> Response put(T object) {
 		return sendPayload(object, "PUT");
 	}
+
+    public <T> Future<Response> putAsync(T payload, AsynchronousRequest asynchronousRequest) {
+        asynchronousRequest.setUp(this, HttpMethod.PUT, payload);
+        return ES.submit(asynchronousRequest);
+    }
 
 	public Map<String, String> getHeaders() {
 		return headers;
