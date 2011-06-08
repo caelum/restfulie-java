@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import br.com.caelum.restfulie.Response;
@@ -30,12 +29,13 @@ public class DefaultHttpRequest implements Request {
 
 	protected RequestStack stack;
 
-    private static final ExecutorService ES      = Executors.newCachedThreadPool();
+    private final ExecutorService executorService;
 
-	public DefaultHttpRequest(URI uri, RestClient client) {
+	public DefaultHttpRequest(URI uri, RestClient client, ExecutorService executorService) {
 		this.uri = uri;
 		this.client = client;
 		this.stack = new RequestStack(client);
+		this.executorService = executorService;
 	}
 
 	private Response sendPayload(Object payload, String verb) {
@@ -62,9 +62,8 @@ public class DefaultHttpRequest implements Request {
 		return retrieve("GET");
 	}
 
-    public Future<Response> getAsync(AsynchronousRequest asynchronousRequest) {
-        asynchronousRequest.setUp(this, HttpMethod.GET);
-        return ES.submit(asynchronousRequest);
+    public Future<Response> getAsync(RequestCallback requestCallback) {
+        return executorService.submit(new AsynchronousRequest(this, HttpMethod.GET, requestCallback));
     }
 
 	private Response retrieve(String verb) {
@@ -79,9 +78,8 @@ public class DefaultHttpRequest implements Request {
 		return retrieve("DELETE");
 	}
 
-    public Future<Response> deleteAsync(AsynchronousRequest asynchronousRequest) {
-        asynchronousRequest.setUp(this, HttpMethod.DELETE);
-        return ES.submit(asynchronousRequest);
+    public Future<Response> deleteAsync(RequestCallback requestCallback) {
+        return executorService.submit(new AsynchronousRequest(this, HttpMethod.DELETE, requestCallback));
     }
 
 	public Response head() {
@@ -100,18 +98,16 @@ public class DefaultHttpRequest implements Request {
 		return sendPayload(object, "POST");
 	}
 
-    public <T> Future<Response> postAsync(T payload, AsynchronousRequest asynchronousRequest) {
-        asynchronousRequest.setUp(this, HttpMethod.POST, payload);
-        return ES.submit(asynchronousRequest);
+    public <T> Future<Response> postAsync(T payload, RequestCallback requestCallback) {
+        return executorService.submit(new AsynchronousRequest(this, HttpMethod.POST, payload, requestCallback));
     }
 
 	public <T> Response put(T object) {
 		return sendPayload(object, "PUT");
 	}
 
-    public <T> Future<Response> putAsync(T payload, AsynchronousRequest asynchronousRequest) {
-        asynchronousRequest.setUp(this, HttpMethod.PUT, payload);
-        return ES.submit(asynchronousRequest);
+    public <T> Future<Response> putAsync(T payload, RequestCallback requestCallback) {
+        return executorService.submit(new AsynchronousRequest(this, HttpMethod.PUT, payload, requestCallback));
     }
 
 	public Map<String, String> getHeaders() {

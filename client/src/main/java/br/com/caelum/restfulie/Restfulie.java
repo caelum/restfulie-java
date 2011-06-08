@@ -19,6 +19,7 @@ package br.com.caelum.restfulie;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
 
 import br.com.caelum.restfulie.http.DefaultHttpRequest;
 import br.com.caelum.restfulie.http.DefaultRestClient;
@@ -50,7 +51,7 @@ public class Restfulie {
 	 */
 	public static Request at(URI uri) {
 		RestClient client = custom();
-		return new DefaultHttpRequest(uri, client).accept("application/xml");
+		return new DefaultHttpRequest(uri, client, Executors.newCachedThreadPool()).accept("application/xml");
 	}
 
 	/**

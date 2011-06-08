@@ -41,21 +41,21 @@ public interface Request {
 
 	Response get();
 
-    Future<Response> getAsync(AsynchronousRequest asynchronousRequest);
+    Future<Response> getAsync(RequestCallback requestCallback);
 
     <T> Response post(T object);
 
-    <T> Future<Response> postAsync(T payload, AsynchronousRequest asynchronousRequest);
+    <T> Future<Response> postAsync(T payload, RequestCallback requestCallback);
 
 	<T> Response put(T object);
 
-    <T> Future<Response> putAsync(T payload, AsynchronousRequest asynchronousRequest);
+    <T> Future<Response> putAsync(T payload, RequestCallback requestCallback);
 
 	<T> Response patch(T object);
 
 	Response delete();
 
-    Future<Response> deleteAsync(AsynchronousRequest asynchronousRequest);
+    Future<Response> deleteAsync(RequestCallback requestCallback);
 
 	Response options();
 

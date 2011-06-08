@@ -3,69 +3,44 @@ package br.com.caelum.restfulie.http;
 import java.util.concurrent.Callable;
 import br.com.caelum.restfulie.Response;
 
-public abstract class AsynchronousRequest implements Callable<Response> {
+public class AsynchronousRequest implements Callable<Response> {
 
-    private Request request;
-    private HttpMethod httpMethod;
-    private Object payload;
+    private final Request request;
+    private final HttpMethod httpMethod;
+    private final Object payload;
+    private final RequestCallback requestCallback;
     
-    public AsynchronousRequest setUp(Request newRequest, HttpMethod newHttpMethod) {
-        this.request = newRequest;
-        this.httpMethod = newHttpMethod;
-        return this;
+    public AsynchronousRequest(Request request, HttpMethod httpMethod, RequestCallback requestCallback) {
+        this(request, httpMethod, null, requestCallback);
     }
     
-    public AsynchronousRequest setUp(Request newRequest, HttpMethod newHttpMethod, Object newPayload) {
-        this.request = newRequest;
-        this.httpMethod = newHttpMethod;
-        this.payload = newPayload;
-        return this;
+    public AsynchronousRequest(Request request, HttpMethod httpMethod, Object payload, RequestCallback requestCallback) {
+        this.request = request;
+        this.httpMethod = httpMethod;
+        this.payload = payload;
+        this.requestCallback = requestCallback;
     }
 
     public Request getRequest() {
         return request;
     }
 
-    public void setRequest(Request request) {
-        this.request = request;
-    }
-    
     public HttpMethod getHttpMethod() {
         return httpMethod;
-    }
-
-    public void setHttpMethod(HttpMethod httpMethod) {
-        this.httpMethod = httpMethod;
     }
 
     public Object getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
-        this.payload = payload;
-    }
-
-    /**
-     * Method to be called when the response comes.
-     */
-    public abstract void callback(Response response);
-
-    /**
-     * Method to be called when something goes wrong with the request.
-     */
-    public void onError(Exception e) {
-        e.printStackTrace();
-    }
-
     public Response call() {
         Response response = null;
         try {
             response = getHttpMethod().execute(request, payload);
-            callback(response);
+            requestCallback.callback(response);
         }
         catch (Exception e) {
-            onError(e);
+            requestCallback.onException(e);
         }
         return response;
     }

@@ -19,6 +19,7 @@ package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
 
 import org.jvnet.inflector.Pluralizer;
 import org.jvnet.inflector.lang.en.NounPluralizer;
@@ -84,7 +85,7 @@ public class DefaultRestClient implements RestClient {
 	 * @return
 	 */
 	protected Request createRequestFor(URI uri) {
-		return new DefaultHttpRequest(uri, this);
+		return new DefaultHttpRequest(uri, this, Executors.newCachedThreadPool());
 	}
 
 	/**

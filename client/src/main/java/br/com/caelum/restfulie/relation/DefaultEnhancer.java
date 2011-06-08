@@ -1,5 +1,6 @@
 package br.com.caelum.restfulie.relation;
 
+import java.util.Random;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -32,7 +33,7 @@ public class DefaultEnhancer implements Enhancer {
 	}
 
     private <T> String generateNewUniqueClassName(Class<T> originalType) {
-        return "br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis() + Math.round(Math.random() * 100000);
+        return "br.com.caelum.restfulie." + originalType.getSimpleName() + "_" + System.currentTimeMillis() + new Random().nextLong();
     }
 
 	private void enhanceLinks(CtClass newType) throws CannotCompileException {
