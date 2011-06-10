@@ -27,7 +27,8 @@ public abstract class RequestCallback {
      * Method to be called when something goes wrong with the request.
      */
     public void onException(Request request, HttpMethod httpMethod, Exception e) {
-        logger.warn("An asynchronous request could not be made to " + request.getURI() + " using the HTTP " + httpMethod + " method", e);
+        e.printStackTrace();
+        logger.error("An asynchronous request could not be made to " + request.getURI() + " using the HTTP " + httpMethod + " method", e);
     }
 
 }
