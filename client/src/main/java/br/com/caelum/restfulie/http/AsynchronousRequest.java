@@ -3,6 +3,11 @@ package br.com.caelum.restfulie.http;
 import java.util.concurrent.Callable;
 import br.com.caelum.restfulie.Response;
 
+/**
+ * An asynchronous HTTP request.
+ * 
+ * @author samuel portela
+ */
 public class AsynchronousRequest implements Callable<Response> {
 
     private final Request request;
@@ -40,7 +45,7 @@ public class AsynchronousRequest implements Callable<Response> {
             requestCallback.callback(response);
         }
         catch (Exception e) {
-            requestCallback.onException(e);
+            requestCallback.onException(request, httpMethod, e);
         }
         return response;
     }

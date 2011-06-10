@@ -29,13 +29,13 @@ public class DefaultHttpRequest implements Request {
 
 	protected RequestStack stack;
 
-    private final ExecutorService executorService;
+    private final ExecutorService threads;
 
-	public DefaultHttpRequest(URI uri, RestClient client, ExecutorService executorService) {
+	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
 		this.client = client;
 		this.stack = new RequestStack(client);
-		this.executorService = executorService;
+		this.threads = client.getThreads();
 	}
 
 	private Response sendPayload(Object payload, String verb) {
@@ -63,7 +63,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
     public Future<Response> getAsync(RequestCallback requestCallback) {
-        return executorService.submit(new AsynchronousRequest(this, HttpMethod.GET, requestCallback));
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.GET, requestCallback));
     }
 
 	private Response retrieve(String verb) {
@@ -79,7 +79,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
     public Future<Response> deleteAsync(RequestCallback requestCallback) {
-        return executorService.submit(new AsynchronousRequest(this, HttpMethod.DELETE, requestCallback));
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.DELETE, requestCallback));
     }
 
 	public Response head() {
@@ -99,7 +99,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
     public <T> Future<Response> postAsync(T payload, RequestCallback requestCallback) {
-        return executorService.submit(new AsynchronousRequest(this, HttpMethod.POST, payload, requestCallback));
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.POST, payload, requestCallback));
     }
 
 	public <T> Response put(T object) {
@@ -107,7 +107,7 @@ public class DefaultHttpRequest implements Request {
 	}
 
     public <T> Future<Response> putAsync(T payload, RequestCallback requestCallback) {
-        return executorService.submit(new AsynchronousRequest(this, HttpMethod.PUT, payload, requestCallback));
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.PUT, payload, requestCallback));
     }
 
 	public Map<String, String> getHeaders() {

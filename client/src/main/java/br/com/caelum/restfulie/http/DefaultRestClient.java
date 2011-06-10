@@ -19,6 +19,7 @@ package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.jvnet.inflector.Pluralizer;
@@ -45,8 +46,10 @@ public class DefaultRestClient implements RestClient {
 	private RequestDispatcher dispatcher;
 
 	private Pluralizer inflector;
+
+    private URI lastURI = null;
 	
-	private URI lastURI = null;
+	private final ExecutorService threads;
 
 	public DefaultRestClient() 
 	{
@@ -55,6 +58,7 @@ public class DefaultRestClient implements RestClient {
 		types.register(new XmlMediaType());
 		types.register(new JsonMediaType());
 		types.register(new FormEncoded());
+		this.threads = Executors.newCachedThreadPool();
 	}
 	
 	public DefaultRestClient use(RequestDispatcher executor) {
@@ -85,7 +89,7 @@ public class DefaultRestClient implements RestClient {
 	 * @return
 	 */
 	protected Request createRequestFor(URI uri) {
-		return new DefaultHttpRequest(uri, this, Executors.newCachedThreadPool());
+		return new DefaultHttpRequest(uri, this);
 	}
 
 	/**
@@ -113,5 +117,9 @@ public class DefaultRestClient implements RestClient {
 		this.inflector = inflector;
 		return this;
 	}
+    
+    public ExecutorService getThreads() {
+        return threads;
+    }
 
 }
