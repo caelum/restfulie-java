@@ -3,6 +3,8 @@ package br.com.caelum.restfulie.http;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -27,10 +29,13 @@ public class DefaultHttpRequest implements Request {
 
 	protected RequestStack stack;
 
+    private final ExecutorService threads;
+
 	public DefaultHttpRequest(URI uri, RestClient client) {
 		this.uri = uri;
 		this.client = client;
 		this.stack = new RequestStack(client);
+		this.threads = client.getThreads();
 	}
 
 	private Response sendPayload(Object payload, String verb) {
@@ -57,6 +62,10 @@ public class DefaultHttpRequest implements Request {
 		return retrieve("GET");
 	}
 
+    public Future<Response> getAsync(RequestCallback requestCallback) {
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.GET, requestCallback));
+    }
+
 	private Response retrieve(String verb) {
 		return using(verb).access();
 	}
@@ -68,6 +77,10 @@ public class DefaultHttpRequest implements Request {
 	public Response delete() {
 		return retrieve("DELETE");
 	}
+
+    public Future<Response> deleteAsync(RequestCallback requestCallback) {
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.DELETE, requestCallback));
+    }
 
 	public Response head() {
 		return retrieve("HEAD");
@@ -85,9 +98,17 @@ public class DefaultHttpRequest implements Request {
 		return sendPayload(object, "POST");
 	}
 
+    public <T> Future<Response> postAsync(T payload, RequestCallback requestCallback) {
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.POST, payload, requestCallback));
+    }
+
 	public <T> Response put(T object) {
 		return sendPayload(object, "PUT");
 	}
+
+    public <T> Future<Response> putAsync(T payload, RequestCallback requestCallback) {
+        return threads.submit(new AsynchronousRequest(this, HttpMethod.PUT, payload, requestCallback));
+    }
 
 	public Map<String, String> getHeaders() {
 		return headers;

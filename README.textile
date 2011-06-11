@@ -354,6 +354,57 @@ While typical JAX-RS services will deserialize your request body into your metho
 
 Parameter support is provided through VRaptor, so Iogi and Paranamer support is already built-in.
 
+
+h1. Asynchronous Request
+
+To make an asynchronous request, you can use getAsync, postAsync, putAsync or deleteAsync methods. For that, you must provide a RequestCallback instance with a callback method implementation (the code to be executed when the response comes), like this:
+
+<pre>
+RequestCallback requestCallback = new RequestCallback() {
+    @Override
+    public void callback(Response response) {
+        // code to be executed when the response comes
+    }
+};
+
+Future<Response> future1 = Restfulie.at("http://www.caelum.com.br/clients").getAsync(requestCallback);
+</pre>
+
+If you prefer, you can abbreviate it this way:
+
+<pre>
+Future<Response> future1 = Restfulie.at("http://www.caelum.com.br/clients").getAsync(new RequestCallback() {
+    @Override
+    public void callback(Response response) {
+        // code to be executed when the response comes
+    }
+});
+</pre>
+
+h2. Using Log4j to log exceptions from Asynchronous Request
+
+If you want Log4j to log the exceptions occurred when something goes wrong with the asynchronous request, you can create a log4j.xml configuration file on your classpath like this:
+
+<pre>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+        
+        <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" 
+                                value="%d{HH:mm:ss,SSS} %5p [%-20c{1}] %m%n"/>
+                </layout>
+        </appender>
+
+        <category name="br.com.caelum.restfulie">
+                <priority value="ERROR" />
+                <appender-ref ref="stdout" />
+        </category>
+
+</log4j:configuration>
+</pre>
+
 h2. Getting help and mailing lists
 
 If you are looking for or want to help, let us know at the mailing list:
