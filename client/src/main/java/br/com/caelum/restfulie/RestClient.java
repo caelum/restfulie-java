@@ -18,6 +18,7 @@
 package br.com.caelum.restfulie;
 
 import java.net.URI;
+import java.util.concurrent.ExecutorService;
 
 import org.jvnet.inflector.Pluralizer;
 
@@ -60,5 +61,10 @@ public interface RestClient extends RequestEntry {
 	 * Set custom inflection rules
 	 */
 	RestClient withInflector(Pluralizer inflector);
+
+	/**
+     * Returns the required object for asynchronous requests of this client.
+     */
+    ExecutorService getThreads();
 	
 }

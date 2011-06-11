@@ -2,6 +2,7 @@ package br.com.caelum.restfulie.http;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.feature.RequestFeature;
@@ -40,13 +41,21 @@ public interface Request {
 
 	Response get();
 
-	<T> Response post(T object);
+    Future<Response> getAsync(RequestCallback requestCallback);
+
+    <T> Response post(T object);
+
+    <T> Future<Response> postAsync(T payload, RequestCallback requestCallback);
 
 	<T> Response put(T object);
+
+    <T> Future<Response> putAsync(T payload, RequestCallback requestCallback);
 
 	<T> Response patch(T object);
 
 	Response delete();
+
+    Future<Response> deleteAsync(RequestCallback requestCallback);
 
 	Response options();
 
