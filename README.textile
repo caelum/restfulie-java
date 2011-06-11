@@ -423,6 +423,7 @@ Projetct Founder
 Contributors
 * Lucas Cavalcanti ("email":mailto:lucas.cavalcanti@caelum.com.br) - twitter:http://www.twitter.com/lucascs
 * "Adriano Almeida":http://ahalmeida.com/ ("email":mailto:adriano.almeida@caelum.com.br) - twitter:http://www.twitter.com/adrianoalmeida7
+* Samuel Portela ("email":mailto:negociosnainternet@gmail.com) - twitter:http://www.twitter.com/samuel_portela
 
 h3. Example
 
