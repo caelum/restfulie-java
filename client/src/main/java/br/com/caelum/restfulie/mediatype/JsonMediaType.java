@@ -8,6 +8,9 @@ import java.util.List;
 
 import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.client.DefaultLinkConverter;
+import br.com.caelum.restfulie.relation.CachedEnhancer;
+import br.com.caelum.restfulie.relation.DefaultEnhancer;
+import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
@@ -24,15 +27,19 @@ public class JsonMediaType implements MediaType {
 
 	private final List<String> types = Arrays.asList("application/json", "text/json", "json");
 
-	private final XStreamHelper helper = new XStreamHelper(
-			new JettisonMappedXmlDriver());
+	private final XStreamHelper helper;
 
 	private final XStream xstream;
 
-	public JsonMediaType() {
+	public JsonMediaType(Enhancer enhancer) {
+		helper = new XStreamHelper(new JettisonMappedXmlDriver(), enhancer);
 		this.xstream = helper.getXStream(getTypesToEnhance(), getCollectionNames());
 		configure(xstream);
 	}
+	public JsonMediaType() {
+		this(new CachedEnhancer(new DefaultEnhancer()));
+	}
+	
 
 	/**
 	 * Allows xstream further configuration.
