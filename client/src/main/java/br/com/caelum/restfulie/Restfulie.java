@@ -19,8 +19,10 @@ package br.com.caelum.restfulie;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import br.com.caelum.restfulie.http.DefaultHttpRequest;
 import br.com.caelum.restfulie.http.DefaultRestClient;
+import br.com.caelum.restfulie.http.JsonRestClient;
 import br.com.caelum.restfulie.http.Request;
 
 /**
@@ -44,6 +46,13 @@ public class Restfulie {
 		return new DefaultRestClient();
 	}
 
+	/**
+	 * Entry point to configure serialization data prior to accessing the resources (json only).
+	 */
+	public static RestClient jsonOnly() {
+		return new JsonRestClient();
+	}
+	
 	/**
 	 * Entry point to direct access an uri.
 	 */
