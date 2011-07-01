@@ -32,6 +32,9 @@ import br.com.caelum.restfulie.mediatype.FormEncoded;
 import br.com.caelum.restfulie.mediatype.JsonMediaType;
 import br.com.caelum.restfulie.mediatype.MediaTypes;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
+import br.com.caelum.restfulie.relation.CachedEnhancer;
+import br.com.caelum.restfulie.relation.DefaultEnhancer;
+import br.com.caelum.restfulie.relation.Enhancer;
 import br.com.caelum.restfulie.request.RequestDispatcher;
 
 /**
@@ -51,12 +54,16 @@ public class DefaultRestClient implements RestClient {
 	
 	private final ExecutorService threads;
 
-	public DefaultRestClient() 
+	public DefaultRestClient() {
+		this(new CachedEnhancer(new DefaultEnhancer()));
+	}
+	
+	public DefaultRestClient(Enhancer enhancer) 
 	{
 		this.dispatcher = new ApacheDispatcher(this);
 		this.inflector = new NounPluralizer();
-		types.register(new XmlMediaType());
-		types.register(new JsonMediaType());
+		types.register(new XmlMediaType(enhancer));
+		types.register(new JsonMediaType(enhancer));
 		types.register(new FormEncoded());
 		this.threads = Executors.newCachedThreadPool();
 	}
