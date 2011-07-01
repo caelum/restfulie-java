@@ -7,8 +7,6 @@ import java.util.Map;
 
 import br.com.caelum.restfulie.Resource;
 import br.com.caelum.restfulie.http.DefaultRelation;
-import br.com.caelum.restfulie.relation.CachedEnhancer;
-import br.com.caelum.restfulie.relation.DefaultEnhancer;
 import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
@@ -21,8 +19,6 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 @SuppressWarnings("unchecked")
 public class XStreamHelper {
-
-	private Enhancer cachedEnhancer = new CachedEnhancer(new DefaultEnhancer());
 
 	private final class EnhancedLookupProvider extends
 			ReflectionProviderWrapper {
@@ -37,7 +33,7 @@ public class XStreamHelper {
 				return super.newInstance(realTypes.get(originalType));
 			} else if (!Modifier.isFinal(originalType.getModifiers())) {
 				// enhance now!
-				Class enhanced = cachedEnhancer.enhanceResource(originalType);
+				Class enhanced = enhancer.enhanceResource(originalType);
 				return super.newInstance(enhanced);
 			}
 			return super.newInstance(originalType);
@@ -83,12 +79,14 @@ public class XStreamHelper {
 	}
 
 	private final HierarchicalStreamDriver driver;
+	private final Enhancer enhancer;
 
 	@SuppressWarnings("rawtypes")
 	private final Map<Class, Class> realTypes = new HashMap<Class, Class>();
 
-	public XStreamHelper(HierarchicalStreamDriver driver) {
+	public XStreamHelper(HierarchicalStreamDriver driver, Enhancer enhancer) {
 		this.driver = driver;
+		this.enhancer = enhancer;
 	}
 
 	/**
@@ -96,7 +94,7 @@ public class XStreamHelper {
 	 *
 	 * @return
 	 */
-	private ReflectionProvider getProvider() {
+	protected ReflectionProvider getProvider() {
 		return new EnhancedLookupProvider(new Sun14ReflectionProvider());
 	}
 
@@ -123,11 +121,11 @@ public class XStreamHelper {
 		xstream.useAttributeFor(DefaultRelation.class, "type");
 
 		for (Class type : typesToEnhance) {
-			realTypes.put(type, cachedEnhancer.enhanceResource(type));
+			realTypes.put(type, enhancer.enhanceResource(type));
 			xstream.processAnnotations(type);
 		}
 
-		Class enhancedType = cachedEnhancer.enhanceResource(EnhancedList.class);
+		Class enhancedType = enhancer.enhanceResource(EnhancedList.class);
 		realTypes.put(EnhancedList.class, enhancedType);
 
 		for (String name : collectionNames) {

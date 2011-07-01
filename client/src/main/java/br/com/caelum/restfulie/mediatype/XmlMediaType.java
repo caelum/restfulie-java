@@ -15,6 +15,9 @@ import br.com.caelum.restfulie.RestClient;
 import br.com.caelum.restfulie.client.DefaultLinkConverter;
 import br.com.caelum.restfulie.http.DefaultRelation;
 import br.com.caelum.restfulie.opensearch.conveter.DefaultUrlConverter;
+import br.com.caelum.restfulie.relation.CachedEnhancer;
+import br.com.caelum.restfulie.relation.DefaultEnhancer;
+import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.QNameMap;
@@ -42,7 +45,7 @@ public class XmlMediaType implements MediaType {
 
 	private List<String> names = new ArrayList<String>();
 
-	public XmlMediaType() {
+	public XmlMediaType(Enhancer enhancer) {
 		QNameMap qnameMap = new QNameMap();
 		QName qname = new QName("http://www.w3.org/2005/Atom", "atom");
 		qnameMap.registerMapping(qname, DefaultRelation.class);
@@ -50,7 +53,11 @@ public class XmlMediaType implements MediaType {
 		// xstream replaces an _ with __ (two underscore) more information at
 		// http://xstream.codehaus.org/faq.html#XML_double_underscores
 		XmlFriendlyReplacer replacer = new XmlFriendlyReplacer("$", "_");
-		helper = new XStreamHelper(new StaxDriver(qnameMap, replacer));
+		helper = new XStreamHelper(new StaxDriver(qnameMap, replacer), enhancer);
+	}
+	
+	public XmlMediaType() {
+		this(new CachedEnhancer(new DefaultEnhancer()));
 	}
 
 	/**

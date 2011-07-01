@@ -22,6 +22,9 @@ import java.net.URISyntaxException;
 import br.com.caelum.restfulie.http.DefaultHttpRequest;
 import br.com.caelum.restfulie.http.DefaultRestClient;
 import br.com.caelum.restfulie.http.Request;
+import br.com.caelum.restfulie.relation.CachedEnhancer;
+import br.com.caelum.restfulie.relation.DefaultEnhancer;
+import br.com.caelum.restfulie.relation.Enhancer;
 
 /**
  * Restfulie's client API entry point.<br/>
@@ -41,7 +44,14 @@ public class Restfulie {
 	 * Entry point to configure serialization data prior to accessing the resources.
 	 */
 	public static RestClient custom() {
-		return new DefaultRestClient();
+		return new DefaultRestClient(new CachedEnhancer(new DefaultEnhancer()));
+	}
+	
+	/**
+	 * Entry point to configure the configuration to serialize serialization data prior to accessing the resources of the resources. AAAAAAAAAAAAW YEAH.
+	 */
+	public static RestClient custom(Enhancer enhancer) {
+		return new DefaultRestClient(enhancer);
 	}
 
 	/**
