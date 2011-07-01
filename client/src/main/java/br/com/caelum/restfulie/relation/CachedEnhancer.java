@@ -21,7 +21,7 @@ public class CachedEnhancer implements Enhancer {
 
 	public <T> Class enhanceResource(Class<T> originalType) {
 		if(cache.containsKey(originalType)) {
-			return originalType;
+			return cache.get(originalType);
 		}
 		Class enhanced = enhancer.enhanceResource(originalType);
 		cache.put(originalType, enhanced);

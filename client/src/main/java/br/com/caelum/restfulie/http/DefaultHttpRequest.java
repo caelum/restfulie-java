@@ -109,7 +109,7 @@ public class DefaultHttpRequest implements Request {
 	 * @return
 	 */
 	protected RequestStack createStack() {
-//		stack.with(new FollowRedirects(client));
+		stack.with(new FollowRedirects(client));
 		return stack;
 	}
 
