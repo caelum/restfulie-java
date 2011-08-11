@@ -21,7 +21,7 @@ import br.com.caelum.restfulie.request.RequestDispatcher;
  * This client has been created to allow using restfulie without XML related
  * libs, which i consider a bit bloat if users really don't need any XML stuff.
  * 
- * @author Felipe Brandão
+ * @author Felipe Brandao
  *
  */
 public class JsonRestClient implements RestClient{

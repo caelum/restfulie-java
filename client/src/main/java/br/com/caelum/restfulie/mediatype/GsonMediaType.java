@@ -19,7 +19,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Media Type implementation for unmarshalling data received in JSON format using GSON library
  * 
- * @author Felipe Brandão
+ * @author Felipe Brandao
  *
  */
 public class GsonMediaType implements MediaType{
@@ -123,7 +123,7 @@ public class GsonMediaType implements MediaType{
 		Matcher matcher = rootTypeDetectionRegex.matcher( jsonData.json );
 		if( matcher.matches() ){
 			String alias = matcher.group(1);
-			//define informações para jsonData, caso a detecção falhe
+			//defines informations inside jsonData, if fails to detect a registered class for unmarshall (could be a collection)
 			jsonData.alias = alias;
 			jsonData.json = matcher.group(2);
 			
