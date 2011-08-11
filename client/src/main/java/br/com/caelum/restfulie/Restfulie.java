@@ -22,8 +22,8 @@ import java.net.URISyntaxException;
 
 import br.com.caelum.restfulie.http.DefaultHttpRequest;
 import br.com.caelum.restfulie.http.DefaultRestClient;
-import br.com.caelum.restfulie.http.JsonRestClient;
 import br.com.caelum.restfulie.http.Request;
+import br.com.caelum.restfulie.mediatype.GsonMediaType;
 
 /**
  * Restfulie's client API entry point.<br/>
@@ -50,7 +50,7 @@ public class Restfulie {
 	 * Entry point to configure serialization data prior to accessing the resources (json only).
 	 */
 	public static RestClient jsonOnly() {
-		return new JsonRestClient();
+		return new DefaultRestClient( new GsonMediaType() );
 	}
 	
 	/**

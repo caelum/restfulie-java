@@ -30,6 +30,7 @@ import br.com.caelum.restfulie.RestfulieException;
 import br.com.caelum.restfulie.http.apache.ApacheDispatcher;
 import br.com.caelum.restfulie.mediatype.FormEncoded;
 import br.com.caelum.restfulie.mediatype.JsonMediaType;
+import br.com.caelum.restfulie.mediatype.MediaType;
 import br.com.caelum.restfulie.mediatype.MediaTypes;
 import br.com.caelum.restfulie.mediatype.XmlMediaType;
 import br.com.caelum.restfulie.request.RequestDispatcher;
@@ -58,6 +59,21 @@ public class DefaultRestClient implements RestClient {
 		types.register(new XmlMediaType());
 		types.register(new JsonMediaType());
 		types.register(new FormEncoded());
+		this.threads = Executors.newCachedThreadPool();
+	}
+	
+	/**
+	 * Constructor which only will register the specified media types
+	 * @param medias MediaTypes to be registered with this client
+	 * @author Felipe Brandao
+	 */
+	public DefaultRestClient( MediaType...medias ) 
+	{
+		this.dispatcher = new ApacheDispatcher(this);
+		this.inflector = new NounPluralizer();
+		
+		for( MediaType media : medias ) this.types.register( media );
+		
 		this.threads = Executors.newCachedThreadPool();
 	}
 	
