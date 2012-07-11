@@ -66,5 +66,15 @@ public interface RestClient extends RequestEntry {
      * Returns the required object for asynchronous requests of this client.
      */
     ExecutorService getThreads();
+    
+    /**
+	 * Set custom inflection rules
+	 */
+	String defaultCharset();
+	
+	/**
+	 * Set the charset definition
+	 */
+	RestClient withCharset(String charset);
 	
 }

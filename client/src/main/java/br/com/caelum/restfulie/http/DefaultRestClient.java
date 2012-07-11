@@ -49,6 +49,8 @@ public class DefaultRestClient implements RestClient {
 	private RequestDispatcher dispatcher;
 
 	private Pluralizer inflector;
+	
+	private String charset = "UTF-8";
 
     private URI lastURI = null;
 	
@@ -128,5 +130,16 @@ public class DefaultRestClient implements RestClient {
     public ExecutorService getThreads() {
         return threads;
     }
+
+	public String defaultCharset() {
+		return charset;
+	}
+
+	public RestClient withCharset(String charset) {
+		this.charset = charset;
+		return this;
+	}
+    
+    
 
 }
