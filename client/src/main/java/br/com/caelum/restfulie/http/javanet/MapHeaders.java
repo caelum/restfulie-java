@@ -17,11 +17,13 @@ public class MapHeaders implements Headers{
 	}
 
 	public List<String> get(String key) {
-		return fields.get(key);
+		List<String> values = fields.get(key); 
+		if(values==null) values = fields.get(key.toLowerCase());
+		return values;
 	}
 
 	public String getMain(String key) {
-		if(!fields.containsKey(key)) {
+		if(!fields.containsKey(key)&&!fields.containsKey(key.toLowerCase())) {
 			throw new IllegalArgumentException("Unable to parse as field does not exist.");
 		}
 		return get(key).get(0).split(";")[0];

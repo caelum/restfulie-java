@@ -59,24 +59,18 @@ public class ApacheDispatcher implements RequestDispatcher {
 					"You should set a content type prior to sending some payload.");
 		}
 
-//		ContentProducer cp = new ContentProducer() {
-//			public void writeTo(OutputStream outstream) throws IOException {
-//				Writer writer = new OutputStreamWriter(outstream, "UTF-8");
-//				String type = headers.get("Content-type");
-//				handlerFor(type).marshal(payload, writer);
-//				writer.flush();
-//			}
-//		};
+
 		StringWriter writer = new StringWriter();
 		String type = headers.get("Content-type");
 		try {
+			type = type.split(";")[0];
 			handlerFor(type).marshal(payload, writer, client);
 			writer.flush();
 			
 			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
 			add(verb, headers);
 			String string = writer.getBuffer().toString();
-			verb.setEntity(new StringEntity(string));
+			verb.setEntity(new StringEntity(string,client.charset()));
 			return execute(details, verb);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to marshal entity.", e);
