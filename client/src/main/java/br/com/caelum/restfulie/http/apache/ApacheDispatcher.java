@@ -70,7 +70,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 			HttpEntityEnclosingRequestBase verb = (HttpEntityEnclosingRequestBase) verbFor(method, uri);
 			add(verb, headers);
 			String string = writer.getBuffer().toString();
-			verb.setEntity(new StringEntity(string));
+			verb.setEntity(new StringEntity(string,client.charset()));
 			return execute(details, verb);
 		} catch (IOException e) {
 			throw new RestfulieException("Unable to marshal entity.", e);

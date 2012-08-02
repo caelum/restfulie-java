@@ -27,9 +27,9 @@ public class FormEncoded implements MediaType {
 		Map<String, String> params = (Map<String, String>) payload;
 		int at = 0;
 		for (String key : params.keySet()) {
-			writer.append(URLEncoder.encode(key));
+			writer.append(URLEncoder.encode(key,client.charset()));
 			writer.append("=");
-			writer.append(URLEncoder.encode(params.get(key)));
+			writer.append(URLEncoder.encode(params.get(key),client.charset()));
 			if (++at != params.size()) {
 				writer.append("&");
 			}

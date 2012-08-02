@@ -19,6 +19,7 @@ public class MediaTypes {
 	private final LinkedList<MediaType> types = new LinkedList<MediaType>();
 
 	public MediaType forContentType(String searching) {
+		searching = searching.split(";")[0];
 		for (MediaType type : types) {
 			if (type.answersTo(searching)) {
 				return type;

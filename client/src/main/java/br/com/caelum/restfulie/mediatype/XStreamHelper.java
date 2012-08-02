@@ -10,6 +10,7 @@ import br.com.caelum.restfulie.http.DefaultRelation;
 import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProviderWrapper;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
@@ -95,7 +96,7 @@ public class XStreamHelper {
 	 * @return
 	 */
 	protected ReflectionProvider getProvider() {
-		return new EnhancedLookupProvider(new Sun14ReflectionProvider());
+		return new EnhancedLookupProvider(new PureJavaReflectionProvider());
 	}
 
 	/**
