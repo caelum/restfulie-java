@@ -81,6 +81,7 @@ public class XStreamHelper {
 
 	private final HierarchicalStreamDriver driver;
 	private final Enhancer enhancer;
+	private ReflectionProvider reflectionProvider = new Sun14ReflectionProvider();
 
 	@SuppressWarnings("rawtypes")
 	private final Map<Class, Class> realTypes = new HashMap<Class, Class>();
@@ -88,15 +89,6 @@ public class XStreamHelper {
 	public XStreamHelper(HierarchicalStreamDriver driver, Enhancer enhancer) {
 		this.driver = driver;
 		this.enhancer = enhancer;
-	}
-
-	/**
-	 * Extension point to define your own provider.
-	 *
-	 * @return
-	 */
-	protected ReflectionProvider getProvider() {
-		return new EnhancedLookupProvider(new Sun14ReflectionProvider());
 	}
 
 	/**
@@ -142,6 +134,14 @@ public class XStreamHelper {
 		}
 
 		return xstream;
+	}
+	
+	private ReflectionProvider getProvider() {
+		return new EnhancedLookupProvider(reflectionProvider);
+	}
+
+	public void setReflectionProvider(ReflectionProvider refletionProvider) {
+		this.reflectionProvider = refletionProvider;
 	}
 
 }

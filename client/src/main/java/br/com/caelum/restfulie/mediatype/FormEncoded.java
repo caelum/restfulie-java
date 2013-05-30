@@ -5,6 +5,8 @@ import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+
 import br.com.caelum.restfulie.RestClient;
 
 /**
@@ -38,6 +40,10 @@ public class FormEncoded implements MediaType {
 
 	public <T> T unmarshal(String content, RestClient client) {
 		return null;
+	}
+
+	public MediaType withReflectionProvider(ReflectionProvider refletionProvider) {
+		return this;
 	}
 
 }

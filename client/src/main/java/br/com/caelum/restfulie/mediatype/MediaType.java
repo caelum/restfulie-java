@@ -3,6 +3,8 @@ package br.com.caelum.restfulie.mediatype;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+
 import br.com.caelum.restfulie.RestClient;
 
 /**
@@ -24,4 +26,6 @@ public interface MediaType {
 	 */
 	<T> T unmarshal(String content, RestClient client);
 
+	
+	MediaType withReflectionProvider(ReflectionProvider refletionProvider);
 }

@@ -13,6 +13,7 @@ import br.com.caelum.restfulie.relation.DefaultEnhancer;
 import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 /**
@@ -70,6 +71,11 @@ public class JsonMediaType implements MediaType {
 	}
 	protected List<String> getCollectionNames() {
 		return Collections.emptyList();
+	}
+	
+	public MediaType withReflectionProvider(ReflectionProvider refletionProvider) {
+		helper.setReflectionProvider(refletionProvider);
+		return this;
 	}
 
 }

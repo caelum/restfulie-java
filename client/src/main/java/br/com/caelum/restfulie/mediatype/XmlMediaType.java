@@ -20,6 +20,7 @@ import br.com.caelum.restfulie.relation.DefaultEnhancer;
 import br.com.caelum.restfulie.relation.Enhancer;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.io.xml.QNameMap;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
@@ -119,6 +120,11 @@ public class XmlMediaType implements MediaType {
 		for (String name : names) {
 			this.names.add(name);
 		}
+	}
+
+	public MediaType withReflectionProvider(ReflectionProvider refletionProvider) {
+		helper.setReflectionProvider(refletionProvider);
+		return this;
 	}
 
 }
