@@ -96,7 +96,7 @@ public class XStreamHelper {
 	 * @return
 	 */
 	protected ReflectionProvider getProvider() {
-		return new EnhancedLookupProvider(new PureJavaReflectionProvider());
+		return new EnhancedLookupProvider(new Sun14ReflectionProvider());
 	}
 
 	/**
