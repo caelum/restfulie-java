@@ -63,6 +63,7 @@ public class ApacheDispatcher implements RequestDispatcher {
 		StringWriter writer = new StringWriter();
 		String type = headers.get("Content-type");
 		try {
+			
 			handlerFor(type).marshal(payload, writer, client);
 			writer.flush();
 			
