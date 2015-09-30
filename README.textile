@@ -112,7 +112,7 @@ you to retrieve a resource or post to a resource controller:
 
 Due to the nature of the entry point and the java bytecode, Restfulie is still unable to allow the user to make the http verb even more transparent.
 
-As seen earlier, as soon as you have aquired an object through the use of the restfulie api, you can invoke its transitions:
+As seen earlier, as soon as you have acquired an object through the use of the restfulie api, you can invoke its transitions:
 
 <pre>
 Order order = Restfulie.resource("http://www.caelum.com.br/orders/1").get();
