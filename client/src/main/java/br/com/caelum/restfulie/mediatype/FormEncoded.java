@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import br.com.caelum.restfulie.RestClient;
 
@@ -26,10 +27,10 @@ public class FormEncoded implements MediaType {
 		}
 		Map<String, String> params = (Map<String, String>) payload;
 		int at = 0;
-		for (String key : params.keySet()) {
-			writer.append(URLEncoder.encode(key));
+		for (Entry<String, String> param : params.entrySet()) {
+			writer.append(URLEncoder.encode(param.getKey()));
 			writer.append("=");
-			writer.append(URLEncoder.encode(params.get(key)));
+			writer.append(URLEncoder.encode(param.getValue()));
 			if (++at != params.size()) {
 				writer.append("&");
 			}

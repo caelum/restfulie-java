@@ -84,10 +84,10 @@ public class XmlMediaType implements MediaType {
 	}
 
 	public <T> T unmarshal(String content, RestClient client) {
-		XStream xstream = getXstream(client);
-		xstream.registerConverter(new DefaultLinkConverter(client));
-		xstream.registerConverter(new DefaultUrlConverter(client));
-		return (T) xstream.fromXML(content);
+		XStream xstreamLocal = getXstream(client);
+		xstreamLocal.registerConverter(new DefaultLinkConverter(client));
+		xstreamLocal.registerConverter(new DefaultUrlConverter(client));
+		return (T) xstreamLocal.fromXML(content);
 	}
 
 	private List<Class> getTypesToEnhance() {

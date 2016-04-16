@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import br.com.caelum.restfulie.Response;
 import br.com.caelum.restfulie.RestClient;
@@ -65,8 +66,8 @@ public class JavaNetDispatcher implements RequestDispatcher {
 		if (this.cookie != null) {
 			connection.addRequestProperty("Cookie", this.cookie);
 		}
-		for (String header : headers.keySet()) {
-			connection.addRequestProperty(header, headers.get(header));
+		for (Entry<String, String> header : headers.entrySet()) {
+			connection.addRequestProperty(header.getKey(), header.getValue());
 		}
 		return connection;
 	}
@@ -94,10 +95,10 @@ public class JavaNetDispatcher implements RequestDispatcher {
 	}
 
 	private void extractCookie(JavaNetResponse response) {
-		List<String> cookie = response.getHeader("Set-Cookie");
+		List<String> cookieLocal = response.getHeader("Set-Cookie");
 		
-		if (cookie != null && cookie.size() > 0) {
-			this.cookie = cookie.get(0);
+		if (cookieLocal != null && cookieLocal.size() > 0) {
+			this.cookie = cookieLocal.get(0);
 			if (this.cookie.contains(";")) {
 				this.cookie = this.cookie
 						.substring(0, this.cookie.indexOf(";"));

@@ -57,7 +57,8 @@ public class HttpURLConnectionContentProcessor implements ContentProcessor {
 			}
 			content.append(partial);
 		}
-		return cachedContent = content.toString();
+		cachedContent = content.toString();
+		return cachedContent;
 	}
 
 }
