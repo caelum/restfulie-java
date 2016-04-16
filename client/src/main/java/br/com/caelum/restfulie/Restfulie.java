@@ -32,6 +32,9 @@ import br.com.caelum.restfulie.relation.Enhancer;
  * @author guilherme silveira
  */
 public class Restfulie {
+    
+    private Restfulie() {}
+    
 	
 	/**
 	 * Given an retrieved resource, gives access to restfulie's transition api.

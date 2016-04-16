@@ -5,6 +5,8 @@ package br.com.caelum.restfulie.feature;
  * @author jose donizetti
  */
 public class Features {
+    
+    private Features() {}
 	
 	public static ResponseFeature throwError() {
 		return new ThrowError();
