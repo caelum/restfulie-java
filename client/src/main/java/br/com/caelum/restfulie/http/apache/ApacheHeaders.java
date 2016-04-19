@@ -45,8 +45,8 @@ public class ApacheHeaders implements Headers {
 	//TODO doni rever testes
 	public List<Link> getLinks() {
 		if(links.isEmpty()) {
-			for ( String links : get("link")) {
-				for(String link : links.split(",")){
+			for ( String tempLinks : get("link")) {
+				for(String link : tempLinks.split(",")){
 					String[] split = link.split(";");
 					String href = split[0].trim().substring(1,split[0].trim().length()-1);
 					String rel = split[1].trim().substring(5,split[1].trim().length()-1);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -87,8 +88,8 @@ public class ApacheDispatcher implements RequestDispatcher {
 	}
 
 	private void add(HttpRequest method, Map<String, String> headers) {
-		for (String header : headers.keySet()) {
-			method.addHeader(header, headers.get(header));
+		for (Entry<String, String> header : headers.entrySet()) {
+			method.addHeader(header.getKey(), header.getValue());
 		}
 	}
 

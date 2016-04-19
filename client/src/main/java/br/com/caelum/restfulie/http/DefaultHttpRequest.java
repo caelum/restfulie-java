@@ -39,8 +39,8 @@ public class DefaultHttpRequest implements Request {
 	}
 
 	private Response sendPayload(Object payload, String verb) {
-		RequestStack stack = createStack();
-		return stack.process(this, verb, uri, payload);
+		RequestStack stackLocal = createStack();
+		return stackLocal.process(this, verb, uri, payload);
 	}
 
 
@@ -120,8 +120,8 @@ public class DefaultHttpRequest implements Request {
 	}
 
 	public Response access() {
-		RequestStack stack = createStack();
-		return stack.process(this, verb, uri, null);
+		RequestStack stackLocal = createStack();
+		return stackLocal.process(this, verb, uri, null);
 	}
 
 	/**
